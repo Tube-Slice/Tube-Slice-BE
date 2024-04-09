@@ -4,11 +4,13 @@ import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
 
+@Entity
+@Table(name = "subtitle")
 public class Subtitle {
 
     @Id
-    @GeneratedValue
-    @Column(name = "subtitle_id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     private Long id;
 
     private String subtitle;

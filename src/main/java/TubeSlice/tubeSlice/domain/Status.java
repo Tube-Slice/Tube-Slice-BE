@@ -1,5 +1,5 @@
 package TubeSlice.tubeSlice.domain;
 
-public enum LoginStatus {
+public enum Status {
     ACTIVATE, INACTIVATE
 }

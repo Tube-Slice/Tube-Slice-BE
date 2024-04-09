@@ -5,11 +5,13 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 
+@Entity
+@Table(name = "video")
 public class Video {
 
     @Id
-    @GeneratedValue
-    @Column(name = "video_id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     private Long id;
 
     private String title;
