@@ -4,11 +4,13 @@ import jakarta.persistence.*;
 
 import java.util.List;
 
+@Entity
+@Table(name = "user")
 public class User {
 
     @Id
-    @GeneratedValue
-    @Column(name = "user_id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     private Long id;
 
     private String name;
@@ -21,9 +23,9 @@ public class User {
     private List<Record> records;
 
     @Enumerated(EnumType.STRING)
-    private SocialLogin socialLogin;
+    private SocialType socialLogin;
 
     @Enumerated(EnumType.STRING)
-    private LoginStatus loginStatus;
+    private Status loginStatus;
 
 }

@@ -2,11 +2,13 @@ package TubeSlice.tubeSlice.domain;
 
 import jakarta.persistence.*;
 
+@Entity
+@Table(name = "record")
 public class Record {
 
     @Id
-    @GeneratedValue
-    @Column(name = "record_id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     private Long id;
 
 

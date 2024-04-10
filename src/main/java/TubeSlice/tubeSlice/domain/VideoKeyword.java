@@ -4,11 +4,13 @@ import jakarta.persistence.*;
 
 import java.security.Key;
 
+@Entity
+@Table(name = "video_keyword")
 public class VideoKeyword {
 
     @Id
-    @GeneratedValue
-    @Column(name = "video_keyword_id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     private Long id;
 
     @JoinColumn(name = "video_id")

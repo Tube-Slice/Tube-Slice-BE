@@ -1,5 +1,5 @@
 package TubeSlice.tubeSlice.domain;
 
-public enum SocialLogin {
+public enum SocialType {
     KAKAO, NAVER
 }

@@ -4,11 +4,13 @@ import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
 
+@Entity
+@Table(name = "script")
 public class Script {
 
     @Id
-    @GeneratedValue
-    @Column(name = "script_id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     private Long id;
 
     private LocalDateTime timeline;
