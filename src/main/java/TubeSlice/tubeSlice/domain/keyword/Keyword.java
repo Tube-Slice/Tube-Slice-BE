@@ -1,5 +1,6 @@
-package TubeSlice.tubeSlice.domain;
+package TubeSlice.tubeSlice.domain.keyword;
 
+import TubeSlice.tubeSlice.domain.videoKeyword.VideoKeyword;
 import jakarta.persistence.*;
 
 import java.util.List;

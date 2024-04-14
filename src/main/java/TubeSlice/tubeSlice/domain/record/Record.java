@@ -1,5 +1,8 @@
-package TubeSlice.tubeSlice.domain;
+package TubeSlice.tubeSlice.domain.record;
 
+import TubeSlice.tubeSlice.domain.userScript.UserScript;
+import TubeSlice.tubeSlice.domain.video.Video;
+import TubeSlice.tubeSlice.domain.user.User;
 import jakarta.persistence.*;
 
 @Entity

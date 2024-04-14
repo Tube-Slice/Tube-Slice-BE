@@ -1,5 +1,6 @@
-package TubeSlice.tubeSlice.domain;
+package TubeSlice.tubeSlice.domain.user;
 
+import TubeSlice.tubeSlice.domain.record.Record;
 import jakarta.persistence.*;
 
 import java.util.List;
