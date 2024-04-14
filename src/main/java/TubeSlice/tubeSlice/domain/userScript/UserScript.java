@@ -1,5 +1,6 @@
-package TubeSlice.tubeSlice.domain;
+package TubeSlice.tubeSlice.domain.userScript;
 
+import TubeSlice.tubeSlice.domain.record.Record;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;

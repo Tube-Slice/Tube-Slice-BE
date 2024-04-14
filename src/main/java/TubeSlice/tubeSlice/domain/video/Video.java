@@ -1,7 +1,9 @@
-package TubeSlice.tubeSlice.domain;
+package TubeSlice.tubeSlice.domain.video;
 
+import TubeSlice.tubeSlice.domain.videoKeyword.VideoKeyword;
+import TubeSlice.tubeSlice.domain.record.Record;
+import TubeSlice.tubeSlice.domain.subtitle.Subtitle;
 import jakarta.persistence.*;
-import org.springframework.stereotype.Component;
 
 import java.util.List;
 

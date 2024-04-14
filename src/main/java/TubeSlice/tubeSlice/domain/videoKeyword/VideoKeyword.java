@@ -1,8 +1,8 @@
-package TubeSlice.tubeSlice.domain;
+package TubeSlice.tubeSlice.domain.videoKeyword;
 
+import TubeSlice.tubeSlice.domain.keyword.Keyword;
+import TubeSlice.tubeSlice.domain.video.Video;
 import jakarta.persistence.*;
-
-import java.security.Key;
 
 @Entity
 @Table(name = "video_keyword")
