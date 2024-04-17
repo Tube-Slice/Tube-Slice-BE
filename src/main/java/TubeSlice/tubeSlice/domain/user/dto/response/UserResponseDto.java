@@ -17,7 +17,7 @@ public class UserResponseDto {
     private String code;
     private String message;
 
-    @JsonProperty(namespace = "result")
+    @JsonProperty("result")
     private LoginResponseDto loginResponseDto;
 
 }

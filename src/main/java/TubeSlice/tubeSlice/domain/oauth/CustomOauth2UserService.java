@@ -1,7 +1,9 @@
-package TubeSlice.tubeSlice.domain.user.dto.oauth;
+package TubeSlice.tubeSlice.domain.oauth;
 
 
 
+import TubeSlice.tubeSlice.domain.oauth.dto.KakaoUserDto;
+import TubeSlice.tubeSlice.domain.oauth.dto.NaverUserDto;
 import TubeSlice.tubeSlice.domain.user.Status;
 import TubeSlice.tubeSlice.domain.user.User;
 import TubeSlice.tubeSlice.domain.user.UserRepository;

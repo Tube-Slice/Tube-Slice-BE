@@ -1,6 +1,5 @@
-package TubeSlice.tubeSlice.domain.user.dto.oauth;
+package TubeSlice.tubeSlice.domain.oauth;
 
-import TubeSlice.tubeSlice.domain.user.dto.oauth.CustomOauth2User;
 import TubeSlice.tubeSlice.domain.user.UserRepository;
 import TubeSlice.tubeSlice.global.provider.JwtProvider;
 import jakarta.servlet.ServletException;

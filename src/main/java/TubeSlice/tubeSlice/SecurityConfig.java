@@ -1,7 +1,7 @@
 package TubeSlice.tubeSlice;
 
 import TubeSlice.tubeSlice.global.filter.JwtAuthenticationFilter;
-import TubeSlice.tubeSlice.domain.user.dto.oauth.OAuth2SuccessHandler;
+import TubeSlice.tubeSlice.domain.oauth.OAuth2SuccessHandler;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;

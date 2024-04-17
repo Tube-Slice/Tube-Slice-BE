@@ -1,6 +1,6 @@
-package TubeSlice.tubeSlice.domain.user.dto.oauth;
+package TubeSlice.tubeSlice.domain.oauth.dto;
 
-import TubeSlice.tubeSlice.domain.user.dto.oauth.OAuth2UserInfo;
+import TubeSlice.tubeSlice.domain.oauth.OAuth2UserInfo;
 import lombok.AllArgsConstructor;
 
 import java.util.Map;

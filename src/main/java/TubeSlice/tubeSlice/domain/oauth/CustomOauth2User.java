@@ -1,4 +1,4 @@
-package TubeSlice.tubeSlice.domain.user.dto.oauth;
+package TubeSlice.tubeSlice.domain.oauth;
 
 import TubeSlice.tubeSlice.domain.user.User;
 import org.springframework.security.core.GrantedAuthority;

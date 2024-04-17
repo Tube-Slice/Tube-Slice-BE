@@ -4,6 +4,8 @@ import TubeSlice.tubeSlice.domain.user.dto.response.KakaoLoginDto;
 import TubeSlice.tubeSlice.domain.user.dto.response.LoginResponseDto;
 import TubeSlice.tubeSlice.domain.user.dto.response.NaverLoginDto;
 import TubeSlice.tubeSlice.global.provider.JwtProvider;
+import TubeSlice.tubeSlice.global.response.code.resultCode.ErrorStatus;
+import TubeSlice.tubeSlice.global.response.exception.handler.UserHandler;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpEntity;
@@ -38,7 +40,9 @@ public class UserService {
             loginId = loginByKakao(accessToken);
         }
         if (loginId==null)   {
-            throw new RuntimeException("userId 없음.");
+            //throw new RuntimeException("userId 없음.");
+            //naver또는 kakao에서 유저에 관한 정보를 불러오지 못한 경우 에러 발생.
+            throw new UserHandler(ErrorStatus.USER_NOT_FOUND);
         }
 
         User findUser = userRepository.findByLoginId(loginId);
