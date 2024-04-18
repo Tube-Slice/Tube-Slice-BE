@@ -1,4 +1,4 @@
-package TubeSlice.tubeSlice.domain.user.dto.response;
+package TubeSlice.tubeSlice.domain.oauth.dto.response;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Getter;
