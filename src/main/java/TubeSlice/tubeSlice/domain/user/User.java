@@ -1,12 +1,15 @@
 package TubeSlice.tubeSlice.domain.user;
 
-import TubeSlice.tubeSlice.domain.record.Record;
+import TubeSlice.tubeSlice.domain.follow.Follow;
+import TubeSlice.tubeSlice.domain.post.Post;
+import TubeSlice.tubeSlice.domain.userScript.UserScript;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -30,16 +33,24 @@ public class User {
 
     private String loginId;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
-    private List<Record> records;
-
-//    @Enumerated(EnumType.STRING)
-//    private SocialType socialType;
-
     private String socialType;
 
     @Enumerated(EnumType.STRING)
     private Status loginStatus;
 
     private String role;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<UserScript> userScriptList = new ArrayList<>();
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<Post> postList = new ArrayList<>();
+
+    @OneToMany(mappedBy = "sender", cascade = CascadeType.ALL)
+    private List<Follow> followingList = new ArrayList<>();
+
+    @OneToMany(mappedBy = "receiver", cascade = CascadeType.ALL)
+    private List<Follow> followerList = new ArrayList<>();
+
+
 }
