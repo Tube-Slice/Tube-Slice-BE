@@ -1,4 +1,4 @@
-package TubeSlice.tubeSlice;
+package TubeSlice.tubeSlice.global.config;
 
 import TubeSlice.tubeSlice.global.filter.JwtAuthenticationFilter;
 import TubeSlice.tubeSlice.domain.oauth.OAuth2SuccessHandler;
