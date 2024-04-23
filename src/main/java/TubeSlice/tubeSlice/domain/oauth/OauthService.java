@@ -37,14 +37,14 @@ public class OauthService {
     // 유저의 기능과 로그인 기능은 분리시켜주세요.
 
     @Transactional
-    public LoginResponseDto getJwtTokenAndUserId(String accessToken, String socialType){
+    public LoginResponseDto getJwtTokenAndUserId(String access_token, String socialType){
         String loginId = null;
 
         if (socialType.equals("naver")) {
-            loginId = loginByNaver(accessToken);
+            loginId = loginByNaver(access_token);
         }
         if (socialType.equals("kakao")) {
-            loginId = loginByKakao(accessToken);
+            loginId = loginByKakao(access_token);
         }
         if (loginId==null)   {
             //naver또는 kakao에서 유저에 관한 정보를 불러오지 못한 경우 에러 발생.
@@ -60,10 +60,10 @@ public class OauthService {
     }
 
     @Transactional
-    public String loginByNaver (String accessToken) {
+    public String loginByNaver (String access_token) {
         HttpHeaders headers = new HttpHeaders();
 
-        headers.set("Authorization", "Bearer " + accessToken);
+        headers.set("Authorization", "Bearer " + access_token);
         HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(headers);
 
         ResponseEntity<NaverLoginDto> response =
@@ -108,10 +108,10 @@ public class OauthService {
     }
 
     @Transactional
-    public String loginByKakao (String accessToken) {
+    public String loginByKakao (String access_token) {
         HttpHeaders headers = new HttpHeaders();
 
-        headers.set("Authorization", "Bearer " + accessToken);
+        headers.set("Authorization", "Bearer " + access_token);
         HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(headers);
 
         ResponseEntity<KakaoLoginDto> response =
