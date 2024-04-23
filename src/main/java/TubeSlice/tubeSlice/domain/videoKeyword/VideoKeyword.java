@@ -13,12 +13,12 @@ public class VideoKeyword {
     @Column(name = "id")
     private Long id;
 
-    @JoinColumn(name = "video_id")
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "video_id")
     private Video video;
 
-    @JoinColumn(name = "keyword_id")
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "keyword_id")
     private Keyword keyword;
 
 }

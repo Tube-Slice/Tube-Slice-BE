@@ -18,7 +18,7 @@ public class Subtitle {
 
     private LocalDateTime timeline;
 
-    @JoinColumn(name = "video_id")
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinColumn(name = "video_id")
     private Video video;
 }

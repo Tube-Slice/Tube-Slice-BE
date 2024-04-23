@@ -1,5 +1,6 @@
 package TubeSlice.tubeSlice.domain.keyword;
 
+import TubeSlice.tubeSlice.domain.postKeyword.PostKeyword;
 import TubeSlice.tubeSlice.domain.videoKeyword.VideoKeyword;
 import jakarta.persistence.*;
 
@@ -16,7 +17,9 @@ public class Keyword {
 
     private String name;
 
-
     @OneToMany(mappedBy = "keyword")
     private List<VideoKeyword> videoKeyword;
+
+    @OneToMany(mappedBy = "keyword")
+    private List<PostKeyword> postKeyword;
 }

@@ -1,6 +1,7 @@
 package TubeSlice.tubeSlice.domain.userScript;
 
-import TubeSlice.tubeSlice.domain.record.Record;
+import TubeSlice.tubeSlice.domain.script.Script;
+import TubeSlice.tubeSlice.domain.user.User;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
@@ -15,10 +16,13 @@ public class UserScript {
     @Column(name = "id")
     private Long id;
 
-    private LocalDateTime timeline;
 
-    private String script;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private User user;
 
-    @OneToMany(mappedBy = "userScript", cascade = CascadeType.ALL)
-    private List<Record> records;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "script_id")
+    private Script script;
+
 }

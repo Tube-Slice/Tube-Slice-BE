@@ -1,10 +1,11 @@
 package TubeSlice.tubeSlice.domain.video;
 
+import TubeSlice.tubeSlice.domain.image.Image;
 import TubeSlice.tubeSlice.domain.videoKeyword.VideoKeyword;
-import TubeSlice.tubeSlice.domain.record.Record;
 import TubeSlice.tubeSlice.domain.subtitle.Subtitle;
 import jakarta.persistence.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -18,14 +19,13 @@ public class Video {
 
     private String title;
 
-    private String thumbnail;
+    private String url;
 
     @OneToMany(mappedBy = "video", cascade = CascadeType.ALL)
-    private List<Record> records;
+    private List<VideoKeyword> videoKeywordList = new ArrayList<>();
 
     @OneToMany(mappedBy = "video", cascade = CascadeType.ALL)
-    private List<VideoKeyword> videoKeywords;
+    private List<Subtitle> subtitleList = new ArrayList<>();
 
-    @OneToMany(mappedBy = "video", cascade = CascadeType.ALL)
-    private List<Subtitle> subtitles;
+
 }
