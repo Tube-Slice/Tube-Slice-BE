@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/v1/follow")
+@RequestMapping("/v1/follows")
 public class FollowController {
     private final UserService userService;
     private final FollowService followService;
