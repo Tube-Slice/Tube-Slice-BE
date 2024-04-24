@@ -26,7 +26,7 @@ public class FollowController {
     private final UserService userService;
     private final FollowService followService;
 
-    @GetMapping("/users/{userId}")
+    @PostMapping("/users/{userId}")
     @Operation(summary = "유저 팔로우 하기 API",description = "유저의 id를 받아 해당 유저 팔로우 하기")
     @ApiResponses({
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200",description = "OK, 성공"),
