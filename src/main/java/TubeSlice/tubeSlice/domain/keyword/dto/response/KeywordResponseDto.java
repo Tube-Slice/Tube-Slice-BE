@@ -9,7 +9,10 @@ public class KeywordResponseDto {
     @Setter
     @NoArgsConstructor
     @AllArgsConstructor
-    public static class KeywordResultDto{
+    public static class KeywordInfoDto{
         private Long keywordId;
+        private String name;
     }
+
+
 }

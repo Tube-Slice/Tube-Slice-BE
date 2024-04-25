@@ -35,6 +35,10 @@ public class User {
 
     private String socialType;
 
+    private String introduction;
+
+    private String profileUrl;
+
     @Enumerated(EnumType.STRING)
     private Status loginStatus;
 

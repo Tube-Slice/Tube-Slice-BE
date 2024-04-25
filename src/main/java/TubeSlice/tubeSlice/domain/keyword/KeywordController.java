@@ -29,7 +29,7 @@ public class KeywordController {
     @Parameters({
             @Parameter(name = "keyword", description = "키워드"),
     })
-    public ApiResponse<KeywordResponseDto.KeywordResultDto> createPostKeyword(@RequestParam String keyword){
+    public ApiResponse<KeywordResponseDto.KeywordInfoDto> createPostKeyword(@RequestParam String keyword){
         return ApiResponse.onSuccess(keywordService.createPostKeyword(keyword));
     }
 }

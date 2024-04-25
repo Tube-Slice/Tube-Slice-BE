@@ -12,7 +12,7 @@ public class KeywordService {
     private final KeywordRepository keywordRepository;
 
     @Transactional
-    public KeywordResponseDto.KeywordResultDto createPostKeyword(String keyword){
+    public KeywordResponseDto.KeywordInfoDto createPostKeyword(String keyword){
 
         boolean exist = keywordRepository.existsByName(keyword);
 
@@ -27,7 +27,7 @@ public class KeywordService {
             keyword1 = keywordRepository.findByName(keyword);
         }
 
-        return KeywordResponseDto.KeywordResultDto.builder()
+        return KeywordResponseDto.KeywordInfoDto.builder()
                 .keywordId(keyword1.getId())
                 .build();
     }
