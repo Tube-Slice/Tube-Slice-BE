@@ -4,7 +4,7 @@ spring:
   datasource:
     url: jdbc:mysql://localhost:3306/tubeslice
     username: root
-    password: khsoo2580
+    password: 245245
     driver-class-name: com.mysql.cj.jdbc.Driver
   sql:
     init:
@@ -17,7 +17,7 @@ spring:
         format_sql: true
         use_sql_comments: true
         hbm2ddl:
-          auto: update
+          auto: create
         default_batch_fetch_size: 1000
 
   security:
@@ -61,7 +61,6 @@ spring:
 
 jwt :
   secret : fjeofkdjfsoef3426lsdiffjefdfkejoj32536326jo4jejfkdsj4737452o5jakfjeojfej2564j35
-
 
 
 
