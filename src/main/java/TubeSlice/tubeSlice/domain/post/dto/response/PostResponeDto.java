@@ -2,6 +2,7 @@ package TubeSlice.tubeSlice.domain.post.dto.response;
 
 import lombok.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 public class PostResponeDto {
@@ -17,5 +18,8 @@ public class PostResponeDto {
         private String content;
         private List<String> keyword;
         private String videoUrl;
+        private Integer commentNum;
+        private Integer likeNum;
+        private LocalDateTime createdAt;
     }
 }

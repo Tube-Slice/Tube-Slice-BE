@@ -23,8 +23,8 @@ public class UserResponseDto {
         private String introduction;
         private boolean isFollowing;
         private String profileUrl;
-        private Integer following;
-        private Integer follower;
+        private Integer followingNum;
+        private Integer followerNum;
     }
 
     @Builder
