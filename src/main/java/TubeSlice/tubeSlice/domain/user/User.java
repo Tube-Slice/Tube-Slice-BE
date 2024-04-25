@@ -1,8 +1,11 @@
 package TubeSlice.tubeSlice.domain.user;
 
+import TubeSlice.tubeSlice.domain.comment.Comment;
 import TubeSlice.tubeSlice.domain.follow.Follow;
 import TubeSlice.tubeSlice.domain.post.Post;
+import TubeSlice.tubeSlice.domain.postLike.PostLike;
 import TubeSlice.tubeSlice.domain.userScript.UserScript;
+import TubeSlice.tubeSlice.global.entity.BaseEntity;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -18,7 +21,7 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class User {
+public class User extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -52,5 +55,9 @@ public class User {
     @OneToMany(mappedBy = "receiver", cascade = CascadeType.ALL)
     private List<Follow> followerList = new ArrayList<>();
 
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<Comment> commentList = new ArrayList<>();
 
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<PostLike> postLikeList = new ArrayList<>();
 }
