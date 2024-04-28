@@ -1,6 +1,8 @@
 package TubeSlice.tubeSlice.domain.user;
 
 
+import TubeSlice.tubeSlice.domain.keyword.KeywordConverter;
+import TubeSlice.tubeSlice.domain.keyword.dto.response.KeywordResponseDto;
 import TubeSlice.tubeSlice.domain.post.Post;
 import TubeSlice.tubeSlice.domain.post.PostConverter;
 import TubeSlice.tubeSlice.domain.post.dto.PostResponseDto;
@@ -32,5 +34,12 @@ public class UserService {
 
         return PostConverter.toPostInfoDtoList(postList);
     }
+
+    public List<KeywordResponseDto.KeywordResultDto> getUserKeywordList(User user){
+        List<Post> postList = user.getPostList();
+
+        return KeywordConverter.toKeywordResultDtoList(postList);
+    }
+
 }
 

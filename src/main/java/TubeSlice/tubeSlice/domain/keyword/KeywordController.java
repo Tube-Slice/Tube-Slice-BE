@@ -19,17 +19,4 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/v1/keywords")
 public class KeywordController {
 
-    private final KeywordService keywordService;
-
-    @PostMapping("/post")
-    @Operation(summary = "게시글 키워드 추가 API",description = "게시글에 필요한 키워드 객체 생성, KeywordResultDto 반환")
-    @ApiResponses({
-            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200",description = "OK, 성공"),
-    })
-    @Parameters({
-            @Parameter(name = "keyword", description = "키워드"),
-    })
-    public ApiResponse<KeywordResponseDto.KeywordResultDto> createPostKeyword(@RequestParam String keyword){
-        return ApiResponse.onSuccess(keywordService.createPostKeyword(keyword));
-    }
 }

@@ -11,5 +11,6 @@ public class KeywordResponseDto {
     @AllArgsConstructor
     public static class KeywordResultDto{
         private Long keywordId;
+        private String name;
     }
 }
