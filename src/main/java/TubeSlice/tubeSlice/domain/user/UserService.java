@@ -72,5 +72,8 @@ public class UserService {
         return UserConverter.toFollowerListDto(myFollowingIdList, followList, user);
     }
 
+    public UserResponseDto.MypageUserInfoDto getMypageUserInfo(User user){
+        return UserConverter.toMypageUserInfoDto(user);
+    }
 }
 
