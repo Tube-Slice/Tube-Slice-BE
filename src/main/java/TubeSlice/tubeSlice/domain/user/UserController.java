@@ -25,8 +25,8 @@ import java.util.List;
 public class UserController {
     private final UserService userService;
 
-    @GetMapping("/me/posts")
-    @Operation(summary = "나의 게시글 목록 가져오기 API",description = "내가 작성한 게시글 목록 가져오기, PostInfoDto의 list를 반환")
+    @GetMapping("/me/mypage/posts")
+    @Operation(summary = "마이페이지용 나의 게시글 목록 가져오기 API",description = "PostInfoDto의 list를 반환")
     @ApiResponses({
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200",description = "OK, 성공"),
     })
@@ -37,8 +37,8 @@ public class UserController {
     }
 
 
-    @GetMapping("/{userId}/posts")
-    @Operation(summary = "특정유저의 게시글 목록 가져오기 API",description = "특정유저가 작성한 게시글 목록 가져오기, PostInfoDto의 list를 반환")
+    @GetMapping("/{userId}/mypage/posts")
+    @Operation(summary = "마이페이지용 특정유저의 게시글 목록 가져오기 API",description = "PostInfoDto의 list를 반환")
     @ApiResponses({
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200",description = "OK, 성공"),
     })
@@ -51,8 +51,8 @@ public class UserController {
         return ApiResponse.onSuccess(userService.getPostList(user));
     }
 
-    @GetMapping("/me/keywords")
-    @Operation(summary = "나의 키워드 목록 가져오기 API",description = "내가 작성한 키워드 목록 가져오기, KeywordResponseDto list를 반환")
+    @GetMapping("/me/mypage/keywords")
+    @Operation(summary = "마이페이지용 나의 키워드 목록 가져오기 API",description = "KeywordResponseDto list를 반환")
     @ApiResponses({
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200",description = "OK, 성공"),
     })
@@ -62,8 +62,8 @@ public class UserController {
         return ApiResponse.onSuccess(userService.getUserKeywordList(user));
     }
 
-    @GetMapping("/{userId}/keywords")
-    @Operation(summary = "특정유저의 키워드 목록 가져오기 API",description = "특정유저가 작성한 키워드 목록 가져오기, KeywordResponseDto list를 반환")
+    @GetMapping("/{userId}/mypage/keywords")
+    @Operation(summary = "마이페이지용 특정유저의 키워드 목록 가져오기 API",description = "KeywordResponseDto list를 반환")
     @ApiResponses({
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200",description = "OK, 성공"),
     })
