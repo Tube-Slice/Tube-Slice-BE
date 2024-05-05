@@ -14,4 +14,13 @@ public class CommentRequestDto {
     public static class CommentCreateDto{
         private String content;
     }
+
+    @Getter
+    @Builder
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class CommentPatchDto{
+        private String content;
+    }
 }
+

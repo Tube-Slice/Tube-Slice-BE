@@ -36,9 +36,27 @@ public class CommentService {
     }
 
     @Transactional
-    public ApiResponse<SuccessStatus> deleteComment(Long commentId){
+    public ApiResponse<SuccessStatus> deleteComment(User user, Long commentId){
         Comment comment = commentRepository.findById(commentId).orElseThrow(()-> new CommentHandler(ErrorStatus.COMMENT_NOT_FOUND));
+
+        if(comment.getUser() != user){
+            throw new CommentHandler(ErrorStatus.COMMENT_FORBIDDEN);
+        }
+
         commentRepository.delete(comment);
+
+        return ApiResponse.onSuccess(SuccessStatus._OK);
+    }
+
+    @Transactional
+    public ApiResponse<SuccessStatus> updateComment(CommentRequestDto.CommentPatchDto request, Long commentId, User user){
+        Comment comment = commentRepository.findById(commentId).orElseThrow(()-> new CommentHandler(ErrorStatus.COMMENT_NOT_FOUND));
+        if(comment.getUser() != user){
+            throw new CommentHandler(ErrorStatus.COMMENT_FORBIDDEN);
+        }
+
+        comment.setContent(request.getContent());
+        commentRepository.save(comment);
 
         return ApiResponse.onSuccess(SuccessStatus._OK);
     }

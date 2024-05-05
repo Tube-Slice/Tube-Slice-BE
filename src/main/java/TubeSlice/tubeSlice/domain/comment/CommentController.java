@@ -47,11 +47,26 @@ public class CommentController {
     @ApiResponses({
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200",description = "OK, 성공"),
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMENT401", description = "삭제할 댓글이 존재하지 않습니다.",content = @Content(schema = @Schema(implementation = ApiResponse.class))),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMENT402", description = "삭제할 권한이 존재하지 않습니다.",content = @Content(schema = @Schema(implementation = ApiResponse.class))),
     })
     @Parameters({
             @Parameter(name = "commentId", description = "삭제할 댓글의 id"),
     })
     public ApiResponse<SuccessStatus> deleteComment(@PathVariable(name = "commentId")Long commentId){
-        return commentService.deleteComment(commentId);
+        User user = userService.findUser(1L);
+        return commentService.deleteComment(user, commentId);
     }
+
+    @PatchMapping("/{commentId}")
+    @Operation(summary = "댓글 수정하기 API",description = "수정할 comment의 id를 받아 삭제")
+    @ApiResponses({
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200",description = "OK, 성공"),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMENT401", description = "수정할 댓글이 존재하지 않습니다.",content = @Content(schema = @Schema(implementation = ApiResponse.class))),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMENT402", description = "수정할 권한이 존재하지 않습니다.",content = @Content(schema = @Schema(implementation = ApiResponse.class))),
+    })
+    public ApiResponse<SuccessStatus> updateComment(@RequestBody CommentRequestDto.CommentPatchDto request, @PathVariable(name = "commentId")Long commentId) {
+        User user = userService.findUser(1L); // 작성자 확인용 수정예정
+        return commentService.updateComment(request, commentId, user);
+    }
+
 }
