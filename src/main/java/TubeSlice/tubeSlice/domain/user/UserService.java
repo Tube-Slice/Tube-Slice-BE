@@ -57,12 +57,21 @@ public class UserService {
 
         return followingIdList;
     }
+
     public UserResponseDto.FollowListDto getFollowingList(User me, User user){
         List<Long> myFollowingIdList = getUserFollowingIdList(me);
         List<Follow> followList = user.getFollowingList();
 
-        return UserConverter.toFollowListDto(myFollowingIdList, followList, user);
+        return UserConverter.toFollowingListDto(myFollowingIdList, followList, user);
     }
+
+    public UserResponseDto.FollowListDto getFollowerList(User me, User user){
+        List<Long> myFollowingIdList = getUserFollowingIdList(me);
+        List<Follow> followList = user.getFollowerList();
+
+        return UserConverter.toFollowerListDto(myFollowingIdList, followList, user);
+    }
+
     public UserResponseDto.MypageUserInfoDto getMypageUserInfo(User user){
         return UserConverter.toMypageUserInfoDto(user);
     }
