@@ -47,12 +47,14 @@ public class CommentController {
     @ApiResponses({
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200",description = "OK, 성공"),
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMENT401", description = "삭제할 댓글이 존재하지 않습니다.",content = @Content(schema = @Schema(implementation = ApiResponse.class))),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMENT402", description = "삭제할 권한이 존재하지 않습니다.",content = @Content(schema = @Schema(implementation = ApiResponse.class))),
     })
     @Parameters({
             @Parameter(name = "commentId", description = "삭제할 댓글의 id"),
     })
     public ApiResponse<SuccessStatus> deleteComment(@PathVariable(name = "commentId")Long commentId){
-        return commentService.deleteComment(commentId);
+        User user = userService.findUser(1L);
+        return commentService.deleteComment(user, commentId);
     }
 
     @PatchMapping("/{commentId}")
