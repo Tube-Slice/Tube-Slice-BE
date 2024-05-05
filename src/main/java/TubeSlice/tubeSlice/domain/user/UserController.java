@@ -1,6 +1,7 @@
 package TubeSlice.tubeSlice.domain.user;
 
 import TubeSlice.tubeSlice.domain.post.dto.PostResponseDto;
+import TubeSlice.tubeSlice.domain.user.dto.response.UserResponseDto;
 import TubeSlice.tubeSlice.global.response.ApiResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -74,4 +75,18 @@ public class UserController {
 
         return ApiResponse.onSuccess(userService.getUserKeywordList(user));
     }
+
+    @GetMapping("/me/following")
+    @Operation(summary = "나의 팔로잉 목록 가져오기 API",description = "FollowListDto 반환")
+    @ApiResponses({
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200",description = "OK, 성공"),
+    })
+    public ApiResponse<UserResponseDto.FollowListDto> getMyFollowingList() {
+        // 나의 기준 팔로잉 리스트 필요
+        User me = userService.findUser(1L);
+        // 보여질 팔로잉 리스트
+        User user = userService.findUser(1L);
+        return ApiResponse.onSuccess(userService.getFollowingList(me, user));
+    }
+
 }
