@@ -4,14 +4,12 @@ import TubeSlice.tubeSlice.domain.post.Post;
 import TubeSlice.tubeSlice.domain.user.User;
 import TubeSlice.tubeSlice.global.entity.BaseEntity;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Entity
 @Table(name = "comment")
 @Getter
+@Setter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
