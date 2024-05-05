@@ -63,7 +63,15 @@ public class UserService {
 
         return UserConverter.toFollowListDto(myFollowingIdList, followList, user);
     }
-
-
+    public UserResponseDto.MypageUserInfoDto getMypageUserInfo(User user){
+        return UserResponseDto.MypageUserInfoDto.builder()
+                .userId(user.getId())
+                .nickname(user.getNickname())
+                .profileUrl(user.getProfileUrl())
+                .introduction(user.getIntroduction())
+                .followerNum(user.getFollowerList().size())
+                .followingNum(user.getFollowingList().size())
+                .build();
+    }
 }
 

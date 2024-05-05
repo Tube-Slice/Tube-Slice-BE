@@ -102,4 +102,15 @@ public class UserController {
         return ApiResponse.onSuccess(userService.getFollowingList(me, user));
     }
 
+    @GetMapping("/me/mypage")
+    @Operation(summary = "마이페이지용 유저정보 가져오기 API",description = "MypageUserInfoDto 반환")
+    @ApiResponses({
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200",description = "OK, 성공"),
+    })
+    public ApiResponse<UserResponseDto.MypageUserInfoDto> getMypageUserInfo(){
+        User user = userService.findUser(1L);
+
+        return ApiResponse.onSuccess(userService.getMypageUserInfo(user));
+    }
+
 }
