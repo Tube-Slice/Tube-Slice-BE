@@ -36,6 +36,10 @@ public class User extends BaseEntity {
 
     private String loginId;
 
+    private String profileUrl;
+
+    private String introduction;
+
     private String socialType;
 
     @Enumerated(EnumType.STRING)
