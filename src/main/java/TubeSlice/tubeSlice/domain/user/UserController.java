@@ -102,4 +102,29 @@ public class UserController {
         return ApiResponse.onSuccess(userService.getFollowingList(me, user));
     }
 
+    @GetMapping("/me/follower")
+    @Operation(summary = "나의 팔로워 목록 가져오기 API",description = "FollowListDto 반환")
+    @ApiResponses({
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200",description = "OK, 성공"),
+    })
+    public ApiResponse<UserResponseDto.FollowListDto> getMyFollowerList(){
+        User me = userService.findUser(1L);
+        User user = userService.findUser(1L);
+
+        return ApiResponse.onSuccess(userService.getFollowerList(me, user));
+    }
+
+    @GetMapping("/{userId}/follower")
+    @Operation(summary = "특정유저의 팔로워 목록 가져오기 API",description = "FollowListDto 반환")
+    @ApiResponses({
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200",description = "OK, 성공"),
+    })
+    public ApiResponse<UserResponseDto.FollowListDto> getUserFollowerList(@PathVariable(name = "userId")Long userId) {
+        // 나의 기준 팔로잉 리스트 필요
+        User me = userService.findUser(1L);
+        // 보여질 팔로잉 리스트
+        User user = userService.findUser(userId);
+        return ApiResponse.onSuccess(userService.getFollowerList(me, user));
+    }
+
 }
