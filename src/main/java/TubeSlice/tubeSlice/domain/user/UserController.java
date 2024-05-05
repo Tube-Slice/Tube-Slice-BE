@@ -89,4 +89,17 @@ public class UserController {
         return ApiResponse.onSuccess(userService.getFollowingList(me, user));
     }
 
+    @GetMapping("/{userId}/following")
+    @Operation(summary = "특정유저의 팔로잉 목록 가져오기 API",description = "FollowListDto 반환")
+    @ApiResponses({
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200",description = "OK, 성공"),
+    })
+    public ApiResponse<UserResponseDto.FollowListDto> getUserFollowingList(@PathVariable(name = "userId")Long userId) {
+        // 나의 기준 팔로잉 리스트 필요
+        User me = userService.findUser(1L);
+        // 보여질 팔로잉 리스트
+        User user = userService.findUser(userId);
+        return ApiResponse.onSuccess(userService.getFollowingList(me, user));
+    }
+
 }
