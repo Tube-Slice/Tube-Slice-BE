@@ -1,4 +1,4 @@
-package TubeSlice.tubeSlice.domain.video;
+package TubeSlice.tubeSlice.domain.text;
 
 import com.amazonaws.auth.AWSStaticCredentialsProvider;
 import com.amazonaws.auth.BasicAWSCredentials;

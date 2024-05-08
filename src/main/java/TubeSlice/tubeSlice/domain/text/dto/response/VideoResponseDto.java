@@ -1,4 +1,4 @@
-package TubeSlice.tubeSlice.domain.video.dto;
+package TubeSlice.tubeSlice.domain.video.dto.response;
 
 import TubeSlice.tubeSlice.domain.subtitle.Subtitle;
 import TubeSlice.tubeSlice.domain.videoKeyword.VideoKeyword;

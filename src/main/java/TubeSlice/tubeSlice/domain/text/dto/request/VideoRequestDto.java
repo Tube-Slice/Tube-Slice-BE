@@ -1,4 +1,4 @@
-package TubeSlice.tubeSlice.domain.video.dto;
+package TubeSlice.tubeSlice.domain.video.dto.request;
 
 public class VideoRequestDto {
 

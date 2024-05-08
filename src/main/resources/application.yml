@@ -63,5 +63,21 @@ jwt :
   secret : fjeofkdjfsoef3426lsdiffjefdfkejoj32536326jo4jejfkdsj4737452o5jakfjeojfej2564j35
 
 
+#clova speech
+clova:
+  speech:
+    api_key: 223ab81bb57040259ab25a5c0624377b
+    invoke_url: https://clovaspeech-gw.ncloud.com/external/v1/7718/30fc9e3356c21227177859ff28b144526d9bcaf9802b1bc19ed5709ca482f8ae/recognizer/object-storage
+
+  
+#naver Object Storage
+naver:
+  objectstorage:
+    access-key: ZOM8m6lZdcrvzAwsHTln
+    secret-key: VPUM5yYjANzgyCIz7HvxCGjrcBcIAynplRO7mHMl
+    endpoint: https://kr.object.ncloudstorage.com
+
+
+#GPT API
 
 
