@@ -6,6 +6,7 @@ import TubeSlice.tubeSlice.domain.text.Text;
 import TubeSlice.tubeSlice.domain.user.User;
 import TubeSlice.tubeSlice.domain.userScript.UserScript;
 import TubeSlice.tubeSlice.domain.video.Video;
+import TubeSlice.tubeSlice.global.entity.BaseEntity;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
@@ -14,7 +15,7 @@ import java.util.List;
 
 @Entity
 @Table(name = "script")
-public class Script {
+public class Script extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
