@@ -18,5 +18,6 @@ public class PostResponseDto {
         private List<String> keywords;
         private Integer likeNum;
         private Integer commentNum;
+        private String createdAt;
     }
 }
