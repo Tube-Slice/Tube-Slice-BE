@@ -41,7 +41,7 @@ public class UserService {
     public List<KeywordResponseDto.KeywordResultDto> getUserKeywordList(User user){
         List<Post> postList = user.getPostList();
 
-        return KeywordConverter.toKeywordResultDtoList(postList);
+        return KeywordConverter.toKeywordDtoList(postList);
     }
 
     // 나 혹은 특정유저가 팔로우 중인 사람이 담긴 테이블
