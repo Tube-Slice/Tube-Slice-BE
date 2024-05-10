@@ -1,4 +1,4 @@
-package TubeSlice.tubeSlice.domain.text;
+package TubeSlice.tubeSlice.global.config;
 
 
 import org.springframework.beans.factory.annotation.Value;
