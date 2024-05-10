@@ -9,26 +9,4 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class KeywordService {
-    private final KeywordRepository keywordRepository;
-
-    @Transactional
-    public KeywordResponseDto.KeywordResultDto createPostKeyword(String keyword){
-
-        boolean exist = keywordRepository.existsByName(keyword);
-
-        Keyword keyword1 = null;
-
-        if(!exist){
-            keyword1 = Keyword.builder()
-                    .name(keyword)
-                    .build();
-            keywordRepository.save(keyword1);
-        }else{
-            keyword1 = keywordRepository.findByName(keyword);
-        }
-
-        return KeywordResponseDto.KeywordResultDto.builder()
-                .keywordId(keyword1.getId())
-                .build();
-    }
 }

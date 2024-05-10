@@ -15,7 +15,17 @@ public enum ErrorStatus implements BaseErrorCode {
     KAKAO_TOKEN_ERROR(HttpStatus.BAD_REQUEST, "GLOBAL402", "토큰관련 서버 에러"),
 
     // User
-    USER_NOT_FOUND(HttpStatus.NOT_FOUND, "USER401", "해당 유저가 존재하지 않습니다." );
+    USER_NOT_FOUND(HttpStatus.NOT_FOUND, "USER401", "해당 유저가 존재하지 않습니다." ),
+
+    // Post
+    POST_NOT_FOUND(HttpStatus.NOT_FOUND, "POST401", "게시글이 존재하지 않습니다."),
+
+    // PostLike
+    POST_LIKE_NOT_FOUND(HttpStatus.NOT_FOUND, "POSTLIKE401", "해당하는 좋아요가 존재하지 않습니다."),
+
+    // Comment
+    COMMENT_NOT_FOUND(HttpStatus.NOT_FOUND, "COMMENT401", "해당하는 댓글이 존재하지 않습니다."),
+    COMMENT_FORBIDDEN(HttpStatus.FORBIDDEN, "COMMENT402", "댓글 수정 혹은 삭제에 관한 권한이 존재하지 않습니다.");
 
     private final HttpStatus httpStatus;
     private final String code;
