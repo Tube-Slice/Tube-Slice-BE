@@ -1,8 +1,10 @@
 package TubeSlice.tubeSlice.domain.text;
 
+import TubeSlice.tubeSlice.domain.script.Script;
+import TubeSlice.tubeSlice.domain.script.ScriptRepository;
 import TubeSlice.tubeSlice.domain.text.dto.response.ClovaSpeechResponseDto;
-import TubeSlice.tubeSlice.domain.video.dto.request.GptRequest;
-import TubeSlice.tubeSlice.domain.video.dto.response.GptResponse;
+import TubeSlice.tubeSlice.domain.text.dto.request.GptRequest;
+import TubeSlice.tubeSlice.domain.text.dto.response.GptResponse;
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.GetObjectRequest;
@@ -22,6 +24,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 
 import java.io.*;
+import java.lang.reflect.Array;
 import java.util.*;
 
 
@@ -32,6 +35,7 @@ import java.util.*;
 public class TextService {
 
     private final TextRepository textRepository;
+    private final ScriptRepository scriptRepository;
 
     @Value("${gpt.api.url}")
     private String gpt_api_url;
@@ -62,7 +66,11 @@ public class TextService {
         amazonS3Client.putObject(request);
     }
 
-    public List<Map.Entry<Integer, String>> getScriptFromBucket(String fileName){ //key가 파일명
+    Long script_id = 0L;
+
+
+    @Transactional
+    public List<Map.Entry<Double, String>> getScriptFromBucket(String fileName){ //key가 파일명
 
         S3Object result = amazonS3Client.getObject(new GetObjectRequest(scriptBucket, fileName));
 
@@ -70,9 +78,11 @@ public class TextService {
             throw new RuntimeException("Script does not exist.");
         }
 
-        HashMap<Integer, String> segments = new HashMap<>();
+        //HashMap<String, String> segments = new HashMap<>();
 
-        List<Map.Entry<Integer, String>> script = new ArrayList<>();
+
+        List<Map.Entry<Double, String>> scripts = new ArrayList<>();
+
         Text text = null;
 
         try {
@@ -86,26 +96,44 @@ public class TextService {
             // JSON 파싱 및 segments 추출
             JsonNode rootNode = new ObjectMapper().readTree(stringBuilder.toString());
             for (JsonNode segmentNode : rootNode.get("segments")) {
-                int start = segmentNode.get("start").asInt();   //6111은 6.111초
-                segments.put(start, segmentNode.get("textEdited").asText());
+                String start = segmentNode.get("start").asText();   //6111은 6.111초
 
-                script.add(new AbstractMap.SimpleEntry<>(start, segmentNode.get("textEdited").asText()));
+                //타임라인 double 형으로 변환.
+                if(start.length() > 3) {
+                    start = start.substring(0, start.length() - 3) + "." + start.substring(start.length() - 3);
+                }
+                Double startDouble = Double.parseDouble(start);
+
+                scripts.add(new AbstractMap.SimpleEntry<>(startDouble, segmentNode.get("textEdited").asText()));
+
+
+                log.info("start: {}", start);
             }
 
-            //스크립트 타임라인 순으로 출력.
-            Collections.sort(script, new Comparator<Map.Entry<Integer, String>>() {
+            //스크립트 타임라인 순으로 정렬.
+            Collections.sort(scripts, new Comparator<Map.Entry<Double, String>>() {
                 @Override
-                public int compare(Map.Entry<Integer, String> o1, Map.Entry<Integer, String> o2) {
+                public int compare(Map.Entry<Double, String> o1, Map.Entry<Double, String> o2) {
                     return o1.getKey().compareTo(o2.getKey());
                 }
             });
 
-            for (Map.Entry<Integer, String> e: script){
+            Script script = null;
+            script = Script.builder()
+                    .videoTitle(fileName)
+                    .videoUrl(null)
+                    .build();
+
+            scriptRepository.save(script);
+
+            //타임라인 double로 변환.
+            for (Map.Entry<Double, String> e: scripts){
+
                 text = Text.builder()
                         .timeline(e.getKey())
                         .scripts(e.getValue())
                         .isSaved(true)
-                        .script(null)
+                        .script(script)
                         .build();
                 textRepository.save(text);
             }
@@ -116,13 +144,10 @@ public class TextService {
             throw new RuntimeException("Error in reading file from storage", e);
         }
 
-
-
-
-
-        return script;
+        return scripts;
     }
 
+    @Transactional
     public Object videoToScript(String objectStorageDataKey) {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);

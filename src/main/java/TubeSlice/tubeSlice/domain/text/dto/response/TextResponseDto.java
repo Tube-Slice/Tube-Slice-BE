@@ -11,7 +11,7 @@ import java.util.List;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class VideoResponseDto {
+public class TextResponseDto {
 
     private String title;
     private String content;

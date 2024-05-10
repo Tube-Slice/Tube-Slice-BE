@@ -5,17 +5,23 @@ import TubeSlice.tubeSlice.domain.scriptKeyword.ScriptKeyword;
 import TubeSlice.tubeSlice.domain.subtitle.Subtitle;
 import TubeSlice.tubeSlice.domain.text.Text;
 import TubeSlice.tubeSlice.domain.user.User;
-import TubeSlice.tubeSlice.domain.userScript.UserScript;
-import TubeSlice.tubeSlice.domain.video.Video;
+
 import TubeSlice.tubeSlice.global.entity.BaseEntity;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
 @Table(name = "script")
+@Getter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class Script extends BaseEntity {
 
     @Id
@@ -34,10 +40,10 @@ public class Script extends BaseEntity {
     @OneToMany(mappedBy = "script", cascade = CascadeType.ALL)
     private List<Text> userScriptList = new ArrayList<>();
 
-    @OneToMany(mappedBy = "script_keyword", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "script", cascade = CascadeType.ALL)
     private List<ScriptKeyword> keywords = new ArrayList<>();
 
-    @OneToMany(mappedBy = "subtitle", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "script", cascade = CascadeType.ALL)
     private List<Subtitle> subtitles = new ArrayList<>();
 
 }

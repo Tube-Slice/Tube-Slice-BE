@@ -1,6 +1,6 @@
-package TubeSlice.tubeSlice.domain.video.dto.response;
+package TubeSlice.tubeSlice.domain.text.dto.response;
 
-import TubeSlice.tubeSlice.domain.video.dto.request.GptRequest;
+import TubeSlice.tubeSlice.domain.text.dto.request.GptRequest;
 import lombok.Getter;
 
 import java.util.List;

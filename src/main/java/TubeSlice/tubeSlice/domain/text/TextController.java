@@ -43,9 +43,9 @@ public class TextController {
     }
 
     @GetMapping("/script")
-    public ApiResponse<List<Map.Entry<Integer,String>>> getScript(@RequestParam("fileName") String fileName){
+    public ApiResponse<List<Map.Entry<Double,String>>> getScript(@RequestParam("fileName") String fileName){
 
-        List<Map.Entry<Integer,String>> result = textService.getScriptFromBucket(fileName);
+        List<Map.Entry<Double, String>> result = textService.getScriptFromBucket(fileName);
 
         return ApiResponse.onSuccess(result);
 

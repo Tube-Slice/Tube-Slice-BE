@@ -1,4 +1,4 @@
-package TubeSlice.tubeSlice.domain.video.dto.request;
+package TubeSlice.tubeSlice.domain.text.dto.request;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

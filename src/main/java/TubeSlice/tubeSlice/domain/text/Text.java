@@ -20,7 +20,7 @@ public class Text {
     @Column(name = "id")
     private Long id;
 
-    private Integer timeline;
+    private Double timeline;
 
     private String scripts;
 
