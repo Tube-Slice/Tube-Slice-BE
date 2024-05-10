@@ -1,5 +1,6 @@
 package TubeSlice.tubeSlice.domain.subtitle;
 
+import TubeSlice.tubeSlice.domain.script.Script;
 import TubeSlice.tubeSlice.domain.video.Video;
 import jakarta.persistence.*;
 
@@ -16,9 +17,9 @@ public class Subtitle {
 
     private String subtitle;
 
-    private LocalDateTime timeline;
+    private Float timeline;
 
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JoinColumn(name = "video_id")
-    private Video video;
+    @JoinColumn(name = "script_id")
+    private Script script;
 }

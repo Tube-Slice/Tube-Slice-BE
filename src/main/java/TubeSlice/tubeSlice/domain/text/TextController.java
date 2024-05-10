@@ -16,7 +16,7 @@ import java.util.Map;
 @Slf4j
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/v1/videos")
+@RequestMapping("/v1/text")
 public class TextController {
 
     private final TextService textService;

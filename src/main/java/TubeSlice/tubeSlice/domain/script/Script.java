@@ -1,6 +1,7 @@
 package TubeSlice.tubeSlice.domain.script;
 
 import TubeSlice.tubeSlice.domain.keyword.Keyword;
+import TubeSlice.tubeSlice.domain.scriptKeyword.ScriptKeyword;
 import TubeSlice.tubeSlice.domain.subtitle.Subtitle;
 import TubeSlice.tubeSlice.domain.text.Text;
 import TubeSlice.tubeSlice.domain.user.User;
@@ -34,7 +35,7 @@ public class Script extends BaseEntity {
     private List<Text> userScriptList = new ArrayList<>();
 
     @OneToMany(mappedBy = "script_keyword", cascade = CascadeType.ALL)
-    private List<Keyword> keywords = new ArrayList<>();
+    private List<ScriptKeyword> keywords = new ArrayList<>();
 
     @OneToMany(mappedBy = "subtitle", cascade = CascadeType.ALL)
     private List<Subtitle> subtitles = new ArrayList<>();

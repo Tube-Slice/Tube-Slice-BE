@@ -1,7 +1,7 @@
-package TubeSlice.tubeSlice.domain.video.dto.response;
+package TubeSlice.tubeSlice.domain.text.dto.response;
 
+import TubeSlice.tubeSlice.domain.scriptKeyword.ScriptKeyword;
 import TubeSlice.tubeSlice.domain.subtitle.Subtitle;
-import TubeSlice.tubeSlice.domain.videoKeyword.VideoKeyword;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -17,7 +17,7 @@ public class VideoResponseDto {
     private String content;
     private String url;
 
-    private List<VideoKeyword> videoKeywords;
+    private List<ScriptKeyword> scriptKeywords;
     private List<Subtitle> subtitles;
 
 }
