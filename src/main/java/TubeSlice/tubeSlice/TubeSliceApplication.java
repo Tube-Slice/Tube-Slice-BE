@@ -7,7 +7,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 
 @SpringBootApplication
-@OpenAPIDefinition(servers = {@Server(url = "https://tubeslice.site", description = "tubeslice")})
+@OpenAPIDefinition(servers = {@Server(url = "/", description = "tubeslice")})
 @EnableJpaAuditing
 public class TubeSliceApplication {
 
