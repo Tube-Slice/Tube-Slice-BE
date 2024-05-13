@@ -25,7 +25,10 @@ public enum ErrorStatus implements BaseErrorCode {
 
     // Comment
     COMMENT_NOT_FOUND(HttpStatus.NOT_FOUND, "COMMENT401", "해당하는 댓글이 존재하지 않습니다."),
-    COMMENT_FORBIDDEN(HttpStatus.FORBIDDEN, "COMMENT402", "댓글 수정 혹은 삭제에 관한 권한이 존재하지 않습니다.");
+    COMMENT_FORBIDDEN(HttpStatus.FORBIDDEN, "COMMENT402", "댓글 수정 혹은 삭제에 관한 권한이 존재하지 않습니다."),
+
+    // Keyword
+    KEYWORD_NOT_FOUND(HttpStatus.NOT_FOUND, "KEYWORD401","해당하는 키워드가 존재하지 않습니다.");
 
     private final HttpStatus httpStatus;
     private final String code;

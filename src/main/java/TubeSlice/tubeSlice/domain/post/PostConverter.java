@@ -1,10 +1,8 @@
 package TubeSlice.tubeSlice.domain.post;
 
-import TubeSlice.tubeSlice.domain.keyword.Keyword;
 import TubeSlice.tubeSlice.domain.keyword.KeywordConverter;
 import TubeSlice.tubeSlice.domain.keyword.dto.response.KeywordResponseDto;
 import TubeSlice.tubeSlice.domain.post.dto.PostResponseDto;
-import TubeSlice.tubeSlice.domain.postKeyword.PostKeyword;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
