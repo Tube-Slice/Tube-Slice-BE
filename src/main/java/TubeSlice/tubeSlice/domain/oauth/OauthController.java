@@ -8,10 +8,7 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -26,8 +23,8 @@ public class OauthController {
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200",description = "OK, 성공"),
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "USER401", description = "유저가 존재하지 않습니다",content = @Content(schema = @Schema(implementation = ApiResponse.class))),
     })
-    public ApiResponse<LoginResponseDto> socialLogin(@RequestHeader(name = "access_token") String access_token,
-                                                     @RequestHeader(name = "social_type") String social_type){
+    public ApiResponse<LoginResponseDto> socialLogin(@RequestParam(name = "access_token") String access_token,
+                                                     @RequestParam(name = "social_type") String social_type){
 
         LoginResponseDto loginResponseDto = userService.getJwtTokenAndUserId(access_token, social_type);
 

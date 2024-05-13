@@ -6,7 +6,7 @@ import TubeSlice.tubeSlice.domain.oauth.dto.response.NaverLoginDto;
 import TubeSlice.tubeSlice.domain.user.Status;
 import TubeSlice.tubeSlice.domain.user.User;
 import TubeSlice.tubeSlice.domain.user.UserRepository;
-import TubeSlice.tubeSlice.global.provider.JwtProvider;
+import TubeSlice.tubeSlice.global.jwt.JwtProvider;
 import TubeSlice.tubeSlice.global.response.code.resultCode.ErrorStatus;
 import TubeSlice.tubeSlice.global.response.exception.handler.UserHandler;
 import lombok.RequiredArgsConstructor;
@@ -32,10 +32,6 @@ public class OauthService {
     private boolean isUser;
     private String username;
 
-
-    //해당 함수는 UserService보다 OauthService와 같은 파일을 하나 더 추가하시는 것이 나을 거 같습니다.
-    // 유저의 기능과 로그인 기능은 분리시켜주세요.
-
     @Transactional
     public LoginResponseDto getJwtTokenAndUserId(String access_token, String socialType){
         String loginId = null;
@@ -53,8 +49,9 @@ public class OauthService {
 
         User findUser = userRepository.findByLoginId(loginId);
         Long userId = findUser.getId(); //db에 저장된 유저의 id 값.
+        String userLoginId = findUser.getLoginId();
 
-        String token = jwtProvider.create(loginId);  //네이버 로그인 성공시 jwt 토큰 반환.
+        String token = jwtProvider.create(userId, userLoginId);
 
         return new LoginResponseDto(userId, username, token, isUser);
     }
@@ -76,10 +73,6 @@ public class OauthService {
         String name = response.getBody().getResponse().getName();
         username = name;
 
-        log.info("email : {}",email );
-        log.info("loginId : {}", loginId);
-        log.info("name : {}",name);
-
         User findUser = userRepository.findByLoginId(loginId);
 
         if(findUser == null){
@@ -91,14 +84,12 @@ public class OauthService {
                     .socialType("naver")
                     .loginStatus(Status.ACTIVATE)
                     .role("ROLE_USER")
-
                     .build();
 
             userRepository.save(user);
             isUser = false;
 
         } else {
-            user = findUser;
             isUser = true;
         }
 
@@ -110,6 +101,7 @@ public class OauthService {
     @Transactional
     public String loginByKakao (String access_token) {
         HttpHeaders headers = new HttpHeaders();
+
 
         headers.set("Authorization", "Bearer " + access_token);
         HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(headers);
@@ -123,10 +115,6 @@ public class OauthService {
         String loginId = response.getBody().getId();
         String name = response.getBody().getProperties().getNickname();
         username = name;
-
-        log.info("email : {}",email );
-        log.info("loginId : {}", loginId);
-        log.info("name : {}",name);
 
         User findUser = userRepository.findByLoginId(loginId);
 
@@ -145,7 +133,6 @@ public class OauthService {
             isUser = false;
 
         } else {
-            user = findUser;
             isUser = true;
         }
 
