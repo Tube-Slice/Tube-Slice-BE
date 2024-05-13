@@ -5,6 +5,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Getter
 @Builder
 @NoArgsConstructor
@@ -12,13 +14,14 @@ import lombok.NoArgsConstructor;
 public class GptRequest {
 
     private String model;
-    private Message message;
+    private List<Messages> messages;
+
 
     @Getter
     @Builder
     @NoArgsConstructor
     @AllArgsConstructor
-    public static class Message {
+    public static class Messages {
         private String role;
         private String content;
     }

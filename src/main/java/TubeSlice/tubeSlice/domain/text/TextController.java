@@ -1,5 +1,6 @@
 package TubeSlice.tubeSlice.domain.text;
 
+import TubeSlice.tubeSlice.domain.text.dto.request.SummaryRequestDto;
 import TubeSlice.tubeSlice.domain.text.dto.response.ClovaSpeechResponseDto;
 import TubeSlice.tubeSlice.global.response.ApiResponse;
 import io.swagger.v3.oas.annotations.Operation;
@@ -52,10 +53,10 @@ public class TextController {
     }
 
     @PostMapping("/summary")
-    public ApiResponse<Object> gptSummarize(@RequestBody String script){
+    public ApiResponse<Object> gptSummarize(@RequestBody SummaryRequestDto summaryRequestDto){
 
 
-        return ApiResponse.onSuccess(textService.summarize(script));
+        return ApiResponse.onSuccess(textService.summarize(summaryRequestDto));
     }
 
     @PostMapping("/trim")

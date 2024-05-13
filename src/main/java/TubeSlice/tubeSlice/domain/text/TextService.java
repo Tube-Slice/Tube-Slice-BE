@@ -2,6 +2,7 @@ package TubeSlice.tubeSlice.domain.text;
 
 import TubeSlice.tubeSlice.domain.script.Script;
 import TubeSlice.tubeSlice.domain.script.ScriptRepository;
+import TubeSlice.tubeSlice.domain.text.dto.request.SummaryRequestDto;
 import TubeSlice.tubeSlice.domain.text.dto.response.ClovaSpeechResponseDto;
 import TubeSlice.tubeSlice.domain.text.dto.request.GptRequest;
 import TubeSlice.tubeSlice.domain.text.dto.response.GptResponse;
@@ -188,22 +189,29 @@ public class TextService {
     }
 
 
-    public String trimText(String script){
-        String requestMessage = "\"" + script + "\" 이 스크립트에서 부자연스러운 문장들 고쳐줘.";
+    public Object trimText(String script){
+        String requestMessage = "\"" + script + "\" \n이 스크립트에서 부자연스러운 부분들 고쳐주고 핵심적인 내용인 부분 소제목을 붙여서 단락 구분해줘.";
 
-        GptRequest gptRequest = new GptRequest(gpt_model,new GptRequest.Message("user",script));
+        List<GptRequest.Messages> messages = new ArrayList<>();
+        messages.add(new GptRequest.Messages("user",requestMessage));
+
+        GptRequest gptRequest = new GptRequest(gpt_model, messages);
         GptResponse gptResponse = template.postForObject(gpt_api_url, gptRequest, GptResponse.class);
 
-        return gptResponse.getChoices().get(0).getMessage().getContent();
+        return gptResponse;
     }
 
-    public String summarize(String script){
-        String requestMessage = "\"" + script + "\" 이 스크립트 내용 3줄로 요약해줘.";
+    public Object summarize(SummaryRequestDto summaryRequestDto){
 
-        GptRequest gptRequest = new GptRequest(gpt_model,new GptRequest.Message("user",requestMessage));
+        String requestMessage = "\"" + summaryRequestDto.getScript() + "\" 이 스크립트에서 핵심 내용" + summaryRequestDto.getRow() + "문장으로 요약해서 구분해서 보여줘.";
+
+        List<GptRequest.Messages> messages = new ArrayList<>();
+        messages.add(new GptRequest.Messages("user",requestMessage));
+
+        GptRequest gptRequest = new GptRequest(gpt_model,messages);
         GptResponse gptResponse = template.postForObject(gpt_api_url, gptRequest, GptResponse.class);
 
-        return gptResponse.getChoices().get(0).getMessage().getContent();
+        return gptResponse;
     }
 
 

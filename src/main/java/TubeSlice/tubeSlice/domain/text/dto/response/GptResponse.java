@@ -13,6 +13,6 @@ public class GptResponse {
     @Getter
     public static class Choice {
         private int index;
-        private GptRequest.Message message;
+        private GptRequest.Messages message;
     }
 }
