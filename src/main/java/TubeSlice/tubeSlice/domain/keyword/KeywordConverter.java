@@ -5,6 +5,7 @@ import TubeSlice.tubeSlice.domain.post.Post;
 import TubeSlice.tubeSlice.domain.postKeyword.PostKeyword;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class KeywordConverter {
 
@@ -14,7 +15,7 @@ public class KeywordConverter {
                 .name(keyword.getName())
                 .build();
     }
-    public static List<KeywordResponseDto.KeywordResultDto> toKeywordResultDtoList(List<Post> postList){
+    public static List<KeywordResponseDto.KeywordResultDto> toKeywordDtoList(List<Post> postList){
         List<List<PostKeyword>> postKeyword = postList.stream()
                 .map(Post::getPostKeywordList)
                 .toList();
@@ -23,6 +24,13 @@ public class KeywordConverter {
                 .flatMap(List::stream)
                 .map(PostKeyword::getKeyword)
                 .distinct()
+                .map(KeywordConverter::toKeywordResultDto)
+                .toList();
+    }
+
+    public static List<KeywordResponseDto.KeywordResultDto> toPostKeywordDtoList(Post post){
+        return post.getPostKeywordList().stream()
+                .map(PostKeyword::getKeyword)
                 .map(KeywordConverter::toKeywordResultDto)
                 .toList();
     }

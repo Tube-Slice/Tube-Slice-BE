@@ -1,5 +1,7 @@
 package TubeSlice.tubeSlice.domain.postLike;
 
+import TubeSlice.tubeSlice.domain.user.User;
+import TubeSlice.tubeSlice.domain.user.UserService;
 import TubeSlice.tubeSlice.global.response.ApiResponse;
 import TubeSlice.tubeSlice.global.response.code.resultCode.SuccessStatus;
 import io.swagger.v3.oas.annotations.Operation;
@@ -9,6 +11,8 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -17,6 +21,7 @@ import org.springframework.web.bind.annotation.*;
 public class PostLikeController {
 
     private final PostLikeService postLikeService;
+    private final UserService userService;
 
     @PostMapping("/posts/{postId}")
     @Operation(summary = "게시글 좋아요 API",description = "게시글에 좋아요 누르기")
@@ -29,8 +34,10 @@ public class PostLikeController {
     @Parameters({
             @Parameter(name = "postId", description = "좋아요 할 게시글의 id"),
     })
-    public ApiResponse<SuccessStatus> createPostLike(@PathVariable(name = "postId")Long postId){
-        return postLikeService.createPostLike(1L, postId);
+    public ApiResponse<SuccessStatus> createPostLike(@AuthenticationPrincipal UserDetails details,@PathVariable(name = "postId")Long postId){
+        Long userId = userService.getUserId(details);
+
+        return postLikeService.createPostLike(userId, postId);
     }
 
     @DeleteMapping("/posts/{postId}")
@@ -43,8 +50,10 @@ public class PostLikeController {
     @Parameters({
             @Parameter(name = "postId", description = "좋아요 할 게시글의 id"),
     })
-    public ApiResponse<SuccessStatus> deletePostLike(@PathVariable(name = "postId") Long postId){
-        return postLikeService.deletePostLike(1L, postId);
+    public ApiResponse<SuccessStatus> deletePostLike(@AuthenticationPrincipal UserDetails details,@PathVariable(name = "postId") Long postId){
+        Long userId = userService.getUserId(details);
+
+        return postLikeService.deletePostLike(userId, postId);
     }
 
 }

@@ -1,8 +1,8 @@
 package TubeSlice.tubeSlice.domain.post;
 
-import TubeSlice.tubeSlice.domain.keyword.Keyword;
+import TubeSlice.tubeSlice.domain.keyword.KeywordConverter;
+import TubeSlice.tubeSlice.domain.keyword.dto.response.KeywordResponseDto;
 import TubeSlice.tubeSlice.domain.post.dto.PostResponseDto;
-import TubeSlice.tubeSlice.domain.postKeyword.PostKeyword;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
@@ -41,11 +41,12 @@ public class PostConverter {
 
     public static PostResponseDto.PostInfoDto toPostInfoDto(Post post){
         String createdAt = toCreatedFormat(post.getCreatedAt());
+        List<KeywordResponseDto.KeywordResultDto> keywordList = KeywordConverter.toPostKeywordDtoList(post);
         return PostResponseDto.PostInfoDto.builder()
                 .title(post.getTitle())
                 .postId(post.getId())
                 .content(post.getContent())
-                .keywords(post.getPostKeywordList().stream().map(PostKeyword::getKeyword).map(Keyword::getName).toList())
+                .keywords(keywordList)
                 .videoUrl(post.getVideoUrl())
                 .likeNum(post.getPostLikeList().size())
                 .commentNum(post.getCommentList().size())
