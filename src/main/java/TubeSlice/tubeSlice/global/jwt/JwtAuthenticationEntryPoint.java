@@ -1,4 +1,4 @@
-package TubeSlice.tubeSlice.global.Jwt;
+package TubeSlice.tubeSlice.global.jwt;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

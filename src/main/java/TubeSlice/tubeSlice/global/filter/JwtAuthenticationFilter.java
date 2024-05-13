@@ -1,6 +1,6 @@
 package TubeSlice.tubeSlice.global.filter;
 
-import TubeSlice.tubeSlice.global.Jwt.JwtProvider;
+import TubeSlice.tubeSlice.global.jwt.JwtProvider;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

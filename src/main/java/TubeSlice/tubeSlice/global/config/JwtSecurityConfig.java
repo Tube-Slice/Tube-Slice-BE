@@ -1,7 +1,7 @@
 package TubeSlice.tubeSlice.global.config;
 
 import TubeSlice.tubeSlice.global.filter.JwtAuthenticationFilter;
-import TubeSlice.tubeSlice.global.Jwt.JwtProvider;
+import TubeSlice.tubeSlice.global.jwt.JwtProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.config.annotation.SecurityConfigurerAdapter;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;

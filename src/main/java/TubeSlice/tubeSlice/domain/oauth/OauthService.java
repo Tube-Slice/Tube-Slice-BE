@@ -6,7 +6,7 @@ import TubeSlice.tubeSlice.domain.oauth.dto.response.NaverLoginDto;
 import TubeSlice.tubeSlice.domain.user.Status;
 import TubeSlice.tubeSlice.domain.user.User;
 import TubeSlice.tubeSlice.domain.user.UserRepository;
-import TubeSlice.tubeSlice.global.Jwt.JwtProvider;
+import TubeSlice.tubeSlice.global.jwt.JwtProvider;
 import TubeSlice.tubeSlice.global.response.code.resultCode.ErrorStatus;
 import TubeSlice.tubeSlice.global.response.exception.handler.UserHandler;
 import lombok.RequiredArgsConstructor;

@@ -1,9 +1,9 @@
 package TubeSlice.tubeSlice.global.config;
 
-import TubeSlice.tubeSlice.global.Jwt.JwtAccessDeniedHandler;
-import TubeSlice.tubeSlice.global.Jwt.JwtAuthenticationEntryPoint;
+import TubeSlice.tubeSlice.global.jwt.JwtAccessDeniedHandler;
+import TubeSlice.tubeSlice.global.jwt.JwtAuthenticationEntryPoint;
 import TubeSlice.tubeSlice.global.filter.JwtAuthenticationFilter;
-import TubeSlice.tubeSlice.global.Jwt.JwtProvider;
+import TubeSlice.tubeSlice.global.jwt.JwtProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

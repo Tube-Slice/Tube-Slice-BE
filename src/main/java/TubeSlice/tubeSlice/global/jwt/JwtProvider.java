@@ -1,8 +1,5 @@
-package TubeSlice.tubeSlice.global.Jwt;
+package TubeSlice.tubeSlice.global.jwt;
 
-import TubeSlice.tubeSlice.global.response.code.resultCode.ErrorStatus;
-import TubeSlice.tubeSlice.global.response.exception.handler.GeneralHandler;
-import TubeSlice.tubeSlice.global.response.exception.handler.UserHandler;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;

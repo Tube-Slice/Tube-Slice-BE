@@ -1,4 +1,4 @@
-package TubeSlice.tubeSlice.global.Jwt;
+package TubeSlice.tubeSlice.global.jwt;
 
 import TubeSlice.tubeSlice.domain.user.User;
 import org.springframework.security.core.GrantedAuthority;

@@ -2,15 +2,19 @@ package TubeSlice.tubeSlice.domain.user;
 
 
 import TubeSlice.tubeSlice.domain.follow.Follow;
+import TubeSlice.tubeSlice.domain.keyword.Keyword;
 import TubeSlice.tubeSlice.domain.keyword.KeywordConverter;
+import TubeSlice.tubeSlice.domain.keyword.KeywordRepository;
 import TubeSlice.tubeSlice.domain.keyword.dto.response.KeywordResponseDto;
 import TubeSlice.tubeSlice.domain.post.Post;
 import TubeSlice.tubeSlice.domain.post.PostConverter;
 import TubeSlice.tubeSlice.domain.post.dto.PostResponseDto;
+import TubeSlice.tubeSlice.domain.postKeyword.PostKeywordRepository;
 import TubeSlice.tubeSlice.domain.user.dto.response.UserResponseDto;
-import TubeSlice.tubeSlice.global.Jwt.UserDetailsImpl;
-import TubeSlice.tubeSlice.global.Jwt.UserDetailsServiceImpl;
+import TubeSlice.tubeSlice.global.jwt.UserDetailsImpl;
+import TubeSlice.tubeSlice.global.jwt.UserDetailsServiceImpl;
 import TubeSlice.tubeSlice.global.response.code.resultCode.ErrorStatus;
+import TubeSlice.tubeSlice.global.response.exception.handler.KeywordHandler;
 import TubeSlice.tubeSlice.global.response.exception.handler.UserHandler;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -28,6 +32,8 @@ import java.util.List;
 @Transactional(readOnly = true)
 public class UserService {
     private final UserRepository userRepository;
+    private final KeywordRepository keywordRepository;
+    private final PostKeywordRepository postKeywordRepository;
     private final UserDetailsServiceImpl userDetailsService;
 
     public Long getUserId(UserDetails user){
@@ -51,7 +57,7 @@ public class UserService {
     public List<KeywordResponseDto.KeywordResultDto> getUserKeywordList(User user){
         List<Post> postList = user.getPostList();
 
-        return KeywordConverter.toKeywordResultDtoList(postList);
+        return KeywordConverter.toKeywordDtoList(postList);
     }
 
     // 나 혹은 특정유저가 팔로우 중인 사람이 담긴 테이블
@@ -84,6 +90,17 @@ public class UserService {
 
     public UserResponseDto.MypageUserInfoDto getMypageUserInfo(User user){
         return UserConverter.toMypageUserInfoDto(user);
+    }
+
+    public List<PostResponseDto.PostInfoDto> getPostWithKeyword(User user, String keyword){
+        List<Post> postList = user.getPostList();
+        Keyword search = keywordRepository.findByName(keyword).orElseThrow(()->new KeywordHandler(ErrorStatus.KEYWORD_NOT_FOUND));
+
+        List<Post> postWithKeywordList = postList.stream()
+                .filter(post->post.getPostKeywordList().stream().anyMatch(pk -> pk.getKeyword().equals(search)))
+                .toList();
+
+        return PostConverter.toPostInfoDtoList(postWithKeywordList);
     }
 }
 
