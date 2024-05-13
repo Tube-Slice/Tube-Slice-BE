@@ -9,22 +9,22 @@ import TubeSlice.tubeSlice.domain.keyword.dto.response.KeywordResponseDto;
 import TubeSlice.tubeSlice.domain.post.Post;
 import TubeSlice.tubeSlice.domain.post.PostConverter;
 import TubeSlice.tubeSlice.domain.post.dto.PostResponseDto;
-import TubeSlice.tubeSlice.domain.postKeyword.PostKeyword;
 import TubeSlice.tubeSlice.domain.postKeyword.PostKeywordRepository;
 import TubeSlice.tubeSlice.domain.user.dto.response.UserResponseDto;
+import TubeSlice.tubeSlice.global.jwt.UserDetailsImpl;
+import TubeSlice.tubeSlice.global.jwt.UserDetailsServiceImpl;
 import TubeSlice.tubeSlice.global.response.code.resultCode.ErrorStatus;
-import TubeSlice.tubeSlice.global.response.exception.handler.CommentHandler;
 import TubeSlice.tubeSlice.global.response.exception.handler.KeywordHandler;
 import TubeSlice.tubeSlice.global.response.exception.handler.UserHandler;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -34,6 +34,13 @@ public class UserService {
     private final UserRepository userRepository;
     private final KeywordRepository keywordRepository;
     private final PostKeywordRepository postKeywordRepository;
+    private final UserDetailsServiceImpl userDetailsService;
+
+    public Long getUserId(UserDetails user){
+        String username = user.getUsername();
+        UserDetailsImpl userDetails = userDetailsService.loadUserByUsername(username);
+        return userDetails.getUserId();
+    }
 
     public User findUser(Long userId){
         return userRepository.findById(userId).orElseThrow(()-> new UserHandler(ErrorStatus.USER_NOT_FOUND));
