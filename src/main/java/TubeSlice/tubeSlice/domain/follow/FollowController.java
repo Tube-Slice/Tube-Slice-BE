@@ -1,9 +1,5 @@
 package TubeSlice.tubeSlice.domain.follow;
 
-import TubeSlice.tubeSlice.domain.oauth.CustomOauth2User;
-import TubeSlice.tubeSlice.domain.oauth.OAuth2UserInfo;
-import TubeSlice.tubeSlice.domain.user.User;
-import TubeSlice.tubeSlice.domain.user.UserRepository;
 import TubeSlice.tubeSlice.domain.user.UserService;
 import TubeSlice.tubeSlice.global.response.ApiResponse;
 import TubeSlice.tubeSlice.global.response.code.resultCode.SuccessStatus;
@@ -14,9 +10,6 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.web.bind.annotation.*;
 
 @RestController

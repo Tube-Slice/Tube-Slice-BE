@@ -2,6 +2,7 @@ package TubeSlice.tubeSlice.domain.user;
 
 import TubeSlice.tubeSlice.domain.post.dto.PostResponseDto;
 import TubeSlice.tubeSlice.domain.user.dto.response.UserResponseDto;
+import TubeSlice.tubeSlice.global.Jwt.UserDetailsImpl;
 import TubeSlice.tubeSlice.global.response.ApiResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -10,6 +11,8 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import TubeSlice.tubeSlice.domain.keyword.dto.response.KeywordResponseDto;
 import TubeSlice.tubeSlice.global.response.ApiResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -132,8 +135,9 @@ public class UserController {
     @ApiResponses({
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200",description = "OK, 성공"),
     })
-    public ApiResponse<UserResponseDto.MypageUserInfoDto> getMypageUserInfo(){
-        User user = userService.findUser(1L);
+    public ApiResponse<UserResponseDto.MypageUserInfoDto> getMypageUserInfo(@AuthenticationPrincipal UserDetails details){
+        Long userId = userService.getUserId(details);
+        User user = userService.findUser(userId);
 
         return ApiResponse.onSuccess(userService.getMypageUserInfo(user));
     }
