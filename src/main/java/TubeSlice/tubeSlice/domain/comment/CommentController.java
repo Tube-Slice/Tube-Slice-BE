@@ -15,6 +15,8 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -35,8 +37,10 @@ public class CommentController {
     @Parameters({
             @Parameter(name = "postId", description = "댓글을 작성할 post의 id"),
     })
-    public ApiResponse<CommentResponseDto.CommentResultDto> createComment(@PathVariable(name = "postId")Long postId, @RequestBody CommentRequestDto.CommentCreateDto request){
-        User user = userService.findUser(1L);
+    public ApiResponse<CommentResponseDto.CommentResultDto> createComment(@AuthenticationPrincipal UserDetails details, @PathVariable(name = "postId")Long postId, @RequestBody CommentRequestDto.CommentCreateDto request){
+        Long userId = userService.getUserId(details);
+        User user = userService.findUser(userId);
+
         Post post = postService.findPost(postId);
 
         return ApiResponse.onSuccess(commentService.createComment(request, user, post));
@@ -52,8 +56,10 @@ public class CommentController {
     @Parameters({
             @Parameter(name = "commentId", description = "삭제할 댓글의 id"),
     })
-    public ApiResponse<SuccessStatus> deleteComment(@PathVariable(name = "commentId")Long commentId){
-        User user = userService.findUser(1L);
+    public ApiResponse<SuccessStatus> deleteComment(@AuthenticationPrincipal UserDetails details,@PathVariable(name = "commentId")Long commentId){
+        Long userId = userService.getUserId(details);
+        User user = userService.findUser(userId);
+
         return commentService.deleteComment(user, commentId);
     }
 
@@ -64,8 +70,10 @@ public class CommentController {
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMENT401", description = "수정할 댓글이 존재하지 않습니다.",content = @Content(schema = @Schema(implementation = ApiResponse.class))),
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMENT402", description = "수정할 권한이 존재하지 않습니다.",content = @Content(schema = @Schema(implementation = ApiResponse.class))),
     })
-    public ApiResponse<SuccessStatus> updateComment(@RequestBody CommentRequestDto.CommentPatchDto request, @PathVariable(name = "commentId")Long commentId) {
-        User user = userService.findUser(1L); // 작성자 확인용 수정예정
+    public ApiResponse<SuccessStatus> updateComment(@AuthenticationPrincipal UserDetails details,@RequestBody CommentRequestDto.CommentPatchDto request, @PathVariable(name = "commentId")Long commentId) {
+        Long userId = userService.getUserId(details);
+        User user = userService.findUser(userId);
+
         return commentService.updateComment(request, commentId, user);
     }
 

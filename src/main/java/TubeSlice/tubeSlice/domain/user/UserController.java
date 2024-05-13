@@ -33,8 +33,9 @@ public class UserController {
     @ApiResponses({
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200",description = "OK, 성공"),
     })
-    public ApiResponse<List<PostResponseDto.PostInfoDto>> getMyPostList(){
-        User user = userService.findUser(1L);
+    public ApiResponse<List<PostResponseDto.PostInfoDto>> getMyPostList(@AuthenticationPrincipal UserDetails details){
+        Long myId = userService.getUserId(details);
+        User user = userService.findUser(myId);
 
         return ApiResponse.onSuccess(userService.getPostList(user));
     }
@@ -48,7 +49,7 @@ public class UserController {
     @Parameters({
             @Parameter(name = "userId", description = "특정 유저의 id"),
     })
-    public ApiResponse<List<PostResponseDto.PostInfoDto>> getUserPostList(@PathVariable(name = "userId")Long userId){
+    public ApiResponse<List<PostResponseDto.PostInfoDto>> getUserPostList(@AuthenticationPrincipal UserDetails details,@PathVariable(name = "userId")Long userId){
         User user = userService.findUser(userId);
 
         return ApiResponse.onSuccess(userService.getPostList(user));
@@ -59,8 +60,9 @@ public class UserController {
     @ApiResponses({
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200",description = "OK, 성공"),
     })
-    public ApiResponse<List<KeywordResponseDto.KeywordResultDto>> getMyKeywordList(){
-        User user = userService.findUser(1L);
+    public ApiResponse<List<KeywordResponseDto.KeywordResultDto>> getMyKeywordList(@AuthenticationPrincipal UserDetails details){
+        Long myId = userService.getUserId(details);
+        User user = userService.findUser(myId);
 
         return ApiResponse.onSuccess(userService.getUserKeywordList(user));
     }
@@ -73,7 +75,7 @@ public class UserController {
     @Parameters({
             @Parameter(name = "userId", description = "특정 유저의 id"),
     })
-    public ApiResponse<List<KeywordResponseDto.KeywordResultDto>> getUserKeywordList(@PathVariable(name = "userId")Long userId){
+    public ApiResponse<List<KeywordResponseDto.KeywordResultDto>> getUserKeywordList(@AuthenticationPrincipal UserDetails details,@PathVariable(name = "userId")Long userId){
         User user = userService.findUser(userId);
 
         return ApiResponse.onSuccess(userService.getUserKeywordList(user));
@@ -84,11 +86,12 @@ public class UserController {
     @ApiResponses({
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200",description = "OK, 성공"),
     })
-    public ApiResponse<UserResponseDto.FollowListDto> getMyFollowingList() {
+    public ApiResponse<UserResponseDto.FollowListDto> getMyFollowingList(@AuthenticationPrincipal UserDetails details) {
         // 나의 기준 팔로잉 리스트 필요
-        User me = userService.findUser(1L);
+        Long myId = userService.getUserId(details);
+        User me = userService.findUser(myId);
         // 보여질 팔로잉 리스트
-        User user = userService.findUser(1L);
+        User user = userService.findUser(myId);
         return ApiResponse.onSuccess(userService.getFollowingList(me, user));
     }
 
@@ -97,9 +100,10 @@ public class UserController {
     @ApiResponses({
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200",description = "OK, 성공"),
     })
-    public ApiResponse<UserResponseDto.FollowListDto> getUserFollowingList(@PathVariable(name = "userId")Long userId) {
+    public ApiResponse<UserResponseDto.FollowListDto> getUserFollowingList(@AuthenticationPrincipal UserDetails details,@PathVariable(name = "userId")Long userId) {
         // 나의 기준 팔로잉 리스트 필요
-        User me = userService.findUser(1L);
+        Long myId = userService.getUserId(details);
+        User me = userService.findUser(myId);
         // 보여질 팔로잉 리스트
         User user = userService.findUser(userId);
         return ApiResponse.onSuccess(userService.getFollowingList(me, user));
@@ -110,9 +114,10 @@ public class UserController {
     @ApiResponses({
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200",description = "OK, 성공"),
     })
-    public ApiResponse<UserResponseDto.FollowListDto> getMyFollowerList(){
-        User me = userService.findUser(1L);
-        User user = userService.findUser(1L);
+    public ApiResponse<UserResponseDto.FollowListDto> getMyFollowerList(@AuthenticationPrincipal UserDetails details){
+        Long myId = userService.getUserId(details);
+        User me = userService.findUser(myId);;
+        User user = userService.findUser(myId);
 
         return ApiResponse.onSuccess(userService.getFollowerList(me, user));
     }
@@ -122,9 +127,10 @@ public class UserController {
     @ApiResponses({
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200",description = "OK, 성공"),
     })
-    public ApiResponse<UserResponseDto.FollowListDto> getUserFollowerList(@PathVariable(name = "userId")Long userId) {
+    public ApiResponse<UserResponseDto.FollowListDto> getUserFollowerList(@AuthenticationPrincipal UserDetails details, @PathVariable(name = "userId")Long userId) {
         // 나의 기준 팔로잉 리스트 필요
-        User me = userService.findUser(1L);
+        Long myId = userService.getUserId(details);
+        User me = userService.findUser(myId);
         // 보여질 팔로잉 리스트
         User user = userService.findUser(userId);
         return ApiResponse.onSuccess(userService.getFollowerList(me, user));

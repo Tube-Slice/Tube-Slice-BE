@@ -1,5 +1,6 @@
 package TubeSlice.tubeSlice.domain.follow;
 
+import TubeSlice.tubeSlice.domain.user.User;
 import TubeSlice.tubeSlice.domain.user.UserService;
 import TubeSlice.tubeSlice.global.response.ApiResponse;
 import TubeSlice.tubeSlice.global.response.code.resultCode.SuccessStatus;
@@ -10,6 +11,8 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -28,8 +31,10 @@ public class FollowController {
     @Parameters({
             @Parameter(name = "userId", description = "팔로우할 유저의 아이디"),
     })
-    public ApiResponse<SuccessStatus> createFollow(@PathVariable(name = "userId") Long userId){
-        return followService.createFollow(1L, userId);
+    public ApiResponse<SuccessStatus> createFollow(@AuthenticationPrincipal UserDetails details, @PathVariable(name = "userId") Long userId){
+        Long myId = userService.getUserId(details);
+
+        return followService.createFollow(myId, userId);
     }
 
     @DeleteMapping("/users/{userId}")
@@ -41,8 +46,10 @@ public class FollowController {
     @Parameters({
             @Parameter(name = "userId", description = "팔로우 최소할 유저의 아이디"),
     })
-    public ApiResponse<SuccessStatus> deleteFollow(@PathVariable(name = "userId") Long userId){
-        return followService.deleteFollow(1L, userId);
+    public ApiResponse<SuccessStatus> deleteFollow(@AuthenticationPrincipal UserDetails details, @PathVariable(name = "userId") Long userId){
+        Long myId = userService.getUserId(details);
+
+        return followService.deleteFollow(myId, userId);
     }
 
 }
