@@ -1,7 +1,7 @@
 package TubeSlice.tubeSlice.domain.user;
 
-import TubeSlice.tubeSlice.domain.post.dto.PostResponseDto;
 import TubeSlice.tubeSlice.domain.user.dto.request.UserRequestDto;
+import TubeSlice.tubeSlice.domain.post.dto.response.PostResponseDto;
 import TubeSlice.tubeSlice.domain.user.dto.response.UserResponseDto;
 import TubeSlice.tubeSlice.global.response.ApiResponse;
 import TubeSlice.tubeSlice.global.response.code.resultCode.SuccessStatus;
@@ -199,4 +199,3 @@ public class UserController {
         return userService.updateUserInfo(user, request);
     }
 }
-
