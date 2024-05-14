@@ -70,10 +70,32 @@ public class PostConverter {
 
         User writer = post.getUser();
 
+        UserResponseDto.PostUserInfo writerInfo = UserResponseDto.PostUserInfo.builder()
+                .userId(writer.getId())
+                .nickname(writer.getNickname())
+                .profileUrl(writer.getProfileUrl())
+                .isFollowing(isFollowing)
+                .build();
         PostResponseDto.PostInfoDto postInfo = toPostInfoDto(post);
 
+        String createdAt = toCreatedFormat(post.getCreatedAt());
+        List<KeywordResponseDto.KeywordResultDto> keywordList = KeywordConverter.toPostKeywordDtoList(post);
+        PostResponseDto.SinglePostUserInfoDto postInfoDto = PostResponseDto.SinglePostUserInfoDto.builder()
+                .writer(writerInfo)
+                .title(post.getTitle())
+                .postId(post.getId())
+                .content(post.getContent())
+                .keywords(keywordList)
+                .videoUrl(post.getVideoUrl())
+                .likeNum(post.getPostLikeList().size())
+                .commentNum(post.getCommentList().size())
+                .createdAt(createdAt)
+                .build();
+
         return PostResponseDto.SinglePostInfoDto.builder()
-                .post(postInfo)
+                .isLike(isLike)
+                .isMine(isMine)
+                .post(postInfoDto)
                 .build();
     }
 }

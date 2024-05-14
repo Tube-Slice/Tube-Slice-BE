@@ -28,11 +28,26 @@ public class PostResponseDto {
     @Setter
     @NoArgsConstructor
     @AllArgsConstructor
-    public static class SinglePostInfoDto{
-        private Boolean isFollowing;
-        private Boolean isMine;
-        private Boolean isList;
-        private PostInfoDto post;
+    public static class SinglePostUserInfoDto{
+        private UserResponseDto.PostUserInfo writer;
+        private Long postId;
+        private String title;
+        private String content;
+        private String videoUrl;
+        private List<KeywordResponseDto.KeywordResultDto> keywords;
+        private Integer likeNum;
+        private Integer commentNum;
+        private String createdAt;
+    }
 
+    @Builder
+    @Getter
+    @Setter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class SinglePostInfoDto{
+        private Boolean isMine;
+        private Boolean isLike;
+        private SinglePostUserInfoDto post;
     }
 }

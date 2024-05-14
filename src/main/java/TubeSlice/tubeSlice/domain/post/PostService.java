@@ -23,7 +23,12 @@ public class PostService {
     }
 
     public PostResponseDto.SinglePostInfoDto getSinglePostInfo(User user, Post post){
-        Boolean isFollowing = followRepository.existsBySenderAndReceiver(user, post.getUser());
+        Boolean isFollowing = false;
+        if(post.getUser() == user){
+            isFollowing = true;
+        } else if(followRepository.existsBySenderAndReceiver(user, post.getUser())){
+            isFollowing = true;
+        }
         Boolean isLike = postLikeRepository.existsByUserAndPost(user, post);
         return PostConverter.toSinglePostDto(user, post, isFollowing, isLike );
     }
