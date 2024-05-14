@@ -10,10 +10,13 @@ import TubeSlice.tubeSlice.domain.post.Post;
 import TubeSlice.tubeSlice.domain.post.PostConverter;
 import TubeSlice.tubeSlice.domain.post.dto.PostResponseDto;
 import TubeSlice.tubeSlice.domain.postKeyword.PostKeywordRepository;
+import TubeSlice.tubeSlice.domain.user.dto.request.UserRequestDto;
 import TubeSlice.tubeSlice.domain.user.dto.response.UserResponseDto;
 import TubeSlice.tubeSlice.global.jwt.UserDetailsImpl;
 import TubeSlice.tubeSlice.global.jwt.UserDetailsServiceImpl;
+import TubeSlice.tubeSlice.global.response.ApiResponse;
 import TubeSlice.tubeSlice.global.response.code.resultCode.ErrorStatus;
+import TubeSlice.tubeSlice.global.response.code.resultCode.SuccessStatus;
 import TubeSlice.tubeSlice.global.response.exception.handler.KeywordHandler;
 import TubeSlice.tubeSlice.global.response.exception.handler.UserHandler;
 import lombok.RequiredArgsConstructor;
@@ -101,6 +104,22 @@ public class UserService {
                 .toList();
 
         return PostConverter.toPostInfoDtoList(postWithKeywordList);
+    }
+
+    @Transactional
+    public ApiResponse<SuccessStatus> updateUserInfo(User user, UserRequestDto.UserInfoUpdateDto request){
+        if(request.getNickname() != null){
+            user.setNickname(request.getNickname());
+        }
+        if(request.getIntroduction() != null){
+            user.setIntroduction(request.getIntroduction());
+        }
+        if(request.getProfileUrl() != null){
+            user.setProfileUrl(request.getProfileUrl());
+        }
+
+        userRepository.save(user);
+        return ApiResponse.onSuccess(SuccessStatus._OK);
     }
 }
 
