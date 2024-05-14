@@ -6,10 +6,12 @@ import TubeSlice.tubeSlice.domain.keyword.dto.response.KeywordResponseDto;
 import TubeSlice.tubeSlice.domain.post.dto.response.PostResponseDto;
 import TubeSlice.tubeSlice.domain.user.User;
 import TubeSlice.tubeSlice.domain.user.dto.response.UserResponseDto;
+import org.springframework.data.domain.Page;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -58,10 +60,21 @@ public class PostConverter {
                 .build();
     }
 
-    public static List<PostResponseDto.PostInfoDto> toPostInfoDtoList(List<Post> postList){
-        return postList.stream()
+    public static PostResponseDto.PostInfoListDto toPostInfoDtoList(Page<Post> postList){
+        List<PostResponseDto.PostInfoDto> postInfoDtoList = new java.util.ArrayList<>(postList.stream()
                 .map(PostConverter::toPostInfoDto)
-                .collect(Collectors.toList());
+                .toList());
+
+        Collections.reverse(postInfoDtoList);
+
+        return PostResponseDto.PostInfoListDto.builder()
+                .isLast(postList.isLast())
+                .isFirst(postList.isFirst())
+                .totalElement(postList.getTotalElements())
+                .totalPage(postList.getTotalPages())
+                .listSize(postInfoDtoList.size())
+                .posts(postInfoDtoList)
+                .build();
 
     }
 

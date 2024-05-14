@@ -9,6 +9,7 @@ import TubeSlice.tubeSlice.domain.keyword.KeywordRepository;
 import TubeSlice.tubeSlice.domain.keyword.dto.response.KeywordResponseDto;
 import TubeSlice.tubeSlice.domain.post.Post;
 import TubeSlice.tubeSlice.domain.post.PostConverter;
+import TubeSlice.tubeSlice.domain.post.PostRepository;
 import TubeSlice.tubeSlice.domain.post.dto.response.PostResponseDto;
 import TubeSlice.tubeSlice.domain.postKeyword.PostKeywordRepository;
 import TubeSlice.tubeSlice.domain.user.dto.request.UserRequestDto;
@@ -22,6 +23,7 @@ import TubeSlice.tubeSlice.global.response.exception.handler.KeywordHandler;
 import TubeSlice.tubeSlice.global.response.exception.handler.UserHandler;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.*;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -37,7 +39,7 @@ import java.util.List;
 public class UserService {
     private final UserRepository userRepository;
     private final KeywordRepository keywordRepository;
-    private final PostKeywordRepository postKeywordRepository;
+    private final PostRepository postRepository;
     private final UserDetailsServiceImpl userDetailsService;
     private final FollowRepository followRepository;
 
@@ -51,11 +53,8 @@ public class UserService {
         return userRepository.findById(userId).orElseThrow(()-> new UserHandler(ErrorStatus.USER_NOT_FOUND));
     }
 
-    public List<PostResponseDto.PostInfoDto> getPostList(User user){
-        List<Post> postList = user.getPostList();
-
-        Collections.reverse(postList);
-
+    public PostResponseDto.PostInfoListDto getPostList(User user, Integer page, Integer size){
+        Page<Post> postList = postRepository.findAllByUser(user, PageRequest.of(page, size));
         return PostConverter.toPostInfoDtoList(postList);
     }
 
@@ -104,15 +103,25 @@ public class UserService {
         return UserConverter.toMypageUserInfoDto(user, isFollowing);
     }
 
-    public List<PostResponseDto.PostInfoDto> getPostWithKeyword(User user, String keyword){
+    public PostResponseDto.PostInfoListDto getPostWithKeyword(User user, String keyword, Integer page, Integer size){
         List<Post> postList = user.getPostList();
+        if(postList == null){
+            return null;
+        }
         Keyword search = keywordRepository.findByName(keyword).orElseThrow(()->new KeywordHandler(ErrorStatus.KEYWORD_NOT_FOUND));
 
         List<Post> postWithKeywordList = postList.stream()
                 .filter(post->post.getPostKeywordList().stream().anyMatch(pk -> pk.getKeyword().equals(search)))
                 .toList();
 
-        return PostConverter.toPostInfoDtoList(postWithKeywordList);
+        Pageable pageable = PageRequest.of(page,size);
+        int start = (int) pageable.getOffset();
+        int end = Math.min((start + pageable.getPageSize()), postWithKeywordList.size());
+        List<Post> paginatedList = postWithKeywordList.subList(start, end);
+
+        Page<Post> postPage = new PageImpl<>(paginatedList, pageable, postWithKeywordList.size());
+
+        return PostConverter.toPostInfoDtoList(postPage);
     }
 
     @Transactional
