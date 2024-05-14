@@ -44,5 +44,21 @@ public class UserResponseDto {
         private String introduction;
         private Integer followingNum;
         private Integer followerNum;
+        private Boolean isFollowing;
     }
+
+    @Builder
+    @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class PostUserInfo{
+        private Long userId;
+        private String nickname;
+        private String profileUrl;
+        private Boolean isFollowing;
+    }
+
+
+
+
 }
