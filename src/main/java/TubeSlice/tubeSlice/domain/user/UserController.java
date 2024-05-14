@@ -1,8 +1,10 @@
 package TubeSlice.tubeSlice.domain.user;
 
 import TubeSlice.tubeSlice.domain.post.dto.PostResponseDto;
+import TubeSlice.tubeSlice.domain.user.dto.request.UserRequestDto;
 import TubeSlice.tubeSlice.domain.user.dto.response.UserResponseDto;
 import TubeSlice.tubeSlice.global.response.ApiResponse;
+import TubeSlice.tubeSlice.global.response.code.resultCode.SuccessStatus;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.Parameters;
@@ -175,4 +177,13 @@ public class UserController {
 
         return ApiResponse.onSuccess(userService.getPostWithKeyword(user, keyword));
     }
+
+    @PatchMapping("/")
+    public ApiResponse<SuccessStatus> updateUserInfo(@AuthenticationPrincipal UserDetails details, @RequestBody UserRequestDto.UserInfoUpdateDto request){
+        Long userId = userService.getUserId(details);
+        User user = userService.findUser(userId);
+
+        return userService.updateUserInfo(user, request);
+    }
 }
+
