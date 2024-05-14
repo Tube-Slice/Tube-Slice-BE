@@ -11,6 +11,7 @@ import org.springframework.data.domain.Page;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -60,9 +61,11 @@ public class PostConverter {
     }
 
     public static PostResponseDto.PostInfoListDto toPostInfoDtoList(Page<Post> postList){
-        List<PostResponseDto.PostInfoDto> postInfoDtoList =  postList.stream()
+        List<PostResponseDto.PostInfoDto> postInfoDtoList = new java.util.ArrayList<>(postList.stream()
                 .map(PostConverter::toPostInfoDto)
-                .toList();
+                .toList());
+
+        Collections.reverse(postInfoDtoList);
 
         return PostResponseDto.PostInfoListDto.builder()
                 .isLast(postList.isLast())

@@ -114,8 +114,6 @@ public class UserService {
                 .filter(post->post.getPostKeywordList().stream().anyMatch(pk -> pk.getKeyword().equals(search)))
                 .toList();
 
-        Sort sort = Sort.by(Sort.Direction.DESC, "createdAt");
-
         Pageable pageable = PageRequest.of(page,size);
         int start = (int) pageable.getOffset();
         int end = Math.min((start + pageable.getPageSize()), postWithKeywordList.size());
