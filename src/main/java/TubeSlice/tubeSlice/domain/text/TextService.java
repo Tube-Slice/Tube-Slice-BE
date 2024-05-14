@@ -2,6 +2,8 @@ package TubeSlice.tubeSlice.domain.text;
 
 import TubeSlice.tubeSlice.domain.script.Script;
 import TubeSlice.tubeSlice.domain.script.ScriptRepository;
+import TubeSlice.tubeSlice.domain.subtitle.Subtitle;
+import TubeSlice.tubeSlice.domain.subtitle.SubtitleRepository;
 import TubeSlice.tubeSlice.domain.text.dto.request.SummaryRequestDto;
 import TubeSlice.tubeSlice.domain.text.dto.response.ClovaSpeechResponseDto;
 import TubeSlice.tubeSlice.domain.text.dto.request.GptRequest;
@@ -37,6 +39,7 @@ public class TextService {
 
     private final TextRepository textRepository;
     private final ScriptRepository scriptRepository;
+    private final SubtitleRepository subtitleRepository;
 
     @Value("${gpt.api.url}")
     private String gpt_api_url;
@@ -59,97 +62,12 @@ public class TextService {
     private String wavBucket = "test-wav"; //kms 키 없는 버킷.
     private String scriptBucket = "script-file-bucket";
 
-
-    public void uploadFile(String filePath) {
-        String key = new File(filePath).getName();
-
-        PutObjectRequest request = new PutObjectRequest(wavBucket, key, new File(filePath)).withCannedAcl(CannedAccessControlList.PublicRead);
-        amazonS3Client.putObject(request);
-    }
-
-    Long script_id = 0L;
-
+    private String totalScriptsWithTimeline = "";
 
     @Transactional
-    public List<Map.Entry<Double, String>> getScriptFromBucket(String fileName){ //key가 파일명
+    public Object videoToScript(String filePath) {
+        String objectStorageDataKey = uploadFile(filePath);
 
-        S3Object result = amazonS3Client.getObject(new GetObjectRequest(scriptBucket, fileName));
-
-        if (result == null){
-            throw new RuntimeException("Script does not exist.");
-        }
-
-        //HashMap<String, String> segments = new HashMap<>();
-
-
-        List<Map.Entry<Double, String>> scripts = new ArrayList<>();
-
-        Text text = null;
-
-        try {
-            BufferedReader reader = new BufferedReader(new InputStreamReader(result.getObjectContent()));
-            StringBuilder stringBuilder = new StringBuilder();
-            String line;
-            while ((line = reader.readLine()) != null) {
-                stringBuilder.append(line);
-            }
-
-            // JSON 파싱 및 segments 추출
-            JsonNode rootNode = new ObjectMapper().readTree(stringBuilder.toString());
-            for (JsonNode segmentNode : rootNode.get("segments")) {
-                String start = segmentNode.get("start").asText();   //6111은 6.111초
-
-                //타임라인 double 형으로 변환.
-                if(start.length() > 3) {
-                    start = start.substring(0, start.length() - 3) + "." + start.substring(start.length() - 3);
-                }
-                Double startDouble = Double.parseDouble(start);
-
-                scripts.add(new AbstractMap.SimpleEntry<>(startDouble, segmentNode.get("textEdited").asText()));
-
-
-                log.info("start: {}", start);
-            }
-
-            //스크립트 타임라인 순으로 정렬.
-            Collections.sort(scripts, new Comparator<Map.Entry<Double, String>>() {
-                @Override
-                public int compare(Map.Entry<Double, String> o1, Map.Entry<Double, String> o2) {
-                    return o1.getKey().compareTo(o2.getKey());
-                }
-            });
-
-            Script script = null;
-            script = Script.builder()
-                    .videoTitle(fileName)
-                    .videoUrl(null)
-                    .build();
-
-            scriptRepository.save(script);
-
-            //타임라인 double로 변환.
-            for (Map.Entry<Double, String> e: scripts){
-
-                text = Text.builder()
-                        .timeline(e.getKey())
-                        .scripts(e.getValue())
-                        .isSaved(true)
-                        .script(script)
-                        .build();
-                textRepository.save(text);
-            }
-
-
-        } catch (IOException e) {
-            System.err.println("Error in reading file from storage: " + e.getMessage());
-            throw new RuntimeException("Error in reading file from storage", e);
-        }
-
-        return scripts;
-    }
-
-    @Transactional
-    public Object videoToScript(String objectStorageDataKey) {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         headers.set("X-CLOVASPEECH-API-KEY", clova_speech_api_key);
@@ -169,52 +87,183 @@ public class TextService {
 
         ResponseEntity<ClovaSpeechResponseDto> response =
                 restTemplate.exchange(clova_speech_invoke_url, HttpMethod.POST ,request, ClovaSpeechResponseDto.class);
-//        try {
-//          ResponseEntity<ClovaSpeechResponseDto> response =
-//                  restTemplate.exchange(clova_speech_invoke_url, HttpMethod.POST ,request, ClovaSpeechResponseDto.class);
-//          //return restTemplate.postForObject(clova_speech_invoke_url + "/recognizer/object-storage", request, Object.class);
-//
-//
-//        } catch (Exception e) {
-//            System.err.println("Error in recognizing from object storage: " + e.getMessage());
-//            throw e;
-//        }
 
         String token = response.getBody().getToken();
 
-        //return response;
         String fileName = wavBucket + ":" + objectStorageDataKey + "_" + token + ".json";
 
         return getScriptFromBucket(fileName);
     }
 
+    public String uploadFile(String filePath) {
+        String key = new File(filePath).getName();
 
-    public Object trimText(String script){
-        String requestMessage = "\"" + script + "\" \n이 스크립트에서 부자연스러운 부분들 고쳐주고 핵심적인 내용인 부분 소제목을 붙여서 단락 구분해줘.";
+        PutObjectRequest request = new PutObjectRequest(wavBucket, key, new File(filePath)).withCannedAcl(CannedAccessControlList.PublicRead);
+        amazonS3Client.putObject(request);
+
+        return key;
+    }
+    
+    @Transactional
+    public List<Map.Entry<Double, String>> getScriptFromBucket(String fileName){ //key가 파일명
+
+        S3Object result = amazonS3Client.getObject(new GetObjectRequest(scriptBucket, fileName));
+
+        if (result == null){
+            throw new RuntimeException("Script does not exist.");
+        }
+
+        List<Map.Entry<Double, String>> scripts = new ArrayList<>();
+
+        try {
+            BufferedReader reader = new BufferedReader(new InputStreamReader(result.getObjectContent()));
+            StringBuilder stringBuilder = new StringBuilder();
+            String line;
+            while ((line = reader.readLine()) != null) {
+                stringBuilder.append(line);
+            }
+
+            // JSON 파싱 및 segments 추출
+            JsonNode rootNode = new ObjectMapper().readTree(stringBuilder.toString());
+            for (JsonNode segmentNode : rootNode.get("segments")) {
+                String start = segmentNode.get("start").asText();   //6111은 6.111초
+                String eachScript = segmentNode.get("textEdited").asText();
+
+                //타임라인 double 형으로 변환.
+                if(start.length() > 3) {
+                    start = start.substring(0, start.length() - 3) + "." + start.substring(start.length() - 3);
+                }
+                else if(start.equals("0")){
+                    start = start + ".0";
+                }
+                Double startDouble = Double.parseDouble(start);
+
+                scripts.add(new AbstractMap.SimpleEntry<>(startDouble, eachScript));
+
+                totalScriptsWithTimeline += start + ":" + eachScript + "\n";
+            }
+            //스크립트 타임라인 순으로 정렬.
+            Collections.sort(scripts, new Comparator<Map.Entry<Double, String>>() {
+                @Override
+                public int compare(Map.Entry<Double, String> o1, Map.Entry<Double, String> o2) {
+                    return o1.getKey().compareTo(o2.getKey());
+                }
+            });
+        } catch (IOException e) {
+            System.err.println("Error in reading file from storage: " + e.getMessage());
+            throw new RuntimeException("Error in reading file from storage", e);
+        }
+
+        Optional<Script> findScript = scriptRepository.findByVideoUrl(fileName);
+        Script script = null;
+
+        if (findScript.isEmpty()) {
+
+            script = Script.builder()
+                    .videoTitle(null)
+                    .videoUrl(fileName)
+                    .build();
+
+            scriptRepository.save(script);
+
+            //Text text = null;
+            for (Map.Entry<Double, String> e : scripts) {
+
+                Text text = Text.builder()
+                        .timeline(e.getKey())
+                        .scripts(e.getValue())
+                        .isSaved(true)
+                        .script(script)
+                        .build();
+                textRepository.save(text);
+            }
+
+            log.info("totalScriptsWithTimeline : {}", totalScriptsWithTimeline);
+
+            String subtitles = trimText(totalScriptsWithTimeline);
+
+            HashMap<Double, String> sub = trimResult(subtitles);
+            //Subtitle subtitle = null;
+            for (Map.Entry<Double, String> e : sub.entrySet()){
+                Subtitle subtitle = Subtitle.builder()
+                        .subtitle(e.getValue())
+                        .timeline(e.getKey())
+                        .script(script)
+                        .build();
+                subtitleRepository.save(subtitle);
+            }
+        }
+
+        return scripts;
+    }
+
+
+
+
+    @Transactional
+    public String trimText(String script){
+        String requestMessage1 = "내 질문에 대한 응답 json 형식으로 출력해줘.";
+        String requestMessage2 = "\"" + script + "\" \n위 전체 스크립트를 읽어보고 중요한 핵심적인 내용에 해당하는 부분만 소제목 지어서 해당하는 시간과 소제목을 출력해줘. \n" +
+                "출력 형식: \"'시간':'소제목'\"";
 
         List<GptRequest.Messages> messages = new ArrayList<>();
-        messages.add(new GptRequest.Messages("user",requestMessage));
+        messages.add(new GptRequest.Messages("system",requestMessage1));
+        messages.add(new GptRequest.Messages("user",requestMessage2));
 
-        GptRequest gptRequest = new GptRequest(gpt_model, messages);
+        HashMap<String, String> response_format = new HashMap<>();
+        response_format.put("type","json_object");
+
+        GptRequest gptRequest = new GptRequest(gpt_model, messages, response_format);
         GptResponse gptResponse = template.postForObject(gpt_api_url, gptRequest, GptResponse.class);
 
-        return gptResponse;
+        String subtitles = gptResponse.getChoices().get(0).getMessage().getContent();
+
+        return subtitles;
+    }
+
+    private HashMap<Double,String> trimResult(String jsonResult){
+
+        HashMap<Double, String> result = new HashMap<>();
+
+        jsonResult = jsonResult.replaceAll("\n", "").trim();
+        jsonResult = jsonResult.replace("{", "").trim();
+        jsonResult = jsonResult.replaceAll("}", "").trim();
+        jsonResult = jsonResult.replaceAll(" ", "").trim();
+
+        List<String> lines = List.of(jsonResult.split(","));
+
+        for (String line : lines) {
+
+            List<String> parts = List.of(line.split(":"));
+
+            String value = parts.get(1).replaceAll("\"", "");
+
+            Double tl = Double.valueOf(parts.get(0).replaceAll("\"",""));
+
+            result.put(tl,value);
+
+            log.info("{} : {}", tl, value);
+        }
+
+        return result;
     }
 
     public Object summarize(SummaryRequestDto summaryRequestDto){
-
-        String requestMessage = "\"" + summaryRequestDto.getScript() + "\" 이 스크립트에서 핵심 내용" + summaryRequestDto.getRow() + "문장으로 요약해서 구분해서 보여줘.";
+        String requestMessage1 = "내 질문에 대한 응답 json 형식으로 출력해줘.";
+        String requestMessage2 = "\"" + summaryRequestDto.getScript() + "\" 이 스크립트에서 핵심 내용" + summaryRequestDto.getRow() + "문장으로 요약해서 구분해서 보여줘.";
 
         List<GptRequest.Messages> messages = new ArrayList<>();
-        messages.add(new GptRequest.Messages("user",requestMessage));
+        messages.add(new GptRequest.Messages("system",requestMessage1));
+        messages.add(new GptRequest.Messages("user",requestMessage2));
 
-        GptRequest gptRequest = new GptRequest(gpt_model,messages);
+        HashMap<String, String> response_format = new HashMap<>();
+        response_format.put("type","json_object");
+
+        GptRequest gptRequest = new GptRequest(gpt_model,messages,response_format);
         GptResponse gptResponse = template.postForObject(gpt_api_url, gptRequest, GptResponse.class);
 
-        return gptResponse;
+        return gptResponse.getChoices().get(0).getMessage().getContent();
     }
-
-
 
     public String getAudioFileFromYoutubeUrl(String youtubeUrl){
 
