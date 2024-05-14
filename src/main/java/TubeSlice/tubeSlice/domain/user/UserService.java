@@ -2,6 +2,7 @@ package TubeSlice.tubeSlice.domain.user;
 
 
 import TubeSlice.tubeSlice.domain.follow.Follow;
+import TubeSlice.tubeSlice.domain.follow.FollowRepository;
 import TubeSlice.tubeSlice.domain.keyword.Keyword;
 import TubeSlice.tubeSlice.domain.keyword.KeywordConverter;
 import TubeSlice.tubeSlice.domain.keyword.KeywordRepository;
@@ -10,10 +11,13 @@ import TubeSlice.tubeSlice.domain.post.Post;
 import TubeSlice.tubeSlice.domain.post.PostConverter;
 import TubeSlice.tubeSlice.domain.post.dto.response.PostResponseDto;
 import TubeSlice.tubeSlice.domain.postKeyword.PostKeywordRepository;
+import TubeSlice.tubeSlice.domain.user.dto.request.UserRequestDto;
 import TubeSlice.tubeSlice.domain.user.dto.response.UserResponseDto;
 import TubeSlice.tubeSlice.global.jwt.UserDetailsImpl;
 import TubeSlice.tubeSlice.global.jwt.UserDetailsServiceImpl;
+import TubeSlice.tubeSlice.global.response.ApiResponse;
 import TubeSlice.tubeSlice.global.response.code.resultCode.ErrorStatus;
+import TubeSlice.tubeSlice.global.response.code.resultCode.SuccessStatus;
 import TubeSlice.tubeSlice.global.response.exception.handler.KeywordHandler;
 import TubeSlice.tubeSlice.global.response.exception.handler.UserHandler;
 import lombok.RequiredArgsConstructor;
@@ -35,6 +39,7 @@ public class UserService {
     private final KeywordRepository keywordRepository;
     private final PostKeywordRepository postKeywordRepository;
     private final UserDetailsServiceImpl userDetailsService;
+    private final FollowRepository followRepository;
 
     public Long getUserId(UserDetails user){
         String username = user.getUsername();
@@ -88,8 +93,15 @@ public class UserService {
         return UserConverter.toFollowerListDto(myFollowingIdList, followList, user);
     }
 
-    public UserResponseDto.MypageUserInfoDto getMypageUserInfo(User user){
-        return UserConverter.toMypageUserInfoDto(user);
+    public UserResponseDto.MypageUserInfoDto getMypageUserInfo(User me, User user){
+        boolean isFollowing = false;
+        if(me == user) {
+            isFollowing = true;
+        }
+        else if(followRepository.existsBySenderAndReceiver(me, user)){
+            isFollowing = true;
+        }
+        return UserConverter.toMypageUserInfoDto(user, isFollowing);
     }
 
     public List<PostResponseDto.PostInfoDto> getPostWithKeyword(User user, String keyword){
@@ -101,6 +113,22 @@ public class UserService {
                 .toList();
 
         return PostConverter.toPostInfoDtoList(postWithKeywordList);
+    }
+
+    @Transactional
+    public ApiResponse<SuccessStatus> updateUserInfo(User user, UserRequestDto.UserInfoUpdateDto request){
+        if(request.getNickname() != null){
+            user.setNickname(request.getNickname());
+        }
+        if(request.getIntroduction() != null){
+            user.setIntroduction(request.getIntroduction());
+        }
+        if(request.getProfileUrl() != null){
+            user.setProfileUrl(request.getProfileUrl());
+        }
+
+        userRepository.save(user);
+        return ApiResponse.onSuccess(SuccessStatus._OK);
     }
 }
 

@@ -44,6 +44,7 @@ public class UserResponseDto {
         private String introduction;
         private Integer followingNum;
         private Integer followerNum;
+        private Boolean isFollowing;
     }
 
     @Builder

@@ -7,10 +7,7 @@ import TubeSlice.tubeSlice.domain.postLike.PostLike;
 import TubeSlice.tubeSlice.domain.userScript.UserScript;
 import TubeSlice.tubeSlice.global.entity.BaseEntity;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,6 +15,7 @@ import java.util.List;
 @Entity
 @Table(name = "user")
 @Getter
+@Setter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor

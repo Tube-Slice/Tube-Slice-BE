@@ -56,7 +56,7 @@ public class UserConverter {
                 .build();
     }
 
-    public static UserResponseDto.MypageUserInfoDto toMypageUserInfoDto(User user){
+    public static UserResponseDto.MypageUserInfoDto toMypageUserInfoDto(User user, boolean isFollowing){
         return UserResponseDto.MypageUserInfoDto.builder()
                 .userId(user.getId())
                 .nickname(user.getNickname())
@@ -64,6 +64,7 @@ public class UserConverter {
                 .introduction(user.getIntroduction())
                 .followerNum(user.getFollowerList().size())
                 .followingNum(user.getFollowingList().size())
+                .isFollowing(isFollowing)
                 .build();
     }
 }

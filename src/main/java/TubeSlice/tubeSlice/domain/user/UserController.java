@@ -1,8 +1,10 @@
 package TubeSlice.tubeSlice.domain.user;
 
+import TubeSlice.tubeSlice.domain.user.dto.request.UserRequestDto;
 import TubeSlice.tubeSlice.domain.post.dto.response.PostResponseDto;
 import TubeSlice.tubeSlice.domain.user.dto.response.UserResponseDto;
 import TubeSlice.tubeSlice.global.response.ApiResponse;
+import TubeSlice.tubeSlice.global.response.code.resultCode.SuccessStatus;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.Parameters;
@@ -134,15 +136,28 @@ public class UserController {
     }
 
     @GetMapping("/me/mypage")
-    @Operation(summary = "마이페이지용 유저정보 가져오기 API",description = "MypageUserInfoDto 반환")
+    @Operation(summary = "마이페이지용 나의 정보 가져오기 API",description = "MypageUserInfoDto 반환")
     @ApiResponses({
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200",description = "OK, 성공"),
     })
-    public ApiResponse<UserResponseDto.MypageUserInfoDto> getMypageUserInfo(@AuthenticationPrincipal UserDetails details){
+    public ApiResponse<UserResponseDto.MypageUserInfoDto> getMyPageMyInfo(@AuthenticationPrincipal UserDetails details){
         Long userId = userService.getUserId(details);
         User user = userService.findUser(userId);
 
-        return ApiResponse.onSuccess(userService.getMypageUserInfo(user));
+        return ApiResponse.onSuccess(userService.getMypageUserInfo(user, user));
+    }
+
+    @GetMapping("/{userId}/mypage")
+    @Operation(summary = "마이페이지용 특정유저 정보 가져오기 API",description = "MypageUserInfoDto 반환")
+    @ApiResponses({
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200",description = "OK, 성공"),
+    })
+    public ApiResponse<UserResponseDto.MypageUserInfoDto> getMyPageUserInfo(@AuthenticationPrincipal UserDetails details, @PathVariable(name = "userId")Long userId){
+        Long myId = userService.getUserId(details);
+        User me = userService.findUser(myId);
+        User user = userService.findUser(userId);
+
+        return ApiResponse.onSuccess(userService.getMypageUserInfo(me, user));
     }
 
     @GetMapping("/me/posts")
@@ -174,5 +189,13 @@ public class UserController {
         User user = userService.findUser(userId);
 
         return ApiResponse.onSuccess(userService.getPostWithKeyword(user, keyword));
+    }
+
+    @PatchMapping("/")
+    public ApiResponse<SuccessStatus> updateUserInfo(@AuthenticationPrincipal UserDetails details, @RequestBody UserRequestDto.UserInfoUpdateDto request){
+        Long userId = userService.getUserId(details);
+        User user = userService.findUser(userId);
+
+        return userService.updateUserInfo(user, request);
     }
 }
