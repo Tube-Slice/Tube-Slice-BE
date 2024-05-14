@@ -25,6 +25,19 @@ public class PostResponseDto {
 
     @Builder
     @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class PostInfoListDto{
+        private List<PostInfoDto> posts;
+        private Integer listSize;
+        private Integer totalPage;
+        private Long totalElement;
+        private Boolean isFirst;
+        private Boolean isLast;
+    }
+
+    @Builder
+    @Getter
     @Setter
     @NoArgsConstructor
     @AllArgsConstructor
