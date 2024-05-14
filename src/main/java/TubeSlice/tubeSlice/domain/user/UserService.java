@@ -2,6 +2,7 @@ package TubeSlice.tubeSlice.domain.user;
 
 
 import TubeSlice.tubeSlice.domain.follow.Follow;
+import TubeSlice.tubeSlice.domain.follow.FollowRepository;
 import TubeSlice.tubeSlice.domain.keyword.Keyword;
 import TubeSlice.tubeSlice.domain.keyword.KeywordConverter;
 import TubeSlice.tubeSlice.domain.keyword.KeywordRepository;
@@ -38,6 +39,7 @@ public class UserService {
     private final KeywordRepository keywordRepository;
     private final PostKeywordRepository postKeywordRepository;
     private final UserDetailsServiceImpl userDetailsService;
+    private final FollowRepository followRepository;
 
     public Long getUserId(UserDetails user){
         String username = user.getUsername();
@@ -91,8 +93,15 @@ public class UserService {
         return UserConverter.toFollowerListDto(myFollowingIdList, followList, user);
     }
 
-    public UserResponseDto.MypageUserInfoDto getMypageUserInfo(User user){
-        return UserConverter.toMypageUserInfoDto(user);
+    public UserResponseDto.MypageUserInfoDto getMypageUserInfo(User me, User user){
+        boolean isFollowing = false;
+        if(me == user) {
+            isFollowing = true;
+        }
+        else if(followRepository.existsBySenderAndReceiver(me, user)){
+            isFollowing = true;
+        }
+        return UserConverter.toMypageUserInfoDto(user, isFollowing);
     }
 
     public List<PostResponseDto.PostInfoDto> getPostWithKeyword(User user, String keyword){
