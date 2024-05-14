@@ -1,7 +1,7 @@
 package TubeSlice.tubeSlice.domain.keyword;
 
 import TubeSlice.tubeSlice.domain.postKeyword.PostKeyword;
-import TubeSlice.tubeSlice.domain.videoKeyword.VideoKeyword;
+import TubeSlice.tubeSlice.domain.scriptKeyword.ScriptKeyword;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -27,7 +27,7 @@ public class Keyword {
     private String name;
 
     @OneToMany(mappedBy = "keyword")
-    private List<VideoKeyword> videoKeyword;
+    private List<ScriptKeyword> scriptKeywords;
 
     @OneToMany(mappedBy = "keyword")
     private List<PostKeyword> postKeyword;

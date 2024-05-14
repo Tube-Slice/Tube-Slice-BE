@@ -41,6 +41,11 @@ dependencies {
 	//swagger
 	implementation group: 'org.springdoc', name: 'springdoc-openapi-starter-webmvc-ui', version: '2.0.3'
 
+	//object storage
+	implementation 'com.amazonaws:aws-java-sdk:1.11.971'
+
+	implementation group: 'org.json', name: 'json', version: '20090211'
+
 }
 
 tasks.named('test') {
