@@ -1,6 +1,6 @@
 package TubeSlice.tubeSlice.domain.user;
 
-import TubeSlice.tubeSlice.domain.post.dto.PostResponseDto;
+import TubeSlice.tubeSlice.domain.post.dto.response.PostResponseDto;
 import TubeSlice.tubeSlice.domain.user.dto.response.UserResponseDto;
 import TubeSlice.tubeSlice.global.response.ApiResponse;
 import io.swagger.v3.oas.annotations.Operation;

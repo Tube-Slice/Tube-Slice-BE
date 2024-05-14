@@ -45,4 +45,7 @@ public class UserResponseDto {
         private Integer followingNum;
         private Integer followerNum;
     }
+
+
+
 }

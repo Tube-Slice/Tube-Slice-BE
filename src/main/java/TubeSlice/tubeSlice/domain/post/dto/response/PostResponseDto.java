@@ -1,6 +1,7 @@
-package TubeSlice.tubeSlice.domain.post.dto;
+package TubeSlice.tubeSlice.domain.post.dto.response;
 
 import TubeSlice.tubeSlice.domain.keyword.dto.response.KeywordResponseDto;
+import TubeSlice.tubeSlice.domain.user.dto.response.UserResponseDto;
 import lombok.*;
 
 import java.util.List;
@@ -20,5 +21,18 @@ public class PostResponseDto {
         private Integer likeNum;
         private Integer commentNum;
         private String createdAt;
+    }
+
+    @Builder
+    @Getter
+    @Setter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class SinglePostInfoDto{
+        private Boolean isFollowing;
+        private Boolean isMine;
+        private Boolean isList;
+        private PostInfoDto post;
+
     }
 }
