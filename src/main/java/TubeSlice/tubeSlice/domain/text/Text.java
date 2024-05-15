@@ -23,6 +23,7 @@ public class Text extends BaseEntity {
 
     private Double timeline;
 
+    @Column(length = 300)
     private String scripts;
 
     private Boolean isSaved;

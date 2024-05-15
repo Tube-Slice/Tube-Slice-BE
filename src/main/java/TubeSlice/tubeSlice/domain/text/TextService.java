@@ -110,7 +110,8 @@ public class TextService {
 
     public Object summarize(TextRequestDto.SummaryRequestDto summaryRequestDto){
         String requestMessage1 = "내 질문에 대한 응답 json 형식으로 출력해줘.";
-        String requestMessage2 = "\"" + summaryRequestDto.getScript() + "\" 이 스크립트에서 핵심 내용" + summaryRequestDto.getRow() + "문장으로 요약해서 구분해서 보여줘.";
+        String requestMessage2 = "\"" + summaryRequestDto.getScript() + "\" 이 스크립트에서 핵심 내용" + summaryRequestDto.getRow() + "문장으로 요약해서 구분해서 보여줘.\n" +
+                "출력 형식:  \"'1':'요약내용'\"";
 
         List<TextRequestDto.GptRequest.Messages> messages = new ArrayList<>();
         messages.add(new TextRequestDto.GptRequest.Messages("system",requestMessage1));
@@ -122,7 +123,9 @@ public class TextService {
         TextRequestDto.GptRequest gptRequest = new TextRequestDto.GptRequest(gpt_model,messages,response_format);
         TextResponseDto.GptResponse gptResponse = template.postForObject(gpt_api_url, gptRequest, TextResponseDto.GptResponse.class);
 
-        return gptResponse.getChoices().get(0).getMessage().getContent();
+        String content = gptResponse.getChoices().get(0).getMessage().getContent();
+
+        return trimResult(content);
     }
 
     public String uploadFile(String filePath) {
@@ -243,9 +246,7 @@ public class TextService {
         TextRequestDto.GptRequest gptRequest = new TextRequestDto.GptRequest(gpt_model, messages, response_format);
         TextResponseDto.GptResponse gptResponse = template.postForObject(gpt_api_url, gptRequest, TextResponseDto.GptResponse.class);
 
-        String subtitles = gptResponse.getChoices().get(0).getMessage().getContent();
-
-        return subtitles;
+        return gptResponse.getChoices().get(0).getMessage().getContent();
     }
 
     private HashMap<Double,String> trimResult(String jsonResult){
@@ -256,7 +257,6 @@ public class TextService {
         jsonResult = jsonResult.replaceAll("\n", "").trim();
         jsonResult = jsonResult.replace("{", "").trim();
         jsonResult = jsonResult.replaceAll("}", "").trim();
-        jsonResult = jsonResult.replaceAll(" ", "").trim();
 
         List<String> lines = List.of(jsonResult.split(","));
 
