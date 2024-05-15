@@ -1,6 +1,7 @@
 package TubeSlice.tubeSlice.domain.script;
 
 import TubeSlice.tubeSlice.domain.script.dto.response.ScriptResponseDto;
+import TubeSlice.tubeSlice.domain.text.dto.response.TextResponseDto;
 
 import java.util.Comparator;
 import java.util.List;
@@ -17,10 +18,10 @@ public class ScriptConverter {
         return subs;
     }
 
-    public static List<ScriptResponseDto.TextResponseDto> toTextListDto(Script script){
-        List<ScriptResponseDto.TextResponseDto> texts = script.getUserScriptList().stream()
-                .map(text -> new ScriptResponseDto.TextResponseDto(text.getTimeline(), text.getScripts()))
-                .sorted(Comparator.comparing(ScriptResponseDto.TextResponseDto::getTimeline))
+    public static List<TextResponseDto> toTextListDto(Script script){
+        List<TextResponseDto> texts = script.getUserScriptList().stream()
+                .map(text -> new TextResponseDto(text.getTimeline(), text.getScripts()))
+                .sorted(Comparator.comparing(TextResponseDto::getTimeline))
                 .collect(Collectors.toList());
 
         return texts;
