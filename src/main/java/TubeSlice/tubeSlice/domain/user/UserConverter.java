@@ -67,4 +67,13 @@ public class UserConverter {
                 .isFollowing(isFollowing)
                 .build();
     }
+
+    public static UserResponseDto.CommentUserDto toCommentUserDto(User user, boolean isMine){
+        return UserResponseDto.CommentUserDto.builder()
+                .userId(user.getId())
+                .nickname(user.getNickname())
+                .profileUrl(user.getProfileUrl())
+                .isMine(isMine)
+                .build();
+    }
 }
