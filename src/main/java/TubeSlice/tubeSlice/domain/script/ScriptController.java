@@ -1,14 +1,10 @@
 package TubeSlice.tubeSlice.domain.script;
 
 import TubeSlice.tubeSlice.domain.script.dto.response.ScriptResponseDto;
-import TubeSlice.tubeSlice.domain.subtitle.Subtitle;
-import TubeSlice.tubeSlice.domain.subtitle.dto.response.SubtitleResponseDto;
 import TubeSlice.tubeSlice.global.response.ApiResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.Parameters;
-import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -25,7 +21,7 @@ public class ScriptController {
 
     private final ScriptService scriptService;
 
-    @GetMapping("/subtitles/{scriptId}")
+    @GetMapping("/{scriptId}/subtitles")
     @Operation(summary = "스크립트 소제목 가져오기 API",description = "스크립트 소제목 가져오기")
     @ApiResponses({
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200",description = "OK, 성공"),
@@ -33,7 +29,7 @@ public class ScriptController {
     @Parameters({
             @Parameter(name = "scriptId", description = "스크립트 id"),
     })
-    public ApiResponse<List<SubtitleResponseDto>> getSubtitles(@PathVariable(name = "scriptId") Long scriptId){
+    public ApiResponse<List<ScriptResponseDto.SubtitleResponseDto>> getSubtitles(@PathVariable(name = "scriptId") Long scriptId){
 
         return ApiResponse.onSuccess(scriptService.getSubtitles(scriptId));
     }

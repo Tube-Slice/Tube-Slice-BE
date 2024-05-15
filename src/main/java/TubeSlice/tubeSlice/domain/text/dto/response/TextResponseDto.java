@@ -10,17 +10,4 @@ import lombok.NoArgsConstructor;
 
 import java.util.List;
 
-@Getter
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
-public class TextResponseDto {
 
-    private Double timeline;
-    private String scripts;
-
-    public TextResponseDto(Text text){
-        this.timeline = text.getTimeline();
-        this.scripts = text.getScripts();
-    }
-}
