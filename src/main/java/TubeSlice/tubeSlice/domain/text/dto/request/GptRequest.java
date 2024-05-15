@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.HashMap;
 import java.util.List;
 
 @Getter
@@ -15,7 +16,7 @@ public class GptRequest {
 
     private String model;
     private List<Messages> messages;
-
+    private HashMap<String, String> response_format;
 
     @Getter
     @Builder
