@@ -1,10 +1,13 @@
 package TubeSlice.tubeSlice.domain.post;
 
+import TubeSlice.tubeSlice.domain.comment.Comment;
+import TubeSlice.tubeSlice.domain.comment.dto.response.CommentResponseDto;
 import TubeSlice.tubeSlice.domain.follow.FollowRepository;
 import TubeSlice.tubeSlice.domain.keyword.KeywordConverter;
 import TubeSlice.tubeSlice.domain.keyword.dto.response.KeywordResponseDto;
 import TubeSlice.tubeSlice.domain.post.dto.response.PostResponseDto;
 import TubeSlice.tubeSlice.domain.user.User;
+import TubeSlice.tubeSlice.domain.user.UserConverter;
 import TubeSlice.tubeSlice.domain.user.dto.response.UserResponseDto;
 import org.springframework.data.domain.Page;
 
@@ -109,6 +112,26 @@ public class PostConverter {
                 .isLike(isLike)
                 .isMine(isMine)
                 .post(postInfoDto)
+                .build();
+    }
+
+    public static List<CommentResponseDto.PostCommentDto> toPostCommentDtoList(User user, List<Comment> commentList){
+        return commentList.stream()
+                .map(comment -> toPostCommentDto(user, comment))
+                .collect(Collectors.toList());
+    }
+
+    public static CommentResponseDto.PostCommentDto toPostCommentDto(User user, Comment comment){
+        boolean isMine = comment.getUser() == user;
+        User writer = comment.getUser();
+        UserResponseDto.CommentUserDto userInfo = UserConverter.toCommentUserDto(writer, isMine);
+        String createdAt = toCreatedFormat(comment.getCreatedAt());
+
+        return CommentResponseDto.PostCommentDto.builder()
+                .user(userInfo)
+                .commentId(comment.getId())
+                .content(comment.getContent())
+                .createdAt(createdAt)
                 .build();
     }
 }

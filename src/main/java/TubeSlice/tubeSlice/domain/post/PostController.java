@@ -1,5 +1,6 @@
 package TubeSlice.tubeSlice.domain.post;
 
+import TubeSlice.tubeSlice.domain.comment.dto.response.CommentResponseDto;
 import TubeSlice.tubeSlice.domain.post.dto.response.PostResponseDto;
 import TubeSlice.tubeSlice.domain.user.User;
 import TubeSlice.tubeSlice.domain.user.UserService;
@@ -20,6 +21,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/v1/posts")
@@ -39,5 +42,15 @@ public class PostController {
         User user = userService.findUser(myId);
 
         return ApiResponse.onSuccess(postService.getSinglePostInfo(user, post));
+    }
+
+    @GetMapping("/{postId}/comments")
+    public ApiResponse<List<CommentResponseDto.PostCommentDto>> getPostComment(@AuthenticationPrincipal UserDetails details, @PathVariable(name = "postId")Long postId){
+        Post post = postService.findPost(postId);
+
+        Long myId = userService.getUserId(details);
+        User user = userService.findUser(myId);
+
+        return ApiResponse.onSuccess(postService.getPostComment(user, post));
     }
 }
