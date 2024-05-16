@@ -67,4 +67,12 @@ public class UserConverter {
                 .isFollowing(isFollowing)
                 .build();
     }
+
+    public static UserResponseDto.BoardUserDto toBoardUserDto(User user){
+        return UserResponseDto.BoardUserDto.builder()
+                .userId(user.getId())
+                .nickname(user.getNickname())
+                .profileUrl(user.getProfileUrl())
+                .build();
+    }
 }

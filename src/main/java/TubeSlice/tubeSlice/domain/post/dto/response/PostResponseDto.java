@@ -63,4 +63,19 @@ public class PostResponseDto {
         private Boolean isLike;
         private SinglePostUserInfoDto post;
     }
+
+    @Builder
+    @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class BoardDto{
+        private UserResponseDto.BoardUserDto user;
+        private Long postId;
+        private String title;
+        private String content;
+        private String videoUrl;
+        private Integer likeNum;
+        private Integer commentNum;
+        private String createdAt;
+    }
 }

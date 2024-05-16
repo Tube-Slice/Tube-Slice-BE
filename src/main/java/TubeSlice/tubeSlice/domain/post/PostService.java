@@ -10,6 +10,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Collections;
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
@@ -31,5 +34,12 @@ public class PostService {
         }
         Boolean isLike = postLikeRepository.existsByUserAndPost(user, post);
         return PostConverter.toSinglePostDto(user, post, isFollowing, isLike );
+    }
+
+    public List<PostResponseDto.BoardDto> getRecentBoard(){
+        List<Post> postList = postRepository.findAll();
+        Collections.reverse(postList);
+
+        return PostConverter.toRecentBoardDtoList(postList);
     }
 }

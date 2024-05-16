@@ -5,20 +5,16 @@ import TubeSlice.tubeSlice.domain.user.User;
 import TubeSlice.tubeSlice.domain.user.UserService;
 import TubeSlice.tubeSlice.global.response.ApiResponse;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.Parameters;
-import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
-import lombok.*;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -39,5 +35,14 @@ public class PostController {
         User user = userService.findUser(myId);
 
         return ApiResponse.onSuccess(postService.getSinglePostInfo(user, post));
+    }
+
+    @GetMapping("/recent")
+    @Operation(summary = "게시판 페이지 최신순 게시글 반환 API",description = "BoardDto의 배열을 반환")
+    @ApiResponses({
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200",description = "OK, 성공"),
+    })
+    public ApiResponse<List<PostResponseDto.BoardDto>> getRecentBoard(){
+        return ApiResponse.onSuccess(postService.getRecentBoard());
     }
 }
