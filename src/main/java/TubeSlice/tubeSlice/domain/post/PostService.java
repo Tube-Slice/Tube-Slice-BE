@@ -42,4 +42,10 @@ public class PostService {
 
         return PostConverter.toRecentBoardDtoList(postList);
     }
+
+    public List<PostResponseDto.BoardDto> getPopularBoard(){
+        List<Post> postList = postRepository.findAll();
+
+        return PostConverter.toPopularBoardDto(postList);
+    }
 }

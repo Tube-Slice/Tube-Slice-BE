@@ -45,4 +45,13 @@ public class PostController {
     public ApiResponse<List<PostResponseDto.BoardDto>> getRecentBoard(){
         return ApiResponse.onSuccess(postService.getRecentBoard());
     }
+
+    @GetMapping("/popular")
+    @Operation(summary = "게시판 페이지 좋아요순 게시글 반환 API",description = "BoardDto의 배열을 반환")
+    @ApiResponses({
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200",description = "OK, 성공"),
+    })
+    public ApiResponse<List<PostResponseDto.BoardDto>> getPopularBoard(){
+        return ApiResponse.onSuccess(postService.getPopularBoard());
+    }
 }
