@@ -118,6 +118,7 @@ public class PostConverter {
         UserResponseDto.BoardUserDto user = UserConverter.toBoardUserDto(post.getUser());
 
         return PostResponseDto.BoardDto.builder()
+                .user(user)
                 .postId(post.getId())
                 .title(post.getTitle())
                 .content(post.getContent())
