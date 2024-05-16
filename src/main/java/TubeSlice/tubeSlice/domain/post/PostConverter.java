@@ -1,6 +1,5 @@
 package TubeSlice.tubeSlice.domain.post;
 
-import TubeSlice.tubeSlice.domain.follow.FollowRepository;
 import TubeSlice.tubeSlice.domain.keyword.KeywordConverter;
 import TubeSlice.tubeSlice.domain.keyword.dto.response.KeywordResponseDto;
 import TubeSlice.tubeSlice.domain.post.dto.response.PostResponseDto;
@@ -13,8 +12,8 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class PostConverter {
 
@@ -131,6 +130,13 @@ public class PostConverter {
     public static List<PostResponseDto.BoardDto> toRecentBoardDtoList(List<Post> postList){
 
         return postList.stream()
+                .map(PostConverter::toBoardDto)
+                .toList();
+    }
+
+    public static List<PostResponseDto.BoardDto> toPopularBoardDto(List<Post> postList){
+        return postList.stream()
+                .sorted(Comparator.comparingInt(post -> -post.getPostLikeList().size()))
                 .map(PostConverter::toBoardDto)
                 .toList();
     }
