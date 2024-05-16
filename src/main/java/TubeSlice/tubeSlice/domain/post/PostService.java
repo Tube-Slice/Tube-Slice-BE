@@ -1,5 +1,7 @@
 package TubeSlice.tubeSlice.domain.post;
 
+import TubeSlice.tubeSlice.domain.comment.Comment;
+import TubeSlice.tubeSlice.domain.comment.dto.response.CommentResponseDto;
 import TubeSlice.tubeSlice.domain.follow.FollowRepository;
 import TubeSlice.tubeSlice.domain.post.dto.response.PostResponseDto;
 import TubeSlice.tubeSlice.domain.postLike.PostLikeRepository;
@@ -9,6 +11,8 @@ import TubeSlice.tubeSlice.global.response.exception.handler.PostHandler;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 import java.util.Collections;
 import java.util.List;
@@ -35,6 +39,14 @@ public class PostService {
         Boolean isLike = postLikeRepository.existsByUserAndPost(user, post);
         return PostConverter.toSinglePostDto(user, post, isFollowing, isLike );
     }
+
+    public List<CommentResponseDto.PostCommentDto> getPostComment(User user, Post post){
+        List<Comment> commentList = post.getCommentList();
+
+        return PostConverter.toPostCommentDtoList(user, commentList);
+    }
+
+
 
     public List<PostResponseDto.BoardDto> getRecentBoard(){
         List<Post> postList = postRepository.findAll();

@@ -1,5 +1,6 @@
 package TubeSlice.tubeSlice.domain.post;
 
+import TubeSlice.tubeSlice.domain.comment.dto.response.CommentResponseDto;
 import TubeSlice.tubeSlice.domain.post.dto.response.PostResponseDto;
 import TubeSlice.tubeSlice.domain.user.User;
 import TubeSlice.tubeSlice.domain.user.UserService;
@@ -35,6 +36,20 @@ public class PostController {
         User user = userService.findUser(myId);
 
         return ApiResponse.onSuccess(postService.getSinglePostInfo(user, post));
+    }
+
+    @GetMapping("/{postId}/comments")
+    @Operation(summary = "게시글의 댓글 목록 가져오기 API",description = "PostCommentDto 반환")
+    @ApiResponses({
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200",description = "OK, 성공"),
+    })
+    public ApiResponse<List<CommentResponseDto.PostCommentDto>> getPostComment(@AuthenticationPrincipal UserDetails details, @PathVariable(name = "postId")Long postId){
+        Post post = postService.findPost(postId);
+
+        Long myId = userService.getUserId(details);
+        User user = userService.findUser(myId);
+
+        return ApiResponse.onSuccess(postService.getPostComment(user, post));
     }
 
     @GetMapping("/recent")

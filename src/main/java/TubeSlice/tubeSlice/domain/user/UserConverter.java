@@ -68,6 +68,15 @@ public class UserConverter {
                 .build();
     }
 
+    public static UserResponseDto.CommentUserDto toCommentUserDto(User user, boolean isMine){
+        return UserResponseDto.CommentUserDto.builder()
+                .userId(user.getId())
+                .nickname(user.getNickname())
+                .profileUrl(user.getProfileUrl())
+                .isMine(isMine)
+                .build();
+    }
+
     public static UserResponseDto.BoardUserDto toBoardUserDto(User user){
         return UserResponseDto.BoardUserDto.builder()
                 .userId(user.getId())

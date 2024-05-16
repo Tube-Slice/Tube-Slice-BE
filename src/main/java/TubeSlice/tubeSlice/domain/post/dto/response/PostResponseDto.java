@@ -9,7 +9,6 @@ import java.util.List;
 public class PostResponseDto {
     @Builder
     @Getter
-    @Setter
     @NoArgsConstructor
     @AllArgsConstructor
     public static class PostInfoDto{
@@ -38,7 +37,6 @@ public class PostResponseDto {
 
     @Builder
     @Getter
-    @Setter
     @NoArgsConstructor
     @AllArgsConstructor
     public static class SinglePostUserInfoDto{
@@ -55,7 +53,6 @@ public class PostResponseDto {
 
     @Builder
     @Getter
-    @Setter
     @NoArgsConstructor
     @AllArgsConstructor
     public static class SinglePostInfoDto{

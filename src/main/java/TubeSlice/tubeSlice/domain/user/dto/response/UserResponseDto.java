@@ -62,6 +62,17 @@ public class UserResponseDto {
     @Getter
     @NoArgsConstructor
     @AllArgsConstructor
+    public static class CommentUserDto{
+        private Long userId;
+        private String nickname;
+        private String profileUrl;
+        private Boolean isMine;
+    }
+
+    @Builder
+    @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
     public static class BoardUserDto{
         private Long userId;
         private String nickname;

@@ -1,5 +1,7 @@
 package TubeSlice.tubeSlice.domain.post;
 
+import TubeSlice.tubeSlice.domain.comment.Comment;
+import TubeSlice.tubeSlice.domain.comment.dto.response.CommentResponseDto;
 import TubeSlice.tubeSlice.domain.keyword.KeywordConverter;
 import TubeSlice.tubeSlice.domain.keyword.dto.response.KeywordResponseDto;
 import TubeSlice.tubeSlice.domain.post.dto.response.PostResponseDto;
@@ -14,6 +16,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class PostConverter {
 
@@ -111,6 +114,28 @@ public class PostConverter {
                 .post(postInfoDto)
                 .build();
     }
+
+    public static List<CommentResponseDto.PostCommentDto> toPostCommentDtoList(User user, List<Comment> commentList){
+        return commentList.stream()
+                .map(comment -> toPostCommentDto(user, comment))
+                .collect(Collectors.toList());
+    }
+
+    public static CommentResponseDto.PostCommentDto toPostCommentDto(User user, Comment comment){
+        boolean isMine = comment.getUser() == user;
+        User writer = comment.getUser();
+        UserResponseDto.CommentUserDto userInfo = UserConverter.toCommentUserDto(writer, isMine);
+        String createdAt = toCreatedFormat(comment.getCreatedAt());
+
+        return CommentResponseDto.PostCommentDto.builder()
+                .user(userInfo)
+                .commentId(comment.getId())
+                .content(comment.getContent())
+                .createdAt(createdAt)
+                .build();
+    }
+
+
 
     public static PostResponseDto.BoardDto toBoardDto(Post post){
         String createdAt = toCreatedFormat(post.getCreatedAt());
