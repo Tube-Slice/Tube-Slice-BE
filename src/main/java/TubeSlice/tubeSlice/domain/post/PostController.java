@@ -6,14 +6,8 @@ import TubeSlice.tubeSlice.domain.user.User;
 import TubeSlice.tubeSlice.domain.user.UserService;
 import TubeSlice.tubeSlice.global.response.ApiResponse;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.Parameters;
-import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
-import lombok.*;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -45,6 +39,10 @@ public class PostController {
     }
 
     @GetMapping("/{postId}/comments")
+    @Operation(summary = "게시글의 댓글 목록 가져오기 API",description = "PostCommentDto 반환")
+    @ApiResponses({
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200",description = "OK, 성공"),
+    })
     public ApiResponse<List<CommentResponseDto.PostCommentDto>> getPostComment(@AuthenticationPrincipal UserDetails details, @PathVariable(name = "postId")Long postId){
         Post post = postService.findPost(postId);
 
@@ -52,5 +50,23 @@ public class PostController {
         User user = userService.findUser(myId);
 
         return ApiResponse.onSuccess(postService.getPostComment(user, post));
+    }
+
+    @GetMapping("/recent")
+    @Operation(summary = "게시판 페이지 최신순 게시글 반환 API",description = "BoardDto의 배열을 반환")
+    @ApiResponses({
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200",description = "OK, 성공"),
+    })
+    public ApiResponse<List<PostResponseDto.BoardDto>> getRecentBoard(){
+        return ApiResponse.onSuccess(postService.getRecentBoard());
+    }
+
+    @GetMapping("/popular")
+    @Operation(summary = "게시판 페이지 좋아요순 게시글 반환 API",description = "BoardDto의 배열을 반환")
+    @ApiResponses({
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200",description = "OK, 성공"),
+    })
+    public ApiResponse<List<PostResponseDto.BoardDto>> getPopularBoard(){
+        return ApiResponse.onSuccess(postService.getPopularBoard());
     }
 }

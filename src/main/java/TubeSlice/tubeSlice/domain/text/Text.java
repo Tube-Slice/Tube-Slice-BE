@@ -1,6 +1,7 @@
 package TubeSlice.tubeSlice.domain.text;
 
 import TubeSlice.tubeSlice.domain.script.Script;
+import TubeSlice.tubeSlice.global.entity.BaseEntity;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -13,7 +14,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class Text {
+public class Text extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

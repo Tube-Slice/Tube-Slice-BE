@@ -14,6 +14,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+import java.util.Collections;
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
@@ -41,5 +44,20 @@ public class PostService {
         List<Comment> commentList = post.getCommentList();
 
         return PostConverter.toPostCommentDtoList(user, commentList);
+    }
+
+
+
+    public List<PostResponseDto.BoardDto> getRecentBoard(){
+        List<Post> postList = postRepository.findAll();
+        Collections.reverse(postList);
+
+        return PostConverter.toRecentBoardDtoList(postList);
+    }
+
+    public List<PostResponseDto.BoardDto> getPopularBoard(){
+        List<Post> postList = postRepository.findAll();
+
+        return PostConverter.toPopularBoardDto(postList);
     }
 }

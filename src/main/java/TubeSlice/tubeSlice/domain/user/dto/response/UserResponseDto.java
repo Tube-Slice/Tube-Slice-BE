@@ -69,6 +69,16 @@ public class UserResponseDto {
         private Boolean isMine;
     }
 
+    @Builder
+    @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class BoardUserDto{
+        private Long userId;
+        private String nickname;
+        private String profileUrl;
+    }
+
 
 
 

@@ -2,7 +2,6 @@ package TubeSlice.tubeSlice.domain.post;
 
 import TubeSlice.tubeSlice.domain.comment.Comment;
 import TubeSlice.tubeSlice.domain.comment.dto.response.CommentResponseDto;
-import TubeSlice.tubeSlice.domain.follow.FollowRepository;
 import TubeSlice.tubeSlice.domain.keyword.KeywordConverter;
 import TubeSlice.tubeSlice.domain.keyword.dto.response.KeywordResponseDto;
 import TubeSlice.tubeSlice.domain.post.dto.response.PostResponseDto;
@@ -15,6 +14,7 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -133,5 +133,36 @@ public class PostConverter {
                 .content(comment.getContent())
                 .createdAt(createdAt)
                 .build();
+    }
+
+
+
+    public static PostResponseDto.BoardDto toBoardDto(Post post){
+        String createdAt = toCreatedFormat(post.getCreatedAt());
+        UserResponseDto.BoardUserDto user = UserConverter.toBoardUserDto(post.getUser());
+
+        return PostResponseDto.BoardDto.builder()
+                .user(user)
+                .postId(post.getId())
+                .title(post.getTitle())
+                .content(post.getContent())
+                .commentNum(post.getCommentList().size())
+                .likeNum(post.getPostLikeList().size())
+                .createdAt(createdAt)
+                .build();
+    }
+
+    public static List<PostResponseDto.BoardDto> toRecentBoardDtoList(List<Post> postList){
+
+        return postList.stream()
+                .map(PostConverter::toBoardDto)
+                .toList();
+    }
+
+    public static List<PostResponseDto.BoardDto> toPopularBoardDto(List<Post> postList){
+        return postList.stream()
+                .sorted(Comparator.comparingInt(post -> -post.getPostLikeList().size()))
+                .map(PostConverter::toBoardDto)
+                .toList();
     }
 }
