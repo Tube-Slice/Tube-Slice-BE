@@ -5,6 +5,7 @@ import TubeSlice.tubeSlice.domain.keyword.KeywordConverter;
 import TubeSlice.tubeSlice.domain.keyword.dto.response.KeywordResponseDto;
 import TubeSlice.tubeSlice.domain.post.dto.response.PostResponseDto;
 import TubeSlice.tubeSlice.domain.user.User;
+import TubeSlice.tubeSlice.domain.user.UserConverter;
 import TubeSlice.tubeSlice.domain.user.dto.response.UserResponseDto;
 import org.springframework.data.domain.Page;
 
@@ -110,5 +111,26 @@ public class PostConverter {
                 .isMine(isMine)
                 .post(postInfoDto)
                 .build();
+    }
+
+    public static PostResponseDto.BoardDto toBoardDto(Post post){
+        String createdAt = toCreatedFormat(post.getCreatedAt());
+        UserResponseDto.BoardUserDto user = UserConverter.toBoardUserDto(post.getUser());
+
+        return PostResponseDto.BoardDto.builder()
+                .postId(post.getId())
+                .title(post.getTitle())
+                .content(post.getContent())
+                .commentNum(post.getCommentList().size())
+                .likeNum(post.getPostLikeList().size())
+                .createdAt(createdAt)
+                .build();
+    }
+
+    public static List<PostResponseDto.BoardDto> toRecentBoardDtoList(List<Post> postList){
+
+        return postList.stream()
+                .map(PostConverter::toBoardDto)
+                .toList();
     }
 }
