@@ -148,6 +148,7 @@ public class PostConverter {
                 .content(post.getContent())
                 .commentNum(post.getCommentList().size())
                 .likeNum(post.getPostLikeList().size())
+                .videoUrl(post.getVideoUrl())
                 .createdAt(createdAt)
                 .build();
     }

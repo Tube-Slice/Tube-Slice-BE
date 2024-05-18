@@ -19,6 +19,7 @@ public enum ErrorStatus implements BaseErrorCode {
 
     // Post
     POST_NOT_FOUND(HttpStatus.NOT_FOUND, "POST401", "게시글이 존재하지 않습니다."),
+    POST_SEARCH_BAD_REQUEST(HttpStatus.BAD_REQUEST, "POST402", "검색 타입을 잘못 입력하셨습니다."),
 
     // PostLike
     POST_LIKE_NOT_FOUND(HttpStatus.NOT_FOUND, "POSTLIKE401", "해당하는 좋아요가 존재하지 않습니다."),
