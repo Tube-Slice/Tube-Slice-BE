@@ -75,6 +75,7 @@ public class PostConverter {
                 .isFirst(postList.isFirst())
                 .totalElement(postList.getTotalElements())
                 .totalPage(postList.getTotalPages())
+                .currentPage(postList.getNumber())
                 .listSize(postInfoDtoList.size())
                 .posts(postInfoDtoList)
                 .build();

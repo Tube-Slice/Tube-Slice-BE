@@ -30,6 +30,7 @@ public class PostResponseDto {
         private List<PostInfoDto> posts;
         private Integer listSize;
         private Integer totalPage;
+        private Integer currentPage;
         private Long totalElement;
         private Boolean isFirst;
         private Boolean isLast;
