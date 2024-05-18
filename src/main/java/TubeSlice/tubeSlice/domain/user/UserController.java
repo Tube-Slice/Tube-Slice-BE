@@ -213,4 +213,16 @@ public class UserController {
 
         return userService.updateUserInfo(user, request);
     }
+
+    @DeleteMapping("/{userId}")
+    @Operation(summary = "유저 탈퇴하기 API",description = "유저 탈퇴하는 기능, 실행시  login_status가 INACTIVATE로 변환")
+    @ApiResponses({
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200",description = "OK, 성공"),
+    })
+    public ApiResponse<SuccessStatus> deleteUser(@AuthenticationPrincipal UserDetails details){
+        Long userId = userService.getUserId(details);
+        User user = userService.findUser(userId);
+
+        return userService.deleteUser(user);
+    }
 }

@@ -139,5 +139,12 @@ public class UserService {
         userRepository.save(user);
         return ApiResponse.onSuccess(SuccessStatus._OK);
     }
+
+    @Transactional
+    public ApiResponse<SuccessStatus> deleteUser(User user){
+        userRepository.delete(user);
+
+        return ApiResponse.onSuccess(SuccessStatus._OK);
+    }
 }
 
