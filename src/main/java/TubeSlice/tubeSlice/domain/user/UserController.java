@@ -213,4 +213,13 @@ public class UserController {
 
         return userService.updateUserInfo(user, request);
     }
+
+    @DeleteMapping("/{userId}")
+    public ApiResponse<SuccessStatus> deleteUser(@PathVariable(name="userId")Long userId ){
+        /*Long userId = userService.getUserId(details);
+        User user = userService.findUser(userId);*/
+
+        User user = userService.findUser(userId);
+        return userService.deleteUser(user);
+    }
 }
