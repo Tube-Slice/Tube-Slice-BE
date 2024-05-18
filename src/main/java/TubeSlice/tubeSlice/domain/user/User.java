@@ -21,7 +21,7 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Where(clause = "login_status")
+@Where(clause = "login_status = 'ACTIVATE'")
 @SQLDelete(sql =  "UPDATE user  SET login_status = 'INACTIVATE' WHERE id = ?")
 public class User extends BaseEntity {
 
