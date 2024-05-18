@@ -8,6 +8,8 @@ import TubeSlice.tubeSlice.domain.userScript.UserScript;
 import TubeSlice.tubeSlice.global.entity.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,6 +21,8 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@Where(clause = "login_status = 'ACTIVATE'")
+@SQLDelete(sql =  "UPDATE user  SET login_status = 'INACTIVATE' WHERE id = ?")
 public class User extends BaseEntity {
 
     @Id
