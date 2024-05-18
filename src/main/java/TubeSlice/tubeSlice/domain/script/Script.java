@@ -33,6 +33,9 @@ public class Script extends BaseEntity {
 
     private String videoTitle;
 
+    private String scriptTitle;
+
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
