@@ -1,10 +1,12 @@
 package TubeSlice.tubeSlice.domain.post;
 
 import TubeSlice.tubeSlice.domain.comment.dto.response.CommentResponseDto;
+import TubeSlice.tubeSlice.domain.post.dto.request.PostRequestDto;
 import TubeSlice.tubeSlice.domain.post.dto.response.PostResponseDto;
 import TubeSlice.tubeSlice.domain.user.User;
 import TubeSlice.tubeSlice.domain.user.UserService;
 import TubeSlice.tubeSlice.global.response.ApiResponse;
+import TubeSlice.tubeSlice.global.response.code.resultCode.SuccessStatus;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.Parameters;
@@ -24,6 +26,42 @@ import java.util.List;
 public class PostController {
     private final PostService postService;
     private final UserService userService;
+
+    @PostMapping("/new")
+    @Operation(summary = "게시글 생성하기",description = "게시글 생성")
+    @ApiResponses({
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200",description = "OK, 성공"),
+    })
+    public ApiResponse<Long> createPost(@AuthenticationPrincipal UserDetails details,  @RequestBody PostRequestDto.PostCreateDto postRequestDto){
+        Long myId = userService.getUserId(details);
+        User user = userService.findUser(myId);
+
+        return ApiResponse.onSuccess(postService.createPost(user, postRequestDto));
+    }
+
+    @PatchMapping("/{postId}")
+    @Operation(summary = "게시글 수정하기",description = "게시글 수정")
+    @ApiResponses({
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200",description = "OK, 성공"),
+    })
+    public ApiResponse<Long> updatePost(@AuthenticationPrincipal UserDetails details, @PathVariable Long postId, @RequestBody PostRequestDto.PostUpdateDto postRequestDto){
+        Long myId = userService.getUserId(details);
+        User user = userService.findUser(myId);
+
+        return ApiResponse.onSuccess(postService.updatePost(user, postId, postRequestDto));
+    }
+
+    @DeleteMapping("/{postId}")
+    @Operation(summary = "게시글 삭제하기",description = "게시글 삭제")
+    @ApiResponses({
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200",description = "OK, 성공"),
+    })
+    public ApiResponse<SuccessStatus> deletePost(@AuthenticationPrincipal UserDetails details, @PathVariable Long postId){
+        Long myId = userService.getUserId(details);
+        User user = userService.findUser(myId);
+
+        return ApiResponse.onSuccess(postService.deletePost(user, postId));
+    }
 
     @GetMapping("/{postId}")
     @Operation(summary = "게시글 정보 가져오기 API",description = "SinglePostInfoDto 반환")
