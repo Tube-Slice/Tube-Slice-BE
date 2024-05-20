@@ -6,14 +6,15 @@ import TubeSlice.tubeSlice.domain.user.User;
 import TubeSlice.tubeSlice.domain.user.UserService;
 import TubeSlice.tubeSlice.global.response.ApiResponse;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.Parameters;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -68,5 +69,21 @@ public class PostController {
     })
     public ApiResponse<List<PostResponseDto.BoardDto>> getPopularBoard(){
         return ApiResponse.onSuccess(postService.getPopularBoard());
+    }
+
+    @GetMapping("/search")
+    @Operation(summary = "키워드기반 게시판페이지 게시글 목록 가져오기 API",description = "BoardDto의 배열을 반환한다.")
+    @ApiResponses({
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200",description = "OK, 성공"),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "POST402", description = "type을 확인해주세요.",content = @Content(schema = @Schema(implementation = ApiResponse.class))),
+    })
+    @Parameters({
+            @Parameter(name = "type", description = "TITLE, CONTENT,BOTH"),
+            @Parameter(name = "search", description = "검색어"),
+
+    })
+    public ApiResponse<List<PostResponseDto.BoardDto>> getSearchBoard(@RequestParam(name = "type") String type, @RequestParam(name = "search") String search){
+
+        return ApiResponse.onSuccess(postService.getSearchBoard(type, search));
     }
 }
