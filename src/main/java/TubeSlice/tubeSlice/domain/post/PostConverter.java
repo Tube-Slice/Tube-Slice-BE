@@ -75,6 +75,7 @@ public class PostConverter {
                 .isFirst(postList.isFirst())
                 .totalElement(postList.getTotalElements())
                 .totalPage(postList.getTotalPages())
+                .currentPage(postList.getNumber())
                 .listSize(postInfoDtoList.size())
                 .posts(postInfoDtoList)
                 .build();
@@ -148,6 +149,7 @@ public class PostConverter {
                 .content(post.getContent())
                 .commentNum(post.getCommentList().size())
                 .likeNum(post.getPostLikeList().size())
+                .videoUrl(post.getVideoUrl())
                 .createdAt(createdAt)
                 .build();
     }

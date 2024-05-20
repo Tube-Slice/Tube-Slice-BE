@@ -16,6 +16,7 @@ import java.util.List;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
@@ -59,5 +60,27 @@ public class PostService {
         List<Post> postList = postRepository.findAll();
 
         return PostConverter.toPopularBoardDto(postList);
+    }
+
+    public List<PostResponseDto.BoardDto> getSearchBoard(String type, String search){
+        if(type.equals("TITLE")){
+            List<Post> postList = postRepository.findPostsByTitle(search);
+            Collections.reverse(postList);
+
+            return PostConverter.toRecentBoardDtoList(postList);
+        } else if(type.equals("CONTENT")){
+            List<Post> postList = postRepository.findPostsByContent(search);
+            Collections.reverse(postList);
+
+            return PostConverter.toRecentBoardDtoList(postList);
+        } else if(type.equals("BOTH")) {
+            List<Post> postList = postRepository.findPostsByTitleOrContent(search);
+            Collections.reverse(postList);
+
+            return PostConverter.toRecentBoardDtoList(postList);
+        } else {
+            throw new PostHandler(ErrorStatus.POST_SEARCH_BAD_REQUEST);
+        }
+
     }
 }

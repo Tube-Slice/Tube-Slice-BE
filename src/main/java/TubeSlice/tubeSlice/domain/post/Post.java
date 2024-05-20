@@ -29,6 +29,7 @@ public class Post extends BaseEntity {
 
     private String title;
 
+    @Column(length = 800)
     private String content;
 
     private String videoUrl;
