@@ -314,16 +314,16 @@ public class TextService {
         return result;
     }
 
-
     public String getAudioFileFromYoutubeUrl(String youtubeUrl){
         String filename = "mp3 파일 가져오기 실패.";
 
-        // yt-dlp.exe의 절대 경로 사용
-        //리눅스에서는 \말고 /사용.
-        //String ytDlpPath = "yt-dlp";
-        String ytDlpPath = "D:\\youtube-dl\\ffmpeg-7.0-essentials_build\\bin\\yt-dlp.exe";
-        //String downloadDir = "yt-dlp/mp3/%(title)s.%(ext)s";
-        String downloadDir = "D:\\youtube-dl\\%(title)s.%(ext)s";
+        //yt-dlp 파일 실행 위치.
+        String ytDlpPath = "yt-dlp";
+        //String ytDlpPath = "D:\\youtube-dl\\ffmpeg-7.0-essentials_build\\bin\\yt-dlp.exe";
+
+        //mp3 파일 저장 경로. 서버 상에 경로 지정.
+        String downloadDir = "yt-dlp/mp3/%(title)s.%(ext)s";
+        //String downloadDir = "D:\\youtube-dl\\%(title)s.%(ext)s";
 
         try {
             // Command to download video
