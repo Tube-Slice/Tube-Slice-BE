@@ -303,8 +303,10 @@ public class TextService {
             List<String> parts = List.of(line.split(":"));
 
             String value = parts.get(1).replaceAll("\"", "");
+            value = value.trim();
 
             String idx = parts.get(0).replaceAll("\"","");
+            idx = idx.trim();
 
             result.put(idx,value);
 
