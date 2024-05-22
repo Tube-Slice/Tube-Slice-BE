@@ -8,4 +8,7 @@ import java.util.List;
 
 public interface PostKeywordRepository extends JpaRepository<PostKeyword, Long> {
     List<PostKeyword> findByPostAndKeyword(Post post, Keyword keyword);
+    List<PostKeyword> findByPostId(Long postId);
+    PostKeyword findByPost(Post post);
+    PostKeyword findByKeywordAndPostId(Keyword keyword, Long postId);
 }
