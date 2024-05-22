@@ -3,12 +3,16 @@ package TubeSlice.tubeSlice.domain.post;
 import TubeSlice.tubeSlice.domain.comment.Comment;
 import TubeSlice.tubeSlice.domain.comment.dto.response.CommentResponseDto;
 import TubeSlice.tubeSlice.domain.follow.FollowRepository;
+import TubeSlice.tubeSlice.domain.image.Image;
+import TubeSlice.tubeSlice.domain.image.ImageRepository;
+import TubeSlice.tubeSlice.domain.image.ImageServie;
 import TubeSlice.tubeSlice.domain.keyword.Keyword;
 import TubeSlice.tubeSlice.domain.keyword.KeywordRepository;
 import TubeSlice.tubeSlice.domain.post.dto.request.PostRequestDto;
 import TubeSlice.tubeSlice.domain.post.dto.response.PostResponseDto;
 import TubeSlice.tubeSlice.domain.postKeyword.PostKeyword;
 import TubeSlice.tubeSlice.domain.postKeyword.PostKeywordRepository;
+import TubeSlice.tubeSlice.domain.postKeyword.PostKeywordService;
 import TubeSlice.tubeSlice.domain.postLike.PostLikeRepository;
 import TubeSlice.tubeSlice.domain.user.User;
 import TubeSlice.tubeSlice.global.response.code.resultCode.ErrorStatus;
@@ -17,10 +21,14 @@ import TubeSlice.tubeSlice.global.response.exception.handler.CommentHandler;
 import TubeSlice.tubeSlice.global.response.exception.handler.PostHandler;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.*;
 
 import java.util.List;
@@ -36,9 +44,15 @@ public class PostService {
     private final PostLikeRepository postLikeRepository;
     private final KeywordRepository keywordRepository;
     private final PostKeywordRepository postKeywordRepository;
+    
+    private final PostKeywordService postKeywordService;
+    private final ImageServie imageServie;
+
+    @Value("${spring.servlet.multipart.location}")
+    private String fileDir;
 
     @Transactional
-    public Long createPost(User user, PostRequestDto.PostCreateDto postRequestDto){
+    public Long createPost(User user, PostRequestDto.PostCreateDto postRequestDto, List<MultipartFile> multipartFiles) throws IOException {
         Post post = Post.builder()
                 .title(postRequestDto.getTitle())
                 .content(postRequestDto.getContent())
@@ -48,23 +62,15 @@ public class PostService {
 
         postRepository.save(post);
 
-        for (String pk: postRequestDto.getPostKeywords()){
-            Keyword keyword = Keyword.builder()
-                    .name(pk)
-                    .build();
-            keywordRepository.save(keyword);
-            PostKeyword postKeyword = PostKeyword.builder()
-                    .keyword(keyword)
-                    .post(post)
-                    .build();
-            postKeywordRepository.save(postKeyword);
-        }
+        postKeywordService.savePostKeyword(postRequestDto, post);
 
         return post.getId();
     }
 
+
+
     @Transactional
-    public Long updatePost(User user, Long postId, PostRequestDto.PostUpdateDto postRequestDto){
+    public Long updatePost(User user,  Long postId, PostRequestDto.PostUpdateDto postRequestDto, List<MultipartFile> multipartFiles) throws IOException {
         Post findPost = postRepository.findById(postId).orElseThrow(()-> new PostHandler(ErrorStatus.POST_NOT_FOUND));
 
         if(findPost.getUser() != user){
@@ -86,42 +92,9 @@ public class PostService {
         List<String> updatePostKeywords = postRequestDto.getPostKeywords();
 
         if (updatePostKeywords!=null) {
-
-            for (String pk : updatePostKeywords) {
-                Optional<Keyword> findKeyword = keywordRepository.findByName(pk);
-                Keyword keyword;
-                PostKeyword findPostKeyword = postKeywordRepository.findByKeywordAndPostId(findKeyword.orElse(null), postId);
-
-                if (findKeyword.isEmpty()){ //keyword 테이블에 없으면 keyword랑 post_keyword에 둘다 저장 필요.
-                     keyword = Keyword.builder()
-                            .name(pk)
-                            .build();
-                    keywordRepository.save(keyword);
-                    PostKeyword postKeyword = PostKeyword.builder()
-                            .keyword(keyword)
-                            .post(findPost)
-                            .build();
-
-                    postKeywordRepository.save(postKeyword);
-                } else if (findPostKeyword == null){    //keyword에는 있는데 post_keyword에 없는 경우.
-
-                    PostKeyword postKeyword = PostKeyword.builder()
-                            .keyword(findKeyword.get())
-                            .post(findPost)
-                            .build();
-
-                    postKeywordRepository.save(postKeyword);
-                }
-            }
-
-            //기존 postKeyword 와 비교해서 삭제된 keyword를 db에서 삭제.
-            List<PostKeyword> findPostKeywords = postKeywordRepository.findByPostId(postId);
-            for (PostKeyword postKeyword: findPostKeywords){
-                if (!updatePostKeywords.contains(postKeyword.getKeyword().getName())){
-                    postKeywordRepository.delete(postKeyword);
-                }
-            }
+            postKeywordService.updatePostKeyword(postId, updatePostKeywords, findPost);
         }
+
         return findPost.getId();
     }
 

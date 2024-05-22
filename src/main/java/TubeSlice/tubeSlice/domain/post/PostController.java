@@ -17,7 +17,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -32,11 +34,13 @@ public class PostController {
     @ApiResponses({
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200",description = "OK, 성공"),
     })
-    public ApiResponse<Long> createPost(@AuthenticationPrincipal UserDetails details,  @RequestBody PostRequestDto.PostCreateDto postRequestDto){
+    public ApiResponse<Long> createPost(@AuthenticationPrincipal UserDetails details,
+                                        @RequestPart(value = "request") @Parameter(schema =@Schema(type = "string", format = "binary")) PostRequestDto.PostCreateDto postRequestDto,
+                                        @RequestPart(value = "images", required = false) List<MultipartFile> multipartFiles) throws IOException {
         Long myId = userService.getUserId(details);
         User user = userService.findUser(myId);
 
-        return ApiResponse.onSuccess(postService.createPost(user, postRequestDto));
+        return ApiResponse.onSuccess(postService.createPost(user, postRequestDto, multipartFiles));
     }
 
     @PatchMapping("/{postId}")
@@ -44,11 +48,14 @@ public class PostController {
     @ApiResponses({
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200",description = "OK, 성공"),
     })
-    public ApiResponse<Long> updatePost(@AuthenticationPrincipal UserDetails details, @PathVariable Long postId, @RequestBody PostRequestDto.PostUpdateDto postRequestDto){
+    public ApiResponse<Long> updatePost(@AuthenticationPrincipal UserDetails details,
+                                        @PathVariable Long postId,
+                                        @RequestPart(value = "request") @Parameter(schema =@Schema(type = "string", format = "binary")) PostRequestDto.PostUpdateDto postRequestDto,
+                                        @RequestPart(value = "images", required = false) List<MultipartFile> multipartFiles) throws IOException {
         Long myId = userService.getUserId(details);
         User user = userService.findUser(myId);
 
-        return ApiResponse.onSuccess(postService.updatePost(user, postId, postRequestDto));
+        return ApiResponse.onSuccess(postService.updatePost(user, postId, postRequestDto, multipartFiles));
     }
 
     @DeleteMapping("/{postId}")
