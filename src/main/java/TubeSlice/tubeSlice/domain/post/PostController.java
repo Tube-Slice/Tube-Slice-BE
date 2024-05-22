@@ -35,12 +35,11 @@ public class PostController {
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200",description = "OK, 성공"),
     })
     public ApiResponse<Long> createPost(@AuthenticationPrincipal UserDetails details,
-                                        @RequestPart(value = "request") @Parameter(schema =@Schema(type = "string", format = "binary")) PostRequestDto.PostCreateDto postRequestDto,
-                                        @RequestPart(value = "images", required = false) List<MultipartFile> multipartFiles) throws IOException {
+                                        @RequestBody PostRequestDto.PostCreateDto postRequestDto) {
         Long myId = userService.getUserId(details);
         User user = userService.findUser(myId);
 
-        return ApiResponse.onSuccess(postService.createPost(user, postRequestDto, multipartFiles));
+        return ApiResponse.onSuccess(postService.createPost(user, postRequestDto));
     }
 
     @PatchMapping("/{postId}")
@@ -50,12 +49,11 @@ public class PostController {
     })
     public ApiResponse<Long> updatePost(@AuthenticationPrincipal UserDetails details,
                                         @PathVariable Long postId,
-                                        @RequestPart(value = "request") @Parameter(schema =@Schema(type = "string", format = "binary")) PostRequestDto.PostUpdateDto postRequestDto,
-                                        @RequestPart(value = "images", required = false) List<MultipartFile> multipartFiles) throws IOException {
+                                        @RequestBody PostRequestDto.PostUpdateDto postRequestDto) {
         Long myId = userService.getUserId(details);
         User user = userService.findUser(myId);
 
-        return ApiResponse.onSuccess(postService.updatePost(user, postId, postRequestDto, multipartFiles));
+        return ApiResponse.onSuccess(postService.updatePost(user, postId, postRequestDto));
     }
 
     @DeleteMapping("/{postId}")
@@ -63,11 +61,9 @@ public class PostController {
     @ApiResponses({
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200",description = "OK, 성공"),
     })
-    public ApiResponse<SuccessStatus> deletePost(@AuthenticationPrincipal UserDetails details, @PathVariable Long postId){
-        Long myId = userService.getUserId(details);
-        User user = userService.findUser(myId);
+    public ApiResponse<SuccessStatus> deletePost(@PathVariable Long postId){
 
-        return ApiResponse.onSuccess(postService.deletePost(user, postId));
+        return ApiResponse.onSuccess(postService.deletePost( postId));
     }
 
     @GetMapping("/{postId}")

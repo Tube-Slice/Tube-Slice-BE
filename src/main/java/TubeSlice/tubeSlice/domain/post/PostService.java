@@ -3,31 +3,21 @@ package TubeSlice.tubeSlice.domain.post;
 import TubeSlice.tubeSlice.domain.comment.Comment;
 import TubeSlice.tubeSlice.domain.comment.dto.response.CommentResponseDto;
 import TubeSlice.tubeSlice.domain.follow.FollowRepository;
-import TubeSlice.tubeSlice.domain.image.Image;
-import TubeSlice.tubeSlice.domain.image.ImageRepository;
-import TubeSlice.tubeSlice.domain.image.ImageServie;
-import TubeSlice.tubeSlice.domain.keyword.Keyword;
-import TubeSlice.tubeSlice.domain.keyword.KeywordRepository;
 import TubeSlice.tubeSlice.domain.post.dto.request.PostRequestDto;
 import TubeSlice.tubeSlice.domain.post.dto.response.PostResponseDto;
-import TubeSlice.tubeSlice.domain.postKeyword.PostKeyword;
-import TubeSlice.tubeSlice.domain.postKeyword.PostKeywordRepository;
 import TubeSlice.tubeSlice.domain.postKeyword.PostKeywordService;
 import TubeSlice.tubeSlice.domain.postLike.PostLikeRepository;
 import TubeSlice.tubeSlice.domain.user.User;
 import TubeSlice.tubeSlice.global.response.code.resultCode.ErrorStatus;
 import TubeSlice.tubeSlice.global.response.code.resultCode.SuccessStatus;
-import TubeSlice.tubeSlice.global.response.exception.handler.CommentHandler;
 import TubeSlice.tubeSlice.global.response.exception.handler.PostHandler;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.*;
 
@@ -42,17 +32,14 @@ public class PostService {
     private final PostRepository postRepository;
     private final FollowRepository followRepository;
     private final PostLikeRepository postLikeRepository;
-    private final KeywordRepository keywordRepository;
-    private final PostKeywordRepository postKeywordRepository;
-    
     private final PostKeywordService postKeywordService;
-    private final ImageServie imageServie;
+
 
     @Value("${spring.servlet.multipart.location}")
     private String fileDir;
 
     @Transactional
-    public Long createPost(User user, PostRequestDto.PostCreateDto postRequestDto, List<MultipartFile> multipartFiles) throws IOException {
+    public Long createPost(User user, PostRequestDto.PostCreateDto postRequestDto) {
         Post post = Post.builder()
                 .title(postRequestDto.getTitle())
                 .content(postRequestDto.getContent())
@@ -67,10 +54,8 @@ public class PostService {
         return post.getId();
     }
 
-
-
     @Transactional
-    public Long updatePost(User user,  Long postId, PostRequestDto.PostUpdateDto postRequestDto, List<MultipartFile> multipartFiles) throws IOException {
+    public Long updatePost(User user,  Long postId, PostRequestDto.PostUpdateDto postRequestDto) {
         Post findPost = postRepository.findById(postId).orElseThrow(()-> new PostHandler(ErrorStatus.POST_NOT_FOUND));
 
         if(findPost.getUser() != user){
@@ -99,16 +84,10 @@ public class PostService {
     }
 
     @Transactional
-    public SuccessStatus deletePost(User user, Long postId) {
+    public SuccessStatus deletePost(Long postId) {
         Post findPost = postRepository.findById(postId).orElseThrow(()->new PostHandler(ErrorStatus.POST_NOT_FOUND));
-        List<PostKeyword> postKeywords = postKeywordRepository.findByPostId(postId);
-
-        if(findPost.getUser() != user){
-            throw new PostHandler(ErrorStatus.POST_NOT_FOUND);
-        }
 
         postRepository.delete(findPost);
-        postKeywordRepository.deleteAll(postKeywords);
 
         return SuccessStatus._OK;
     }
@@ -133,7 +112,6 @@ public class PostService {
 
         return PostConverter.toPostCommentDtoList(user, commentList);
     }
-
 
 
     public List<PostResponseDto.BoardDto> getRecentBoard(){
