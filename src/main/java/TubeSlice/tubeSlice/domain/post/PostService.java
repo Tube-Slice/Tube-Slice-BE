@@ -16,13 +16,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
 import java.util.*;
-
 import java.util.List;
-import java.util.stream.Collectors;
+
 
 @Slf4j
 @Service
@@ -54,8 +51,11 @@ public class PostService {
         return post.getId();
     }
 
+
+
     @Transactional
     public Long updatePost(User user,  Long postId, PostRequestDto.PostUpdateDto postRequestDto) {
+
         Post findPost = postRepository.findById(postId).orElseThrow(()-> new PostHandler(ErrorStatus.POST_NOT_FOUND));
 
         if(findPost.getUser() != user){
@@ -79,7 +79,6 @@ public class PostService {
         if (updatePostKeywords!=null) {
             postKeywordService.updatePostKeyword(postId, updatePostKeywords, findPost);
         }
-
         return findPost.getId();
     }
 
