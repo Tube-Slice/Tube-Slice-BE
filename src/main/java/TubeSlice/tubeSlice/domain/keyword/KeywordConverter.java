@@ -15,17 +15,21 @@ public class KeywordConverter {
                 .name(keyword.getName())
                 .build();
     }
-    public static List<KeywordResponseDto.KeywordResultDto> toKeywordDtoList(List<Post> postList){
+    public static KeywordResponseDto.KeywordDtoList toKeywordDtoList(List<Post> postList){
         List<List<PostKeyword>> postKeyword = postList.stream()
                 .map(Post::getPostKeywordList)
                 .toList();
 
-        return postKeyword.stream()
+        List<KeywordResponseDto.KeywordResultDto> keywordList =  postKeyword.stream()
                 .flatMap(List::stream)
                 .map(PostKeyword::getKeyword)
                 .distinct()
                 .map(KeywordConverter::toKeywordResultDto)
                 .toList();
+
+        return KeywordResponseDto.KeywordDtoList.builder()
+                .keywords(keywordList)
+                .build();
     }
 
     public static List<KeywordResponseDto.KeywordResultDto> toPostKeywordDtoList(Post post){
