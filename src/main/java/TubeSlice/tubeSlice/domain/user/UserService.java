@@ -11,7 +11,6 @@ import TubeSlice.tubeSlice.domain.post.Post;
 import TubeSlice.tubeSlice.domain.post.PostConverter;
 import TubeSlice.tubeSlice.domain.post.PostRepository;
 import TubeSlice.tubeSlice.domain.post.dto.response.PostResponseDto;
-import TubeSlice.tubeSlice.domain.postKeyword.PostKeywordRepository;
 import TubeSlice.tubeSlice.domain.user.dto.request.UserRequestDto;
 import TubeSlice.tubeSlice.domain.user.dto.response.UserResponseDto;
 import TubeSlice.tubeSlice.global.jwt.UserDetailsImpl;
@@ -23,13 +22,15 @@ import TubeSlice.tubeSlice.global.response.exception.handler.KeywordHandler;
 import TubeSlice.tubeSlice.global.response.exception.handler.UserHandler;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.*;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 @Slf4j
@@ -58,7 +59,7 @@ public class UserService {
         return PostConverter.toPostInfoDtoList(postList);
     }
 
-    public List<KeywordResponseDto.KeywordResultDto> getUserKeywordList(User user){
+    public KeywordResponseDto.KeywordDtoList getUserKeywordList(User user){
         List<Post> postList = user.getPostList();
 
         return KeywordConverter.toKeywordDtoList(postList);

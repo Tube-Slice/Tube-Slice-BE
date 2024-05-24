@@ -17,10 +17,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
-
-import java.io.IOException;
-import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -85,7 +81,7 @@ public class PostController {
     @ApiResponses({
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200",description = "OK, 성공"),
     })
-    public ApiResponse<List<CommentResponseDto.PostCommentDto>> getPostComment(@AuthenticationPrincipal UserDetails details, @PathVariable(name = "postId")Long postId){
+    public ApiResponse<CommentResponseDto.PostCommentListDto> getPostComment(@AuthenticationPrincipal UserDetails details, @PathVariable(name = "postId")Long postId){
         Post post = postService.findPost(postId);
 
         Long myId = userService.getUserId(details);
@@ -99,7 +95,7 @@ public class PostController {
     @ApiResponses({
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200",description = "OK, 성공"),
     })
-    public ApiResponse<List<PostResponseDto.BoardDto>> getRecentBoard(){
+    public ApiResponse<PostResponseDto.BoardDtoList> getRecentBoard(){
         return ApiResponse.onSuccess(postService.getRecentBoard());
     }
 
@@ -108,7 +104,7 @@ public class PostController {
     @ApiResponses({
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200",description = "OK, 성공"),
     })
-    public ApiResponse<List<PostResponseDto.BoardDto>> getPopularBoard(){
+    public ApiResponse<PostResponseDto.BoardDtoList> getPopularBoard(){
         return ApiResponse.onSuccess(postService.getPopularBoard());
     }
 
@@ -123,7 +119,7 @@ public class PostController {
             @Parameter(name = "search", description = "검색어"),
 
     })
-    public ApiResponse<List<PostResponseDto.BoardDto>> getSearchBoard(@RequestParam(name = "type") String type, @RequestParam(name = "search") String search){
+    public ApiResponse<PostResponseDto.BoardDtoList> getSearchBoard(@RequestParam(name = "type") String type, @RequestParam(name = "search") String search){
 
         return ApiResponse.onSuccess(postService.getSearchBoard(type, search));
     }

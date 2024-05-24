@@ -1,7 +1,8 @@
 package TubeSlice.tubeSlice.domain.user;
 
-import TubeSlice.tubeSlice.domain.user.dto.request.UserRequestDto;
+import TubeSlice.tubeSlice.domain.keyword.dto.response.KeywordResponseDto;
 import TubeSlice.tubeSlice.domain.post.dto.response.PostResponseDto;
+import TubeSlice.tubeSlice.domain.user.dto.request.UserRequestDto;
 import TubeSlice.tubeSlice.domain.user.dto.response.UserResponseDto;
 import TubeSlice.tubeSlice.global.response.ApiResponse;
 import TubeSlice.tubeSlice.global.response.code.resultCode.SuccessStatus;
@@ -11,13 +12,10 @@ import io.swagger.v3.oas.annotations.Parameters;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
-import TubeSlice.tubeSlice.domain.keyword.dto.response.KeywordResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 
 
@@ -65,7 +63,7 @@ public class UserController {
     @ApiResponses({
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200",description = "OK, 성공"),
     })
-    public ApiResponse<List<KeywordResponseDto.KeywordResultDto>> getMyKeywordList(@AuthenticationPrincipal UserDetails details, @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size){
+    public ApiResponse<KeywordResponseDto.KeywordDtoList> getMyKeywordList(@AuthenticationPrincipal UserDetails details, @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size){
         Long myId = userService.getUserId(details);
         User user = userService.findUser(myId);
 
@@ -80,7 +78,7 @@ public class UserController {
     @Parameters({
             @Parameter(name = "userId", description = "특정 유저의 id"),
     })
-    public ApiResponse<List<KeywordResponseDto.KeywordResultDto>> getUserKeywordList(@PathVariable(name = "userId")Long userId){
+    public ApiResponse<KeywordResponseDto.KeywordDtoList> getUserKeywordList(@PathVariable(name = "userId")Long userId){
         User user = userService.findUser(userId);
 
         return ApiResponse.onSuccess(userService.getUserKeywordList(user));
