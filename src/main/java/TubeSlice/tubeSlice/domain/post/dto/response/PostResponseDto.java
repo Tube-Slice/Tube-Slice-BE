@@ -76,4 +76,12 @@ public class PostResponseDto {
         private Integer commentNum;
         private String createdAt;
     }
+
+    @Builder
+    @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class BoardDtoList{
+        private List<BoardDto> posts;
+    }
 }

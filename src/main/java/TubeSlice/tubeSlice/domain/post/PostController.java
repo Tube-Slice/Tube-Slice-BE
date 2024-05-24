@@ -99,7 +99,7 @@ public class PostController {
     @ApiResponses({
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200",description = "OK, 성공"),
     })
-    public ApiResponse<List<PostResponseDto.BoardDto>> getRecentBoard(){
+    public ApiResponse<PostResponseDto.BoardDtoList> getRecentBoard(){
         return ApiResponse.onSuccess(postService.getRecentBoard());
     }
 
@@ -108,7 +108,7 @@ public class PostController {
     @ApiResponses({
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200",description = "OK, 성공"),
     })
-    public ApiResponse<List<PostResponseDto.BoardDto>> getPopularBoard(){
+    public ApiResponse<PostResponseDto.BoardDtoList> getPopularBoard(){
         return ApiResponse.onSuccess(postService.getPopularBoard());
     }
 
@@ -123,7 +123,7 @@ public class PostController {
             @Parameter(name = "search", description = "검색어"),
 
     })
-    public ApiResponse<List<PostResponseDto.BoardDto>> getSearchBoard(@RequestParam(name = "type") String type, @RequestParam(name = "search") String search){
+    public ApiResponse<PostResponseDto.BoardDtoList> getSearchBoard(@RequestParam(name = "type") String type, @RequestParam(name = "search") String search){
 
         return ApiResponse.onSuccess(postService.getSearchBoard(type, search));
     }
