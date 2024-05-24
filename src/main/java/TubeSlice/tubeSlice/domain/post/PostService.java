@@ -17,7 +17,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.*;
+import java.util.Collections;
 import java.util.List;
 
 
@@ -106,7 +106,7 @@ public class PostService {
         return PostConverter.toSinglePostDto(user, post, isFollowing, isLike );
     }
 
-    public List<CommentResponseDto.PostCommentDto> getPostComment(User user, Post post){
+    public CommentResponseDto.PostCommentListDto getPostComment(User user, Post post){
         List<Comment> commentList = post.getCommentList();
 
         return PostConverter.toPostCommentDtoList(user, commentList);

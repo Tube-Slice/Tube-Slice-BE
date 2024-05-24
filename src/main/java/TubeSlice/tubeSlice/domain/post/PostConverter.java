@@ -116,10 +116,14 @@ public class PostConverter {
                 .build();
     }
 
-    public static List<CommentResponseDto.PostCommentDto> toPostCommentDtoList(User user, List<Comment> commentList){
-        return commentList.stream()
+    public static CommentResponseDto.PostCommentListDto toPostCommentDtoList(User user, List<Comment> commentList){
+        List<CommentResponseDto.PostCommentDto> commentDtoList =  commentList.stream()
                 .map(comment -> toPostCommentDto(user, comment))
-                .collect(Collectors.toList());
+                .toList();
+
+        return CommentResponseDto.PostCommentListDto.builder()
+                .comments(commentDtoList)
+                .build();
     }
 
     public static CommentResponseDto.PostCommentDto toPostCommentDto(User user, Comment comment){

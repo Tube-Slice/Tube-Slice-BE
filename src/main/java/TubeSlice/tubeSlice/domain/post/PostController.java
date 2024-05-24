@@ -85,7 +85,7 @@ public class PostController {
     @ApiResponses({
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200",description = "OK, 성공"),
     })
-    public ApiResponse<List<CommentResponseDto.PostCommentDto>> getPostComment(@AuthenticationPrincipal UserDetails details, @PathVariable(name = "postId")Long postId){
+    public ApiResponse<CommentResponseDto.PostCommentListDto> getPostComment(@AuthenticationPrincipal UserDetails details, @PathVariable(name = "postId")Long postId){
         Post post = postService.findPost(postId);
 
         Long myId = userService.getUserId(details);
