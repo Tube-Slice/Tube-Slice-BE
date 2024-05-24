@@ -3,6 +3,8 @@ package TubeSlice.tubeSlice.domain.comment.dto.response;
 import TubeSlice.tubeSlice.domain.user.dto.response.UserResponseDto;
 import lombok.*;
 
+import java.util.List;
+
 public class CommentResponseDto {
 
     @Builder
@@ -23,5 +25,13 @@ public class CommentResponseDto {
         private Long commentId;
         private String content;
         private String createdAt;
+    }
+
+    @Builder
+    @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class PostCommentListDto{
+        private List<PostCommentDto> comments;
     }
 }

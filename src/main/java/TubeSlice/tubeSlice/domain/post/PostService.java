@@ -17,7 +17,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.*;
+import java.util.Collections;
 import java.util.List;
 
 
@@ -106,27 +106,27 @@ public class PostService {
         return PostConverter.toSinglePostDto(user, post, isFollowing, isLike );
     }
 
-    public List<CommentResponseDto.PostCommentDto> getPostComment(User user, Post post){
+    public CommentResponseDto.PostCommentListDto getPostComment(User user, Post post){
         List<Comment> commentList = post.getCommentList();
 
         return PostConverter.toPostCommentDtoList(user, commentList);
     }
 
 
-    public List<PostResponseDto.BoardDto> getRecentBoard(){
+    public PostResponseDto.BoardDtoList getRecentBoard(){
         List<Post> postList = postRepository.findAll();
         Collections.reverse(postList);
 
         return PostConverter.toRecentBoardDtoList(postList);
     }
 
-    public List<PostResponseDto.BoardDto> getPopularBoard(){
+    public PostResponseDto.BoardDtoList getPopularBoard(){
         List<Post> postList = postRepository.findAll();
 
         return PostConverter.toPopularBoardDto(postList);
     }
 
-    public List<PostResponseDto.BoardDto> getSearchBoard(String type, String search){
+    public PostResponseDto.BoardDtoList getSearchBoard(String type, String search){
         if(type.equals("TITLE")){
             List<Post> postList = postRepository.findPostsByTitle(search);
             Collections.reverse(postList);

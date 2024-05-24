@@ -16,7 +16,6 @@ import java.time.format.DateTimeFormatter;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class PostConverter {
 
@@ -116,10 +115,14 @@ public class PostConverter {
                 .build();
     }
 
-    public static List<CommentResponseDto.PostCommentDto> toPostCommentDtoList(User user, List<Comment> commentList){
-        return commentList.stream()
+    public static CommentResponseDto.PostCommentListDto toPostCommentDtoList(User user, List<Comment> commentList){
+        List<CommentResponseDto.PostCommentDto> commentDtoList =  commentList.stream()
                 .map(comment -> toPostCommentDto(user, comment))
-                .collect(Collectors.toList());
+                .toList();
+
+        return CommentResponseDto.PostCommentListDto.builder()
+                .comments(commentDtoList)
+                .build();
     }
 
     public static CommentResponseDto.PostCommentDto toPostCommentDto(User user, Comment comment){
@@ -154,17 +157,25 @@ public class PostConverter {
                 .build();
     }
 
-    public static List<PostResponseDto.BoardDto> toRecentBoardDtoList(List<Post> postList){
+    public static PostResponseDto.BoardDtoList toRecentBoardDtoList(List<Post> postList){
 
-        return postList.stream()
+        List<PostResponseDto.BoardDto> boardDtoList = postList.stream()
                 .map(PostConverter::toBoardDto)
                 .toList();
+
+        return PostResponseDto.BoardDtoList.builder()
+                .posts(boardDtoList)
+                .build();
     }
 
-    public static List<PostResponseDto.BoardDto> toPopularBoardDto(List<Post> postList){
-        return postList.stream()
+    public static PostResponseDto.BoardDtoList toPopularBoardDto(List<Post> postList){
+        List<PostResponseDto.BoardDto> boardDtoList = postList.stream()
                 .sorted(Comparator.comparingInt(post -> -post.getPostLikeList().size()))
                 .map(PostConverter::toBoardDto)
                 .toList();
+
+        return PostResponseDto.BoardDtoList.builder()
+                .posts(boardDtoList)
+                .build();
     }
 }
