@@ -19,7 +19,7 @@ public class CommentService {
     private final CommentRepository commentRepository;
 
     @Transactional
-    public CommentResponseDto.CommentResultDto createComment(CommentRequestDto.CommentCreateDto request, User user, Post post){
+    public ApiResponse<SuccessStatus> createComment(CommentRequestDto.CommentCreateDto request, User user, Post post){
         String content = request.getContent();
 
         Comment comment = Comment.builder()
@@ -30,9 +30,7 @@ public class CommentService {
 
         commentRepository.save(comment);
 
-        return CommentResponseDto.CommentResultDto.builder()
-                .commentId(comment.getId())
-                .build();
+        return ApiResponse.onSuccess(SuccessStatus._OK);
     }
 
     @Transactional

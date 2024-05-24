@@ -37,13 +37,13 @@ public class CommentController {
     @Parameters({
             @Parameter(name = "postId", description = "댓글을 작성할 post의 id"),
     })
-    public ApiResponse<CommentResponseDto.CommentResultDto> createComment(@AuthenticationPrincipal UserDetails details, @PathVariable(name = "postId")Long postId, @RequestBody CommentRequestDto.CommentCreateDto request){
+    public ApiResponse<SuccessStatus> createComment(@AuthenticationPrincipal UserDetails details, @PathVariable(name = "postId")Long postId, @RequestBody CommentRequestDto.CommentCreateDto request){
         Long userId = userService.getUserId(details);
         User user = userService.findUser(userId);
 
         Post post = postService.findPost(postId);
 
-        return ApiResponse.onSuccess(commentService.createComment(request, user, post));
+        return commentService.createComment(request, user, post);
     }
 
     @DeleteMapping("/{commentId}")
