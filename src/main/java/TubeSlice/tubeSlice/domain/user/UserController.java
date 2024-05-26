@@ -223,4 +223,21 @@ public class UserController {
 
         return userService.deleteUser(user);
     }
+
+    @GetMapping("/me/follows/search")
+    @Operation(summary = "검색기반 팔로우 목록 가져오기 API",description = "type과 search를 parameter로 받아 FollowListDto를 반환")
+    @ApiResponses({
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200",description = "OK, 성공"),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "USER402", description = "유저 검색 타입이 유효하지 않습니다.",content = @Content(schema = @Schema(implementation = ApiResponse.class))),
+    })
+    @Parameters({
+            @Parameter(name = "type", description = "FOLLOWING, FOLLOWER"),
+            @Parameter(name = "nickname", description = "닉네임"),
+    })
+    public ApiResponse<UserResponseDto.FollowListDto> getSearchFollowList(@AuthenticationPrincipal UserDetails details, @RequestParam(name = "type")String type, @RequestParam(name = "nickname") String nickname){
+        Long userId = userService.getUserId(details);
+        User user = userService.findUser(userId);
+
+        return ApiResponse.onSuccess(userService.getSearchFollowList(user , user, type, nickname));
+    }
 }
