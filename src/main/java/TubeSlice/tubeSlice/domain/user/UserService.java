@@ -19,6 +19,7 @@ import TubeSlice.tubeSlice.global.response.ApiResponse;
 import TubeSlice.tubeSlice.global.response.code.resultCode.ErrorStatus;
 import TubeSlice.tubeSlice.global.response.code.resultCode.SuccessStatus;
 import TubeSlice.tubeSlice.global.response.exception.handler.KeywordHandler;
+import TubeSlice.tubeSlice.global.response.exception.handler.PostHandler;
 import TubeSlice.tubeSlice.global.response.exception.handler.UserHandler;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -31,6 +32,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @Slf4j
@@ -146,6 +148,31 @@ public class UserService {
         userRepository.delete(user);
 
         return ApiResponse.onSuccess(SuccessStatus._OK);
+    }
+
+    public PostResponseDto.PostInfoListDto getMyPageSearch(User user, String type, String search, Integer page, Integer size){
+        List<Post> userPostList = user.getPostList();
+        if(userPostList == null){
+            return null;
+        }
+
+        if(type.equals("TITLE")){
+            Page<Post> postList = postRepository.findPostsByTitleAndUser(search, user, PageRequest.of(page, size));
+
+            return PostConverter.toPostInfoDtoList(postList);
+        } else if(type.equals("CONTENT")){
+            Page<Post> postList = postRepository.findPostsByContentAndUser(search, user,  PageRequest.of(page, size));
+
+            return PostConverter.toPostInfoDtoList(postList);
+        } else if(type.equals("BOTH")) {
+            Page<Post> postList = postRepository.findPostsByTitleOrContentAndUser(search, user ,PageRequest.of(page, size));
+
+            return PostConverter.toPostInfoDtoList(postList);
+        } else {
+            throw new PostHandler(ErrorStatus.POST_SEARCH_BAD_REQUEST);
+        }
+
+
     }
 }
 
