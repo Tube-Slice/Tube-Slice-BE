@@ -36,7 +36,6 @@ public class TextController {
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "USER401", description = "변환에 실패하였습니다.",content = @Content(schema = @Schema(implementation = ApiResponse.class))),
     })
     public ApiResponse<Object> videoToScript(@RequestParam("youtubeUrl") String youtubeUrl){
-        //String audioFile = new File(youtubeUrl).getName();
         Script findScript = scriptRepository.findByVideoUrl(youtubeUrl);
 
         if (findScript != null){    //ObjectStorage에 변환된 기록 있으면 변환 없이 파일 가져오기.
