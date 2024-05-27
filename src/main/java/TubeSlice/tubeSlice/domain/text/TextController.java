@@ -35,9 +35,9 @@ public class TextController {
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200",description = "OK, 성공"),
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "USER401", description = "변환에 실패하였습니다.",content = @Content(schema = @Schema(implementation = ApiResponse.class))),
     })
-    public ApiResponse<Object> videoToScript(@RequestParam("filePath") String filePath){
-        String audioFile = new File(filePath).getName();
-        Script findScript = scriptRepository.findByVideoUrl(audioFile);
+    public ApiResponse<Object> videoToScript(@RequestParam("youtubeUrl") String youtubeUrl){
+        //String audioFile = new File(youtubeUrl).getName();
+        Script findScript = scriptRepository.findByVideoUrl(youtubeUrl);
 
         if (findScript != null){    //ObjectStorage에 변환된 기록 있으면 변환 없이 파일 가져오기.
 
@@ -45,7 +45,7 @@ public class TextController {
             return ApiResponse.onSuccess(textService.getScriptFromBucket(findScript));
         }
 
-        return ApiResponse.onSuccess(textService.videoToScript(filePath));
+        return ApiResponse.onSuccess(textService.videoToScript(youtubeUrl));
     }
 
     @PostMapping("/summary")
@@ -56,10 +56,19 @@ public class TextController {
     @Parameters(value = {
             @Parameter(name = "scriptBody", description = "요약할 영상의 스크립트"),
     })
-    public ApiResponse<Object> gptSummarize(@RequestBody TextRequestDto.SummaryRequestDto summaryRequestDto){
+    public ApiResponse<Object> gptSummarize(@RequestParam("row") String row,
+                                            @RequestParam("youtubeUrl") String youtubeUrl){
+        Script findScript = scriptRepository.findByVideoUrl(youtubeUrl);
 
-        return ApiResponse.onSuccess(textService.summarize(summaryRequestDto));
+        if (findScript != null){    //ObjectStorage에 변환된 기록 있으면 변환 없이 파일 가져오기.
 
+            log.info("findScript: {}", findScript);
+            String totalScript = textService.getTotalScript(textService.getScriptFromBucket(findScript));
+            return ApiResponse.onSuccess(textService.summarize(new TextRequestDto.SummaryRequestDto(row,totalScript)));
+        }
+
+        String totalScript = textService.getTotalScript(textService.videoToScript(youtubeUrl));
+        return ApiResponse.onSuccess(textService.summarize(new TextRequestDto.SummaryRequestDto(row, totalScript)));
     }
 //        {
 //            "isSuccess": true,
@@ -78,13 +87,10 @@ public class TextController {
         return ApiResponse.onSuccess(new TextResponseDto.ClovaSpeechResponseDto());
     }
 
-//    @GetMapping("/script")
-//    public ApiResponse<List<Map.Entry<Double,String>>> getScript(@RequestParam("fileName") String fileName){
-//
-//        List<Map.Entry<Double, String>> result = textService.getScriptFromBucket(fileName);
-//
-//        return ApiResponse.onSuccess(result);
-//
-//    }
+    @PostMapping("/youtube")
+    public ApiResponse<Object> youtubeUrl(@RequestParam("youtubeUrl") String youtubeUrl) {
+
+        return ApiResponse.onSuccess(textService.getAudioFileFromYoutubeUrl(youtubeUrl));
+    }
 
 }
