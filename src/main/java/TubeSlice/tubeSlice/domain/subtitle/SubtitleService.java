@@ -34,6 +34,7 @@ public class SubtitleService {
     @Autowired
     private RestTemplate template;
 
+    @Transactional
     public void saveSubtitle(List<Map.Entry<Double, String>> scripts, Script script) {
 
         //subtitle은 무조건 저장. 아니면 gpt api 계속 호출해야함.
@@ -68,7 +69,7 @@ public class SubtitleService {
         return totalScriptsWithTimeline;
     }
 
-    @Transactional
+
     public String getSubtitles(String script){
         String requestMessage1 = "내 질문에 대한 응답을 json 형식으로 출력해줘.";
         String requestMessage2 = "\"" + script + "\" \n위 전체 스크립트를 읽어보고 중요한 핵심적인 내용에 해당하는 부분만 소제목 지어서 해당하는 시간과 소제목을 출력해줘. \n" +
