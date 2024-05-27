@@ -223,4 +223,43 @@ public class UserController {
 
         return userService.deleteUser(user);
     }
+
+    @GetMapping("/me/mypage/search")
+    @Operation(summary = "마이페이지용 나의 검색 기반 게시글 가져오기 API",description = "type과 search를 받아 PostInfoListDto를 반환")
+    @ApiResponses({
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200",description = "OK, 성공"),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "POST402", description = "검색 타입이 올바르지 않습니다.",content = @Content(schema = @Schema(implementation = ApiResponse.class))),
+    })
+    @Parameters({
+            @Parameter(name = "type", description = "TITLE, CONTENT, BOTH"),
+            @Parameter(name = "search", description = "검색어"),
+            @Parameter(name = "page", description = "페이지 수"),
+            @Parameter(name = "size", description = "페이지 사이즈"),
+
+    })
+    public ApiResponse<PostResponseDto.PostInfoListDto> getMyPageSearch(@AuthenticationPrincipal UserDetails details, @RequestParam(name = "type")String type, @RequestParam(name = "search") String search, @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size){
+        Long userId = userService.getUserId(details);
+        User user = userService.findUser(userId);
+
+        return ApiResponse.onSuccess(userService.getMyPageSearch(user, type, search, page, size));
+    }
+
+    @GetMapping("/me/{userId}/search")
+    @Operation(summary = "마이페이지용 특정 유저의 검색 기반 게시글 가져오기 API",description = "type과 search를 받아 PostInfoListDto를 반환")
+    @ApiResponses({
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200",description = "OK, 성공"),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "POST402", description = "검색 타입이 올바르지 않습니다.",content = @Content(schema = @Schema(implementation = ApiResponse.class))),
+    })
+    @Parameters({
+            @Parameter(name = "type", description = "TITLE, CONTENT, BOTH"),
+            @Parameter(name = "search", description = "검색어"),
+            @Parameter(name = "page", description = "페이지 수"),
+            @Parameter(name = "size", description = "페이지 사이즈"),
+
+    })
+    public ApiResponse<PostResponseDto.PostInfoListDto> getUserPageSearch(@PathVariable(name = "userId")Long userId, @RequestParam(name = "type")String type, @RequestParam(name = "search") String search, @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size){
+        User user = userService.findUser(userId);
+
+        return ApiResponse.onSuccess(userService.getMyPageSearch(user, type, search, page, size));
+    }
 }
