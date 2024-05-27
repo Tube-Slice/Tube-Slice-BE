@@ -34,6 +34,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -170,6 +171,34 @@ public class UserService {
             return PostConverter.toPostInfoDtoList(postList);
         } else {
             throw new PostHandler(ErrorStatus.POST_SEARCH_BAD_REQUEST);
+        }
+
+
+    }
+
+    public UserResponseDto.FollowListDto getSearchFollowList(User me, User user, String type, String nickname){
+        List<Long> myFollowingIdList = getUserFollowingIdList(me);
+
+        if(type.equals("FOLLOWING")){
+            List<Follow> followList = user.getFollowingList();
+
+            List<Follow> nicknameList = followList.stream()
+                    .filter(follow -> {return follow.getReceiver().getNickname().contains(nickname);})
+                    .toList();
+
+            return UserConverter.toFollowingListDto(myFollowingIdList, nicknameList, user);
+
+        } else if (type.equals("FOLLOWER")){
+            List<Follow> followList = user.getFollowerList();
+
+            List<Follow> nicknameList = followList.stream()
+                    .filter(follow -> {return follow.getSender().getNickname().contains(nickname);})
+                    .toList();
+
+            return UserConverter.toFollowerListDto(myFollowingIdList, nicknameList, user);
+
+        } else {
+            throw new UserHandler(ErrorStatus.USER_TYPE_NOT_VALID);
         }
 
 

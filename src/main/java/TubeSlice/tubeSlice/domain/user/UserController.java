@@ -262,4 +262,41 @@ public class UserController {
 
         return ApiResponse.onSuccess(userService.getMyPageSearch(user, type, search, page, size));
     }
+
+    @GetMapping("/me/follows/search")
+    @Operation(summary = "검색기반 나의 팔로우 목록 가져오기 API",description = "type과 search를 parameter로 받아 FollowListDto를 반환")
+    @ApiResponses({
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200",description = "OK, 성공"),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "USER402", description = "유저 검색 타입이 유효하지 않습니다.",content = @Content(schema = @Schema(implementation = ApiResponse.class))),
+    })
+    @Parameters({
+            @Parameter(name = "type", description = "FOLLOWING, FOLLOWER"),
+            @Parameter(name = "nickname", description = "닉네임"),
+    })
+    public ApiResponse<UserResponseDto.FollowListDto> getSearchMyFollowList(@AuthenticationPrincipal UserDetails details, @RequestParam(name = "type")String type, @RequestParam(name = "nickname") String nickname){
+        Long userId = userService.getUserId(details);
+        User user = userService.findUser(userId);
+
+        return ApiResponse.onSuccess(userService.getSearchFollowList(user , user, type, nickname));
+    }
+
+    @GetMapping("/{userId}/follows/search")
+    @Operation(summary = "검색기반 특정유저의 팔로우 목록 가져오기 API",description = "type과 search를 parameter로 받아 FollowListDto를 반환")
+    @ApiResponses({
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200",description = "OK, 성공"),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "USER402", description = "유저 검색 타입이 유효하지 않습니다.",content = @Content(schema = @Schema(implementation = ApiResponse.class))),
+    })
+    @Parameters({
+            @Parameter(name = "type", description = "FOLLOWING, FOLLOWER"),
+            @Parameter(name = "nickname", description = "닉네임"),
+    })
+    public ApiResponse<UserResponseDto.FollowListDto> getSearchUserFollowList(@AuthenticationPrincipal UserDetails details, @PathVariable(name = "userId") Long userId, @RequestParam(name = "type")String type, @RequestParam(name = "nickname") String nickname){
+        // 나의 기준 팔로잉 리스트 필요
+        Long myId = userService.getUserId(details);
+        User me = userService.findUser(myId);
+        // 보여질 팔로잉 리스트
+        User user = userService.findUser(userId);
+
+        return ApiResponse.onSuccess(userService.getSearchFollowList(me , user, type, nickname));
+    }
 }

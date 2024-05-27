@@ -16,6 +16,7 @@ public enum ErrorStatus implements BaseErrorCode {
 
     // User
     USER_NOT_FOUND(HttpStatus.NOT_FOUND, "USER401", "해당 유저가 존재하지 않습니다." ),
+    USER_TYPE_NOT_VALID(HttpStatus.BAD_REQUEST, "USER402", "검색 타입을 잘못 입력하셨습니다."),
 
     // Post
     POST_NOT_FOUND(HttpStatus.NOT_FOUND, "POST401", "게시글이 존재하지 않습니다."),
