@@ -165,10 +165,10 @@ public class UserService {
             List<Follow> followList = user.getFollowerList();
 
             List<Follow> nicknameList = followList.stream()
-                    .filter(follow -> {return follow.getReceiver().getNickname().contains(nickname);})
+                    .filter(follow -> {return follow.getSender().getNickname().contains(nickname);})
                     .toList();
 
-            return UserConverter.toFollowerListDto(myFollowingIdList, followList, user);
+            return UserConverter.toFollowerListDto(myFollowingIdList, nicknameList, user);
 
         } else {
             throw new UserHandler(ErrorStatus.USER_TYPE_NOT_VALID);
