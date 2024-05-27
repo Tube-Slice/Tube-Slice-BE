@@ -38,4 +38,13 @@ public class TextResponseDto {
             private TextRequestDto.GptRequest.Messages message;
         }
     }
+
+    @Getter
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class SummaryResponseDto{
+        private String id;
+        private String message;
+    }
 }

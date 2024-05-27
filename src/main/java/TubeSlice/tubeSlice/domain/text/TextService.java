@@ -203,7 +203,7 @@ public class TextService {
                 textRepository.save(text);
             }
             String totalScriptsWithTimeline = getTotalScriptsWithTimeline(scripts);
-            String subtitles = trimText(totalScriptsWithTimeline);
+            String subtitles = getSubtitles(totalScriptsWithTimeline);
 
             HashMap<Double, String> sub = trimResult(subtitles);
 
@@ -244,7 +244,7 @@ public class TextService {
     }
 
     @Transactional
-    public String trimText(String script){
+    public String getSubtitles(String script){
         String requestMessage1 = "내 질문에 대한 응답을 json 형식으로 출력해줘.";
         String requestMessage2 = "\"" + script + "\" \n위 전체 스크립트를 읽어보고 중요한 핵심적인 내용에 해당하는 부분만 소제목 지어서 해당하는 시간과 소제목을 출력해줘. \n" +
                 "출력 형식: \"'시간':'소제목'\"";
@@ -288,9 +288,9 @@ public class TextService {
         return result;
     }
 
-    private HashMap<String,String> trimSummary(String jsonResult){
+    private List<TextResponseDto.SummaryResponseDto> trimSummary(String jsonResult){
         log.info("요약 내용: {}", jsonResult);
-        HashMap<String, String> result = new HashMap<>();
+        List<TextResponseDto.SummaryResponseDto> result = new ArrayList<>();
 
         //jsonResult = jsonResult.replaceAll("\n", "").trim();
         jsonResult = jsonResult.replace("{", "").trim();
@@ -308,7 +308,7 @@ public class TextService {
             String idx = parts.get(0).replaceAll("\"","");
             idx = idx.trim();
 
-            result.put(idx,value);
+            result.add(new TextResponseDto.SummaryResponseDto(idx,value));
 
             log.info("{} : {}", idx, value);
         }
@@ -316,16 +316,16 @@ public class TextService {
         return result;
     }
 
+
+
     public String getAudioFileFromYoutubeUrl(String youtubeUrl){
         String filename = "mp3 파일 가져오기 실패.";
 
         //yt-dlp 파일 실행 위치.
         String ytDlpPath = "yt-dlp";
-        //String ytDlpPath = "D:\\youtube-dl\\ffmpeg-7.0-essentials_build\\bin\\yt-dlp.exe";
 
         //mp3 파일 저장 경로. 서버 상에 경로 지정.
         String downloadDir = "yt-dlp/mp3/%(title)s.%(ext)s";
-        //String downloadDir = "D:\\youtube-dl\\%(title)s.%(ext)s";
 
         try {
             // Command to download video
