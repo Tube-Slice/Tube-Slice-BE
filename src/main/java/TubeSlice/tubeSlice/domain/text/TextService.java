@@ -165,12 +165,20 @@ public class TextService {
                 String eachScript = segmentNode.get("textEdited").asText();
 
                 //타임라인 double 형으로 변환.
-                if(start.length() > 3) {
+                if(start.equals("0")){
+                    start = start + ".0";
+                } else if (start.length() == 1){
+                    start = "0.00" + start;
+                } else if (start.length() == 2) {
+                    start = "0.0" + start;
+
+                } else if (start.length() == 3) {
+                    start = "0." + start;
+
+                } else if(start.length() > 3) {
                     start = start.substring(0, start.length() - 3) + "." + start.substring(start.length() - 3);
                 }
-                else if(start.equals("0")){
-                    start = start + ".0";
-                }
+
                 Double startDouble = Double.parseDouble(start);
 
                 scripts.add(new AbstractMap.SimpleEntry<>(startDouble, eachScript));
