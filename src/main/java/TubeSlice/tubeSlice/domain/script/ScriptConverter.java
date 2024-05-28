@@ -18,13 +18,4 @@ public class ScriptConverter {
         return subs;
     }
 
-    public static List<TextResponseDto> toTextListDto(Script script){
-        List<TextResponseDto> texts = script.getUserScriptList().stream()
-                .map(text -> new TextResponseDto(text.getTimeline(), text.getScripts()))
-                .sorted(Comparator.comparing(TextResponseDto::getTimeline))
-                .collect(Collectors.toList());
-
-        return texts;
-    }
-
 }

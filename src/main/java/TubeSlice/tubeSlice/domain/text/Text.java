@@ -1,6 +1,6 @@
 package TubeSlice.tubeSlice.domain.text;
 
-import TubeSlice.tubeSlice.domain.script.Script;
+import TubeSlice.tubeSlice.domain.userScript.UserScript;
 import TubeSlice.tubeSlice.global.entity.BaseEntity;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -24,11 +24,11 @@ public class Text extends BaseEntity {
     private Double timeline;
 
     @Column(length = 300)
-    private String scripts;
+    private String text;
 
-    private Boolean isSaved;
+    private Boolean highlight;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "script_id")
-    private Script script;
+    @JoinColumn(name = "user_script_id")
+    private UserScript userScript;
 }
