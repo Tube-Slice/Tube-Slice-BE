@@ -30,12 +30,12 @@ public class PostController {
     @ApiResponses({
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200",description = "OK, 성공"),
     })
-    public ApiResponse<Long> createPost(@AuthenticationPrincipal UserDetails details,
+    public ApiResponse<SuccessStatus> createPost(@AuthenticationPrincipal UserDetails details,
                                         @RequestBody PostRequestDto.PostCreateDto postRequestDto) {
         Long myId = userService.getUserId(details);
         User user = userService.findUser(myId);
 
-        return ApiResponse.onSuccess(postService.createPost(user, postRequestDto));
+        return postService.createPost(user, postRequestDto);
     }
 
     @PatchMapping("/{postId}")
