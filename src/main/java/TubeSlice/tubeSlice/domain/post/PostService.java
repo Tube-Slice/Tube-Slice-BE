@@ -7,6 +7,7 @@ import TubeSlice.tubeSlice.domain.post.dto.request.PostRequestDto;
 import TubeSlice.tubeSlice.domain.post.dto.response.PostResponseDto;
 import TubeSlice.tubeSlice.domain.postKeyword.PostKeywordService;
 import TubeSlice.tubeSlice.domain.postLike.PostLikeRepository;
+import TubeSlice.tubeSlice.domain.timeline.TimelineService;
 import TubeSlice.tubeSlice.domain.user.User;
 import TubeSlice.tubeSlice.global.response.code.resultCode.ErrorStatus;
 import TubeSlice.tubeSlice.global.response.code.resultCode.SuccessStatus;
@@ -30,7 +31,7 @@ public class PostService {
     private final FollowRepository followRepository;
     private final PostLikeRepository postLikeRepository;
     private final PostKeywordService postKeywordService;
-
+    private final TimelineService timelineService;
 
     @Value("${spring.servlet.multipart.location}")
     private String fileDir;
@@ -46,6 +47,7 @@ public class PostService {
 
         postRepository.save(post);
 
+        timelineService.savePostTimeline(postRequestDto, post);
         postKeywordService.savePostKeyword(postRequestDto, post);
 
         return post.getId();

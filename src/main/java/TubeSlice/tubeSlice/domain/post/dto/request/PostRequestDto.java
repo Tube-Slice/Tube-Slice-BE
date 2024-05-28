@@ -11,7 +11,15 @@ import java.util.List;
 
 public class PostRequestDto {
 
-
+    @Getter
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class TimelineDto{
+        private Integer startTime;
+        private Integer endTime;
+        private String description;
+    }
     @Getter
     @Builder
     @NoArgsConstructor
@@ -21,6 +29,7 @@ public class PostRequestDto {
         private String content;
         private String youtubeUrl;
         private List<String> postKeywords;
+        private List<TimelineDto> timelineDtoList;
     }
 
     @Getter
