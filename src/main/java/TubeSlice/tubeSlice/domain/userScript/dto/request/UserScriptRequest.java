@@ -26,6 +26,6 @@ public class UserScriptRequest {
     public static class UpdateRequestDto{
 
         String scripts;
-        private List<String> postKeywords;
+        private List<String> scriptKeywords;
     }
 }
