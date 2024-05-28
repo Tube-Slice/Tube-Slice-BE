@@ -3,6 +3,8 @@ package TubeSlice.tubeSlice.domain.scriptKeyword;
 import TubeSlice.tubeSlice.domain.keyword.Keyword;
 import TubeSlice.tubeSlice.domain.post.Post;
 import TubeSlice.tubeSlice.domain.script.Script;
+import TubeSlice.tubeSlice.domain.userScript.UserScript;
+import TubeSlice.tubeSlice.global.entity.BaseEntity;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -15,7 +17,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class ScriptKeyword {
+public class ScriptKeyword extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
@@ -26,7 +28,7 @@ public class ScriptKeyword {
     private Keyword keyword;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "script_id")
-    private Script script;
+    @JoinColumn(name = "user_script_id")
+    private UserScript userScript;
 
 }

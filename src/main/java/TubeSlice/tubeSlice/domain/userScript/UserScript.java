@@ -1,6 +1,8 @@
 package TubeSlice.tubeSlice.domain.userScript;
 
+import TubeSlice.tubeSlice.domain.postKeyword.PostKeyword;
 import TubeSlice.tubeSlice.domain.script.Script;
+import TubeSlice.tubeSlice.domain.scriptKeyword.ScriptKeyword;
 import TubeSlice.tubeSlice.domain.text.Text;
 import TubeSlice.tubeSlice.domain.user.User;
 import TubeSlice.tubeSlice.global.entity.BaseEntity;
@@ -35,6 +37,9 @@ public class UserScript extends BaseEntity {
     @JoinColumn(name = "script_id")
     private Script script;
 
-    @OneToMany(mappedBy = "text", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "userScript", cascade = CascadeType.ALL)
     private List<Text> scriptTexts = new ArrayList<>();
+
+    @OneToMany(mappedBy = "userScript", cascade = CascadeType.ALL)
+    private List<ScriptKeyword> scriptKeywords = new ArrayList<>();
 }

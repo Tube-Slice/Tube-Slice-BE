@@ -1,6 +1,8 @@
 package TubeSlice.tubeSlice.domain.userScript;
 
 import TubeSlice.tubeSlice.domain.script.Script;
+import TubeSlice.tubeSlice.domain.scriptKeyword.ScriptKeyword;
+import TubeSlice.tubeSlice.domain.scriptKeyword.ScriptKeywordService;
 import TubeSlice.tubeSlice.domain.subtitle.Subtitle;
 import TubeSlice.tubeSlice.domain.subtitle.SubtitleRepository;
 import TubeSlice.tubeSlice.domain.text.Text;
@@ -24,17 +26,17 @@ public class UserScriptService {
 
     private final UserScriptRepository userScriptRepository;
     private final TextRepository textRepository;
-    private final SubtitleRepository subtitleRepository;
+    private final ScriptKeywordService scriptKeywordService;
 
     private final TextService textService;
 
-    public Long saveScript(User user, Script script){
+    public Long saveScript( Script script, UserScriptRequest.SaveRequestDto requestDto){
 
         List<Map.Entry<Double, String>> scripts = textService.getScriptFromBucket(script);
 
         UserScript userScript = UserScript.builder()
                 .script(script)
-                .user(user)
+                //.user(user)
                 .build();
         userScriptRepository.save(userScript);
 
@@ -44,6 +46,8 @@ public class UserScriptService {
             Text text = TextConverter.toText(e, userScript);
             textRepository.save(text);
         }
+
+        scriptKeywordService.saveScriptKeyword(requestDto, userScript);
 
         return userScript.getId();
     }

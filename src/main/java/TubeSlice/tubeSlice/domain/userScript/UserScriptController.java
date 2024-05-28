@@ -4,11 +4,15 @@ import TubeSlice.tubeSlice.domain.script.Script;
 import TubeSlice.tubeSlice.domain.script.ScriptRepository;
 import TubeSlice.tubeSlice.domain.user.User;
 import TubeSlice.tubeSlice.domain.user.UserService;
+import TubeSlice.tubeSlice.domain.userScript.dto.request.UserScriptRequest;
 import TubeSlice.tubeSlice.global.response.ApiResponse;
+import TubeSlice.tubeSlice.global.response.code.resultCode.SuccessStatus;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -21,12 +25,13 @@ public class UserScriptController {
     private final ScriptRepository scriptRepository;
 
     @PostMapping("/save")
-    public ApiResponse<Long> saveScript(@AuthenticationPrincipal UserDetails details, @RequestParam("youtubeUrl") String youtubeUrl){
-        Long userId = userService.getUserId(details);
-        User user = userService.findUser(userId);
+    public ApiResponse<SuccessStatus> saveScript( @RequestBody UserScriptRequest.SaveRequestDto requestDto){
+//        Long userId = userService.getUserId(details);
+//        User user = userService.findUser(userId);
 
-        Script script = scriptRepository.findByVideoUrl(youtubeUrl);
+        Script script = scriptRepository.findByVideoUrl(requestDto.getYoutubeUrl());
+        userScriptService.saveScript(script, requestDto);
 
-        return ApiResponse.onSuccess(userScriptService.saveScript(user,script));
+        return ApiResponse.onSuccess(SuccessStatus._OK);
     }
 }

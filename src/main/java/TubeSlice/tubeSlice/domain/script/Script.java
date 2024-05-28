@@ -40,9 +40,6 @@ public class Script extends BaseEntity {
     private List<UserScript> userScriptList = new ArrayList<>();
 
     @OneToMany(mappedBy = "script", cascade = CascadeType.ALL)
-    private List<ScriptKeyword> keywords = new ArrayList<>();
-
-    @OneToMany(mappedBy = "script", cascade = CascadeType.ALL)
     private List<Subtitle> subtitles = new ArrayList<>();
 
 }

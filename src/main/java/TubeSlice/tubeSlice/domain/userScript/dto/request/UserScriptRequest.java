@@ -5,6 +5,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 
 public class UserScriptRequest {
 
@@ -13,8 +15,8 @@ public class UserScriptRequest {
     @NoArgsConstructor
     @AllArgsConstructor
     public static class SaveRequestDto{
-        Double timeline;
-        String scripts;
+        String youtubeUrl;
+        private List<String> scriptKeywords;
     }
 
     @Getter
@@ -24,5 +26,6 @@ public class UserScriptRequest {
     public static class UpdateRequestDto{
 
         String scripts;
+        private List<String> postKeywords;
     }
 }
