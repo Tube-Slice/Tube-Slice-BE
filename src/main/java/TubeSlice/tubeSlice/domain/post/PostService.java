@@ -7,7 +7,9 @@ import TubeSlice.tubeSlice.domain.post.dto.request.PostRequestDto;
 import TubeSlice.tubeSlice.domain.post.dto.response.PostResponseDto;
 import TubeSlice.tubeSlice.domain.postKeyword.PostKeywordService;
 import TubeSlice.tubeSlice.domain.postLike.PostLikeRepository;
+import TubeSlice.tubeSlice.domain.timeline.TimelineService;
 import TubeSlice.tubeSlice.domain.user.User;
+import TubeSlice.tubeSlice.global.response.ApiResponse;
 import TubeSlice.tubeSlice.global.response.code.resultCode.ErrorStatus;
 import TubeSlice.tubeSlice.global.response.code.resultCode.SuccessStatus;
 import TubeSlice.tubeSlice.global.response.exception.handler.PostHandler;
@@ -30,13 +32,13 @@ public class PostService {
     private final FollowRepository followRepository;
     private final PostLikeRepository postLikeRepository;
     private final PostKeywordService postKeywordService;
-
+    private final TimelineService timelineService;
 
     @Value("${spring.servlet.multipart.location}")
     private String fileDir;
 
     @Transactional
-    public Long createPost(User user, PostRequestDto.PostCreateDto postRequestDto) {
+    public ApiResponse<SuccessStatus> createPost(User user, PostRequestDto.PostCreateDto postRequestDto) {
         Post post = Post.builder()
                 .title(postRequestDto.getTitle())
                 .content(postRequestDto.getContent())
@@ -46,9 +48,10 @@ public class PostService {
 
         postRepository.save(post);
 
+        timelineService.savePostTimeline(postRequestDto, post);
         postKeywordService.savePostKeyword(postRequestDto, post);
 
-        return post.getId();
+        return ApiResponse.onSuccess(SuccessStatus._OK);
     }
 
 

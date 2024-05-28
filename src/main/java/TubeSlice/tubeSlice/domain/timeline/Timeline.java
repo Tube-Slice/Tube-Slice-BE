@@ -18,19 +18,11 @@ public class Timeline {
     @Column(name="id")
     private Long id;
 
-    private Integer startHours;
-
-    private Integer startMinutes;
+    @Column(nullable = false)
+    private Integer startTime;
 
     @Column(nullable = false)
-    private Integer startSeconds;
-
-    private Integer endHours;
-
-    private Integer endMinutes;
-
-    @Column(nullable = false)
-    private Integer endSeconds;
+    private Integer endTime;
 
     private String description;
 
