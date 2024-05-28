@@ -30,13 +30,13 @@ public class UserScriptService {
 
     private final TextService textService;
 
-    public Long saveScript( Script script, UserScriptRequest.SaveRequestDto requestDto){
+    public Long saveScript(User user, Script script, UserScriptRequest.SaveRequestDto requestDto){
 
         List<Map.Entry<Double, String>> scripts = textService.getScriptFromBucket(script);
 
         UserScript userScript = UserScript.builder()
                 .script(script)
-                //.user(user)
+                .user(user)
                 .build();
         userScriptRepository.save(userScript);
 

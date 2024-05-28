@@ -25,12 +25,12 @@ public class UserScriptController {
     private final ScriptRepository scriptRepository;
 
     @PostMapping("/save")
-    public ApiResponse<SuccessStatus> saveScript( @RequestBody UserScriptRequest.SaveRequestDto requestDto){
-//        Long userId = userService.getUserId(details);
-//        User user = userService.findUser(userId);
+    public ApiResponse<SuccessStatus> saveScript(@AuthenticationPrincipal UserDetails details, @RequestBody UserScriptRequest.SaveRequestDto requestDto){
+        Long userId = userService.getUserId(details);
+        User user = userService.findUser(userId);
 
         Script script = scriptRepository.findByVideoUrl(requestDto.getYoutubeUrl());
-        userScriptService.saveScript(script, requestDto);
+        userScriptService.saveScript(user,script, requestDto);
 
         return ApiResponse.onSuccess(SuccessStatus._OK);
     }
