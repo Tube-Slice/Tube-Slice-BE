@@ -15,7 +15,7 @@ import java.util.List;
 public class TextResponseDto {
 
     private Double timeline;
-    private String scripts;
+    private String text;
 
     @Getter
     @NoArgsConstructor

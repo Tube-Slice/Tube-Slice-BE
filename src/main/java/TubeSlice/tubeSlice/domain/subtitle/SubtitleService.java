@@ -35,7 +35,7 @@ public class SubtitleService {
     private RestTemplate template;
 
     @Transactional
-    public void saveSubtitle(List<Map.Entry<Double, String>> scripts, Script script) {
+    public void saveSubtitle(List<TextResponseDto> scripts, Script script) {
 
         //subtitle은 무조건 저장. 아니면 gpt api 계속 호출해야함.
         String totalScriptsWithTimeline = getTotalScriptsWithTimeline(scripts);
@@ -58,11 +58,11 @@ public class SubtitleService {
         }
     }
 
-    public String getTotalScriptsWithTimeline(List<Map.Entry<Double, String>> scripts){
+    public String getTotalScriptsWithTimeline(List<TextResponseDto> scripts){
         String totalScriptsWithTimeline = "";
 
-        for (Map.Entry<Double, String> e : scripts){
-            totalScriptsWithTimeline += e.getKey() + ":" + e.getValue() + "\n";
+        for (TextResponseDto e : scripts){
+            totalScriptsWithTimeline += e.getTimeline() + ":" + e.getText() + "\n";
         }
         log.info("totalScriptWithTimeLine: {}", totalScriptsWithTimeline);
 
