@@ -39,7 +39,8 @@ public class SubtitleService {
 
         //subtitle은 무조건 저장. 아니면 gpt api 계속 호출해야함.
         String totalScriptsWithTimeline = getTotalScriptsWithTimeline(scripts);
-        String subtitles = getSubtitles(totalScriptsWithTimeline);
+        String totalScripts = getTotalScript(scripts);
+        String subtitles = getSubtitles(totalScriptsWithTimeline, totalScripts.length());
 
         HashMap<Double, String> sub = trimSubtitle(subtitles);
 
@@ -69,10 +70,38 @@ public class SubtitleService {
         return totalScriptsWithTimeline;
     }
 
+    public String getTotalScript(List<TextResponseDto> scripts){
+        String totalScript = "";
 
-    public String getSubtitles(String script){
+        for (TextResponseDto e : scripts){
+            totalScript += e.getText() + "\n";
+        }
+        log.info("totalScript: {}", totalScript);
+
+        return totalScript;
+    }
+
+    public String getSubtitles(String script, Integer size){
+        log.info("스크립트 크기: {}", size);
+        int count = 0;
+        if (size < 1200){
+            count = 4;
+        } else if (size < 2000){
+            count = 6;
+        } else if (size < 5000){
+            count = 8;
+        } else if (size < 10000){
+            count = 10;
+        } else if (size < 15000){
+            count = 12;
+        } else if (size < 20000){
+            count = 14;
+        } else {
+            count = 16;
+        }
+
         String requestMessage1 = "내 질문에 대한 응답을 json 형식으로 출력해줘.";
-        String requestMessage2 = "\"" + script + "\" \n위 전체 스크립트를 읽어보고 중요한 핵심적인 내용에 해당하는 부분만 소제목 지어서 해당하는 시간과 소제목을 출력해줘. \n" +
+        String requestMessage2 = "\"" + script + "\" \n위 전체 스크립트를 읽어보고 중요한 핵심적인 내용에 해당하는 부분만 소제목 지어서 해당하는 시간과 소제목을 " + count + "개 이내로 출력해줘. \n" +
                 "출력 형식: \"'시간':'소제목'\"";
 
         List<TextRequestDto.GptRequest.Messages> messages = new ArrayList<>();
