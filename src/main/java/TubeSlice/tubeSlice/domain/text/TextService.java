@@ -61,11 +61,12 @@ public class TextService {
     private String wavBucket = "test-wav"; //kms 키 없는 버킷.
     private String scriptBucket = "script-file-bucket";
 
+    String currentDir = ".";
 
     @Transactional
     public List<TextResponseDto> videoToScript(String youtubeUrl) {
         String filePath = getAudioFileFromYoutubeUrl(youtubeUrl);   // "mp3/파일이름.mp3"
-        String objectStorageDataKey = uploadFile("~/mp3/" + filePath); //파일이름.mp3
+        String objectStorageDataKey = uploadFile(currentDir+"/mp3/" + filePath); //파일이름.mp3
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
@@ -111,7 +112,7 @@ public class TextService {
 
         subtitleService.saveSubtitle(result, script);
 
-        File file = new File("~/mp3/" + objectStorageDataKey);
+        File file = new File(currentDir+"/mp3/" + objectStorageDataKey);
         boolean isDeleted = file.delete();
 
         log.info("파일 삭제: {}", isDeleted);
@@ -263,15 +264,23 @@ public class TextService {
         //yt-dlp 파일 실행 위치.
         String ytDlpPath = "yt-dlp";
 
-        //mp3 파일 저장 경로. 서버 상에 경로 지정.
-        String downloadDir = "~/mp3/%(title)s.%(ext)s";
+
 
         try {
+            currentDir = executeCommand("pwd");
+            log.info("current working dir: {}", currentDir);
+
+            //mp3 파일 저장 경로. 서버 상에 경로 지정.
+            String downloadDir = currentDir+"/mp3/%(title)s.%(ext)s";
+
             // Command to download video
             String downloadCommand = String.format("%s -x --audio-format mp3 -o \"%s\" %s", ytDlpPath, downloadDir, youtubeUrl);
 
             // Command to print filename
             String printCommand = String.format("%s --print filename -o \"%s\" %s", ytDlpPath, downloadDir, youtubeUrl);
+
+
+
 
             executeCommand(downloadCommand);
 
@@ -286,14 +295,24 @@ public class TextService {
             e.printStackTrace();
         }
 
-        String DATA_DIRECTORY = "~/mp3/";
+        String DATA_DIRECTORY = currentDir+"/mp3/";
         File dir = new File(DATA_DIRECTORY);
 
-        String[] filenames = dir.list();
-        for (String fn : filenames) {
-            log.info("mp3/ : {}", fn);
-            filename=fn;
+        if (dir.exists() && dir.isDirectory()) {
+            // 디렉토리 내의 모든 파일과 디렉토리 이름을 배열로 가져옵니다.
+            String[] fileList = dir.list();
+
+            // 파일 목록을 출력합니다.
+            if (fileList != null) {
+                for (String fn : fileList) {
+                    log.info("mp3/ : {}", fn);
+                    filename=fn;
+                }
+            } else {
+                System.out.println("디렉토리 내에 파일이 없습니다.");
+            }
         }
+
 
         log.info("filename: {}" ,filename);
 
