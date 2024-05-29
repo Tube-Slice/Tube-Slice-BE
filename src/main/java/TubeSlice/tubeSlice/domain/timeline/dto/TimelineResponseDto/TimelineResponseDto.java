@@ -24,6 +24,6 @@ public class TimelineResponseDto {
     @NoArgsConstructor
     @AllArgsConstructor
     public static class PostTimelineDtoList{
-        private List<PostTimelineDto> postTimelineDtoList;
+        private List<PostTimelineDto> timelines;
     }
 }
