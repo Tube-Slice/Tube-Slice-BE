@@ -2,7 +2,7 @@ package TubeSlice.tubeSlice.domain.timeline;
 
 import TubeSlice.tubeSlice.domain.post.Post;
 import TubeSlice.tubeSlice.domain.post.dto.request.PostRequestDto;
-import TubeSlice.tubeSlice.domain.timeline.dto.TimelineRequestDto;
+import TubeSlice.tubeSlice.domain.timeline.dto.TimelineRequestDto.TimelineRequestDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

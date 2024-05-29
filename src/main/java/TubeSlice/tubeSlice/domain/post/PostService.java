@@ -7,7 +7,10 @@ import TubeSlice.tubeSlice.domain.post.dto.request.PostRequestDto;
 import TubeSlice.tubeSlice.domain.post.dto.response.PostResponseDto;
 import TubeSlice.tubeSlice.domain.postKeyword.PostKeywordService;
 import TubeSlice.tubeSlice.domain.postLike.PostLikeRepository;
+import TubeSlice.tubeSlice.domain.timeline.Timeline;
+import TubeSlice.tubeSlice.domain.timeline.TimelineConverter;
 import TubeSlice.tubeSlice.domain.timeline.TimelineService;
+import TubeSlice.tubeSlice.domain.timeline.dto.TimelineResponseDto.TimelineResponseDto;
 import TubeSlice.tubeSlice.domain.user.User;
 import TubeSlice.tubeSlice.global.response.ApiResponse;
 import TubeSlice.tubeSlice.global.response.code.resultCode.ErrorStatus;
@@ -113,6 +116,12 @@ public class PostService {
         List<Comment> commentList = post.getCommentList();
 
         return PostConverter.toPostCommentDtoList(user, commentList);
+    }
+
+    public TimelineResponseDto.PostTimelineDtoList getPostTimeline(User user, Post post){
+        List<Timeline> timelineList = post.getTimelineList();
+
+        return TimelineConverter.toPostTImelineDtoList(timelineList);
     }
 
 
