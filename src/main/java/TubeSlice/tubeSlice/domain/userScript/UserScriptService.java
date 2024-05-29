@@ -10,6 +10,7 @@ import TubeSlice.tubeSlice.domain.text.TextConverter;
 import TubeSlice.tubeSlice.domain.text.TextRepository;
 import TubeSlice.tubeSlice.domain.text.TextService;
 import TubeSlice.tubeSlice.domain.text.dto.request.TextRequestDto;
+import TubeSlice.tubeSlice.domain.text.dto.response.TextResponseDto;
 import TubeSlice.tubeSlice.domain.user.User;
 import TubeSlice.tubeSlice.domain.userScript.dto.request.UserScriptRequest;
 import lombok.RequiredArgsConstructor;
@@ -32,7 +33,7 @@ public class UserScriptService {
 
     public Long saveScript(User user, Script script, UserScriptRequest.SaveRequestDto requestDto){
 
-        List<Map.Entry<Double, String>> scripts = textService.getScriptFromBucket(script);
+        List<TextResponseDto> scripts = textService.getScriptFromBucket(script);
 
         UserScript userScript = UserScript.builder()
                 .script(script)
@@ -41,7 +42,7 @@ public class UserScriptService {
         userScriptRepository.save(userScript);
 
         //text 저장
-        for (Map.Entry<Double, String> e : scripts) {
+        for (TextResponseDto e : scripts) {
 
             Text text = TextConverter.toText(e, userScript);
             textRepository.save(text);
