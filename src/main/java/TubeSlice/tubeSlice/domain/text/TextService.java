@@ -65,7 +65,7 @@ public class TextService {
     @Transactional
     public List<TextResponseDto> videoToScript(String youtubeUrl) {
         String filePath = getAudioFileFromYoutubeUrl(youtubeUrl);   // "mp3/파일이름.mp3"
-        String objectStorageDataKey = uploadFile("mp3/" + filePath); //파일이름.mp3
+        String objectStorageDataKey = uploadFile("~/mp3/" + filePath); //파일이름.mp3
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
@@ -111,7 +111,7 @@ public class TextService {
 
         subtitleService.saveSubtitle(result, script);
 
-        File file = new File("mp3/" + objectStorageDataKey);
+        File file = new File("~/mp3/" + objectStorageDataKey);
         boolean isDeleted = file.delete();
 
         log.info("파일 삭제: {}", isDeleted);
@@ -264,7 +264,7 @@ public class TextService {
         String ytDlpPath = "yt-dlp";
 
         //mp3 파일 저장 경로. 서버 상에 경로 지정.
-        String downloadDir = "mp3/%(title)s.%(ext)s";
+        String downloadDir = "~/mp3/%(title)s.%(ext)s";
 
         try {
             // Command to download video
@@ -286,7 +286,7 @@ public class TextService {
             e.printStackTrace();
         }
 
-        String DATA_DIRECTORY = "mp3/";
+        String DATA_DIRECTORY = "~/mp3/";
         File dir = new File(DATA_DIRECTORY);
 
         String[] filenames = dir.list();
