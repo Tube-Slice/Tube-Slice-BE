@@ -63,9 +63,9 @@ public class TextService {
 
 
     @Transactional
-    public List<Map.Entry<Double, String>> videoToScript(String youtubeUrl) {
-        String filePath = getAudioFileFromYoutubeUrl(youtubeUrl);
-        String objectStorageDataKey = uploadFile(filePath);
+    public List<TextResponseDto> videoToScript(String youtubeUrl) {
+        String filePath = getAudioFileFromYoutubeUrl(youtubeUrl);   // "yt-dlp/mp3/파일이름.mp3"
+        String objectStorageDataKey = uploadFile(filePath); //파일이름.mp3
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
@@ -107,9 +107,14 @@ public class TextService {
         } else {
             script = findScript;
         }
-        List<Map.Entry<Double, String>> result = getScriptFromBucket(script);
+        List<TextResponseDto> result = getScriptFromBucket(script);
 
         subtitleService.saveSubtitle(result, script);
+
+        File file = new File("yt-dlp/mp3/" + objectStorageDataKey);
+        boolean isDeleted = file.delete();
+
+        log.info("파일 삭제: {}", isDeleted);
 
         return result;
     }
@@ -140,11 +145,11 @@ public class TextService {
         PutObjectRequest request = new PutObjectRequest(wavBucket, key, new File(filePath)).withCannedAcl(CannedAccessControlList.PublicRead);
         amazonS3Client.putObject(request);
 
-        return key;
+        return key; //mp3 파일 이름
     }
     
     @Transactional
-    public List<Map.Entry<Double, String>> getScriptFromBucket(Script script){ //key가 파일명
+    public List<TextResponseDto> getScriptFromBucket(Script script){ //key가 파일명
         String fileName = script.getScriptTitle();
 
         S3Object result = amazonS3Client.getObject(new GetObjectRequest(scriptBucket, fileName));
@@ -153,7 +158,7 @@ public class TextService {
             throw new RuntimeException("Script does not exist.");
         }
 
-        List<Map.Entry<Double, String>> scripts = new ArrayList<>();
+        List<TextResponseDto> scripts = new ArrayList<>();
 
         try {
             BufferedReader reader = new BufferedReader(new InputStreamReader(result.getObjectContent()));
@@ -186,14 +191,14 @@ public class TextService {
 
                 Double startDouble = Double.parseDouble(start);
 
-                scripts.add(new AbstractMap.SimpleEntry<>(startDouble, eachScript));
+                scripts.add(new TextResponseDto(startDouble, eachScript));
 
             }
             //스크립트 타임라인 순으로 정렬.
-            Collections.sort(scripts, new Comparator<Map.Entry<Double, String>>() {
+            Collections.sort(scripts, new Comparator<TextResponseDto>() {
                 @Override
-                public int compare(Map.Entry<Double, String> o1, Map.Entry<Double, String> o2) {
-                    return o1.getKey().compareTo(o2.getKey());
+                public int compare(TextResponseDto o1, TextResponseDto o2) {
+                    return o1.getTimeline().compareTo(o2.getTimeline());
                 }
             });
         } catch (IOException e) {
@@ -208,11 +213,11 @@ public class TextService {
 
 
 
-    public String getTotalScript(List<Map.Entry<Double, String>> scripts){
+    public String getTotalScript(List<TextResponseDto> scripts){
         String totalScript = "";
 
-        for (Map.Entry<Double, String> e : scripts){
-            totalScript += e.getValue() + "\n";
+        for (TextResponseDto e : scripts){
+            totalScript += e.getText() + "\n";
         }
         log.info("totalScript: {}", totalScript);
 
@@ -240,8 +245,9 @@ public class TextService {
 
             String idx = parts.get(0).replaceAll("\"","");
             idx = idx.trim();
+            Integer id = Integer.parseInt(idx);
 
-            result.add(new TextResponseDto.SummaryResponseDto(idx,value));
+            result.add(new TextResponseDto.SummaryResponseDto(id,value));
 
             log.info("{} : {}", idx, value);
         }

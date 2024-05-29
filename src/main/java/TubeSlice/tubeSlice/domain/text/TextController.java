@@ -55,7 +55,7 @@ public class TextController {
     @Parameters(value = {
             @Parameter(name = "scriptBody", description = "요약할 영상의 스크립트"),
     })
-    public ApiResponse<Object> gptSummarize(@RequestParam("row") String row,
+    public ApiResponse<Object> gptSummarize(@RequestParam("row") Integer row,
                                             @RequestParam("youtubeUrl") String youtubeUrl){
         Script findScript = scriptRepository.findByVideoUrl(youtubeUrl);
 
@@ -69,14 +69,6 @@ public class TextController {
         String totalScript = textService.getTotalScript(textService.videoToScript(youtubeUrl));
         return ApiResponse.onSuccess(textService.summarize(new TextRequestDto.SummaryRequestDto(row, totalScript)));
     }
-//        {
-//            "isSuccess": true,
-//                "code": "COMMON200",
-//                "message": "성공입니다.",
-//                "result": "{\n    \"요약\": [\n        \"성인 ADHD의 특징: 인강이나 반복 작업 지루함, 물건을 잃어버리고 정리 잘 못함, 시작은 창대하나 속상하고 완료 어려움\",\n  " +
-//                               "      \"대인관계 오해 경험: 대화 중 주의 분산, 상대방 표정 및 언어 무시, 양측 오해로 충돌\",\n    " +
-//                            "    \"자책 대신 질병 인지: 치료로 자신감 회복 가능, 성인 ADHD 검사 및 치료 권고, 정신 건강 회복으로 가치 발견\"\n    ]\n}"
-//        }
 
     @PostMapping("/upload")
     public ApiResponse<TextResponseDto.ClovaSpeechResponseDto> uploadFile(@RequestParam("filePath") String filePath){

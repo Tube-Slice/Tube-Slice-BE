@@ -15,7 +15,7 @@ import java.util.List;
 public class TextResponseDto {
 
     private Double timeline;
-    private String scripts;
+    private String text;
 
     @Getter
     @NoArgsConstructor
@@ -44,7 +44,7 @@ public class TextResponseDto {
     @NoArgsConstructor
     @AllArgsConstructor
     public static class SummaryResponseDto{
-        private String id;
+        private Integer id;
         private String message;
     }
 }
