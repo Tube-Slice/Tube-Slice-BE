@@ -64,8 +64,8 @@ public class TextService {
 
     @Transactional
     public List<TextResponseDto> videoToScript(String youtubeUrl) {
-        String filePath = getAudioFileFromYoutubeUrl(youtubeUrl);
-        String objectStorageDataKey = uploadFile(filePath);
+        String filePath = getAudioFileFromYoutubeUrl(youtubeUrl);   // "yt-dlp/mp3/파일이름.mp3"
+        String objectStorageDataKey = uploadFile(filePath); //파일이름.mp3
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
@@ -111,6 +111,11 @@ public class TextService {
 
         subtitleService.saveSubtitle(result, script);
 
+        File file = new File("yt-dlp/mp3/" + objectStorageDataKey);
+        boolean isDeleted = file.delete();
+
+        log.info("파일 삭제: {}", isDeleted);
+
         return result;
     }
 
@@ -140,7 +145,7 @@ public class TextService {
         PutObjectRequest request = new PutObjectRequest(wavBucket, key, new File(filePath)).withCannedAcl(CannedAccessControlList.PublicRead);
         amazonS3Client.putObject(request);
 
-        return key;
+        return key; //mp3 파일 이름
     }
     
     @Transactional
