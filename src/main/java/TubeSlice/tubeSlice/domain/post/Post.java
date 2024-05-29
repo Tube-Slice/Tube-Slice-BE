@@ -4,6 +4,7 @@ import TubeSlice.tubeSlice.domain.comment.Comment;
 import TubeSlice.tubeSlice.domain.image.Image;
 import TubeSlice.tubeSlice.domain.postKeyword.PostKeyword;
 import TubeSlice.tubeSlice.domain.postLike.PostLike;
+import TubeSlice.tubeSlice.domain.timeline.Timeline;
 import TubeSlice.tubeSlice.domain.user.User;
 import TubeSlice.tubeSlice.global.entity.BaseEntity;
 import jakarta.persistence.*;
@@ -47,4 +48,7 @@ public class Post extends BaseEntity {
 
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
     private List<PostLike> postLikeList = new ArrayList<>();
+
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
+    private List<Timeline> timelineList = new ArrayList<>();
 }

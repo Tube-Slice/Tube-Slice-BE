@@ -3,6 +3,7 @@ package TubeSlice.tubeSlice.domain.post;
 import TubeSlice.tubeSlice.domain.comment.dto.response.CommentResponseDto;
 import TubeSlice.tubeSlice.domain.post.dto.request.PostRequestDto;
 import TubeSlice.tubeSlice.domain.post.dto.response.PostResponseDto;
+import TubeSlice.tubeSlice.domain.timeline.dto.TimelineResponseDto.TimelineResponseDto;
 import TubeSlice.tubeSlice.domain.user.User;
 import TubeSlice.tubeSlice.domain.user.UserService;
 import TubeSlice.tubeSlice.global.response.ApiResponse;
@@ -30,12 +31,12 @@ public class PostController {
     @ApiResponses({
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200",description = "OK, 성공"),
     })
-    public ApiResponse<Long> createPost(@AuthenticationPrincipal UserDetails details,
+    public ApiResponse<SuccessStatus> createPost(@AuthenticationPrincipal UserDetails details,
                                         @RequestBody PostRequestDto.PostCreateDto postRequestDto) {
         Long myId = userService.getUserId(details);
         User user = userService.findUser(myId);
 
-        return ApiResponse.onSuccess(postService.createPost(user, postRequestDto));
+        return postService.createPost(user, postRequestDto);
     }
 
     @PatchMapping("/{postId}")
@@ -88,6 +89,20 @@ public class PostController {
         User user = userService.findUser(myId);
 
         return ApiResponse.onSuccess(postService.getPostComment(user, post));
+    }
+
+    @GetMapping("/{postId}/timelines")
+    @Operation(summary = "게시글의 타임라인 목록 가져오기 API",description = "PostTimelineDto가 담긴 PostTimelineDtoList 반환")
+    @ApiResponses({
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200",description = "OK, 성공"),
+    })
+    public ApiResponse<TimelineResponseDto.PostTimelineDtoList> getPostTimeline(@AuthenticationPrincipal UserDetails details, @PathVariable(name = "postId")Long postId){
+        Post post = postService.findPost(postId);
+
+        Long myId = userService.getUserId(details);
+        User user = userService.findUser(myId);
+
+        return ApiResponse.onSuccess(postService.getPostTimeline(user, post));
     }
 
     @GetMapping("/recent")

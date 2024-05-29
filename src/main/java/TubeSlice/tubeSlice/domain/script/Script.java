@@ -6,6 +6,7 @@ import TubeSlice.tubeSlice.domain.subtitle.Subtitle;
 import TubeSlice.tubeSlice.domain.text.Text;
 import TubeSlice.tubeSlice.domain.user.User;
 
+import TubeSlice.tubeSlice.domain.userScript.UserScript;
 import TubeSlice.tubeSlice.global.entity.BaseEntity;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -35,16 +36,8 @@ public class Script extends BaseEntity {
 
     private String scriptTitle;
 
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
-    private User user;
-
     @OneToMany(mappedBy = "script", cascade = CascadeType.ALL)
-    private List<Text> userScriptList = new ArrayList<>();
-
-    @OneToMany(mappedBy = "script", cascade = CascadeType.ALL)
-    private List<ScriptKeyword> keywords = new ArrayList<>();
+    private List<UserScript> userScriptList = new ArrayList<>();
 
     @OneToMany(mappedBy = "script", cascade = CascadeType.ALL)
     private List<Subtitle> subtitles = new ArrayList<>();

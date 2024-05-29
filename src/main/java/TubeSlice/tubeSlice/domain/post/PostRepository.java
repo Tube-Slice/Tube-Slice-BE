@@ -9,6 +9,7 @@ import org.springframework.data.jpa.repository.Query;
 import java.util.List;
 
 public interface PostRepository extends JpaRepository<Post, Long> {
+    @Query("SELECT p FROM Post p join fetch p.user")
     Page<Post> findAllByUser(User user, Pageable pageable);
 
     @Query("SELECT p FROM Post p WHERE p.title LIKE %:title%")
@@ -19,4 +20,14 @@ public interface PostRepository extends JpaRepository<Post, Long> {
 
     @Query("SELECT DISTINCT p FROM Post p WHERE p.title LIKE %:search% OR p.content LIKE %:search%")
     List<Post> findPostsByTitleOrContent(String search);
+
+    @Query("SELECT p FROM Post p WHERE p.title LIKE %:title% AND p.user = :user")
+    Page<Post> findPostsByTitleAndUser(String title, User user, Pageable pageable);
+
+    @Query("SELECT p FROM Post p WHERE p.content LIKE %:content% AND p.user = :user")
+    Page<Post> findPostsByContentAndUser(String content, User user, Pageable pageable);
+
+
+    @Query("SELECT DISTINCT p FROM Post p WHERE p.title LIKE %:search% OR p.content LIKE %:search% AND p.user = :user")
+    Page<Post> findPostsByTitleOrContentAndUser(String search, User user, Pageable pageable);
 }

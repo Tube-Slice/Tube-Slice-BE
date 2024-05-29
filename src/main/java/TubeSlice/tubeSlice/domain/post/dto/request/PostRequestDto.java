@@ -1,10 +1,10 @@
 package TubeSlice.tubeSlice.domain.post.dto.request;
 
+import TubeSlice.tubeSlice.domain.timeline.dto.TimelineRequestDto.TimelineRequestDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -21,6 +21,7 @@ public class PostRequestDto {
         private String content;
         private String youtubeUrl;
         private List<String> postKeywords;
+        private List<TimelineRequestDto.TimelineDto> timelineDtoList;
     }
 
     @Getter

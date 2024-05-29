@@ -4,6 +4,7 @@ import TubeSlice.tubeSlice.domain.script.Script;
 import TubeSlice.tubeSlice.domain.script.ScriptRepository;
 import TubeSlice.tubeSlice.domain.subtitle.Subtitle;
 import TubeSlice.tubeSlice.domain.subtitle.SubtitleRepository;
+import TubeSlice.tubeSlice.domain.subtitle.SubtitleService;
 import TubeSlice.tubeSlice.domain.text.dto.request.TextRequestDto;
 import TubeSlice.tubeSlice.domain.text.dto.response.TextResponseDto;
 import com.amazonaws.services.s3.AmazonS3Client;
@@ -34,9 +35,10 @@ import java.util.*;
 @Transactional(readOnly = true)
 public class TextService {
 
-    private final TextRepository textRepository;
+    private final SubtitleService subtitleService;
+
     private final ScriptRepository scriptRepository;
-    private final SubtitleRepository subtitleRepository;
+
 
     @Value("${gpt.api.url}")
     private String gpt_api_url;
@@ -61,7 +63,8 @@ public class TextService {
 
 
     @Transactional
-    public Object videoToScript(String filePath) {
+    public List<Map.Entry<Double, String>> videoToScript(String youtubeUrl) {
+        String filePath = getAudioFileFromYoutubeUrl(youtubeUrl);
         String objectStorageDataKey = uploadFile(filePath);
 
         HttpHeaders headers = new HttpHeaders();
@@ -95,8 +98,8 @@ public class TextService {
         if (findScript == null) {
 
             script = Script.builder()
-                    .videoTitle(null)
-                    .videoUrl(objectStorageDataKey)
+                    .videoTitle(objectStorageDataKey)
+                    .videoUrl(youtubeUrl)
                     .scriptTitle(fileName)
                     .build();
 
@@ -104,14 +107,17 @@ public class TextService {
         } else {
             script = findScript;
         }
+        List<Map.Entry<Double, String>> result = getScriptFromBucket(script);
 
-        return getScriptFromBucket(script);
+        subtitleService.saveSubtitle(result, script);
+
+        return result;
     }
 
     public Object summarize(TextRequestDto.SummaryRequestDto summaryRequestDto){
-        String requestMessage1 = "내 질문에 대한 응답 json 형식으로 출력해줘.";
-        String requestMessage2 = "\"" + summaryRequestDto.getScript() + "\" 이 스크립트에서 핵심 내용" + summaryRequestDto.getRow() + "문장으로 요약해서 구분해서 보여줘.\n" +
-                "출력 형식:  \"'1':'요약내용'\"";
+        String requestMessage1 = "내 질문에 대한 응답을 json 형식으로 출력해줘.";
+        String requestMessage2 = "\"" + summaryRequestDto.getScript() + "\"\n이 스크립트에서 핵심 내용을 요약해서 이해하기 쉽게"+ summaryRequestDto.getRow() + "문장으로 설명해줘.\n" +
+                "출력 형식은 \"'1':'설명내용'\" 에 맞게 답해줘.";
 
         List<TextRequestDto.GptRequest.Messages> messages = new ArrayList<>();
         messages.add(new TextRequestDto.GptRequest.Messages("system",requestMessage1));
@@ -125,7 +131,7 @@ public class TextService {
 
         String content = gptResponse.getChoices().get(0).getMessage().getContent();
 
-        return trimResult(content);
+        return trimSummary(content);
     }
 
     public String uploadFile(String filePath) {
@@ -164,12 +170,20 @@ public class TextService {
                 String eachScript = segmentNode.get("textEdited").asText();
 
                 //타임라인 double 형으로 변환.
-                if(start.length() > 3) {
+                if(start.equals("0")){
+                    start = start + ".0";
+                } else if (start.length() == 1){
+                    start = "0.00" + start;
+                } else if (start.length() == 2) {
+                    start = "0.0" + start;
+
+                } else if (start.length() == 3) {
+                    start = "0." + start;
+
+                } else if(start.length() > 3) {
                     start = start.substring(0, start.length() - 3) + "." + start.substring(start.length() - 3);
                 }
-                else if(start.equals("0")){
-                    start = start + ".0";
-                }
+
                 Double startDouble = Double.parseDouble(start);
 
                 scripts.add(new AbstractMap.SimpleEntry<>(startDouble, eachScript));
@@ -187,90 +201,49 @@ public class TextService {
             throw new RuntimeException("Error in reading file from storage", e);
         }
 
-        Text findText = textRepository.findByScripts(scripts.get(0).getValue());
 
-        if (findText == null) {
-            //text 저장
-            for (Map.Entry<Double, String> e : scripts) {
-
-                Text text = Text.builder()
-                        .timeline(e.getKey())
-                        .scripts(e.getValue())
-                        .isSaved(true)
-                        .script(script)
-                        .build();
-                textRepository.save(text);
-            }
-            String totalScriptsWithTimeline = getTotalScriptsWithTimeline(scripts);
-            String subtitles = trimText(totalScriptsWithTimeline);
-
-            HashMap<Double, String> sub = trimResult(subtitles);
-
-            //subtitle 저장.
-            for (Map.Entry<Double, String> e : sub.entrySet()) {
-                Subtitle subtitle = Subtitle.builder()
-                        .subtitle(e.getValue())
-                        .timeline(e.getKey())
-                        .script(script)
-                        .build();
-                subtitleRepository.save(subtitle);
-            }
-        }
 
         return scripts;
     }
 
-    public String getTotalScriptsWithTimeline(List<Map.Entry<Double, String>> scripts){
-        String totalScriptsWithTimeline = "";
+
+
+    public String getTotalScript(List<Map.Entry<Double, String>> scripts){
+        String totalScript = "";
 
         for (Map.Entry<Double, String> e : scripts){
-            totalScriptsWithTimeline += e.getKey() + ":" + e.getValue() + "\n";
+            totalScript += e.getValue() + "\n";
         }
+        log.info("totalScript: {}", totalScript);
 
-        return totalScriptsWithTimeline;
+        return totalScript;
     }
 
-    @Transactional
-    public String trimText(String script){
-        String requestMessage1 = "내 질문에 대한 응답 json 형식으로 출력해줘.";
-        String requestMessage2 = "\"" + script + "\" \n위 전체 스크립트를 읽어보고 중요한 핵심적인 내용에 해당하는 부분만 소제목 지어서 해당하는 시간과 소제목을 출력해줘. \n" +
-                "출력 형식: \"'시간':'소제목'\"";
 
-        List<TextRequestDto.GptRequest.Messages> messages = new ArrayList<>();
-        messages.add(new TextRequestDto.GptRequest.Messages("system",requestMessage1));
-        messages.add(new TextRequestDto.GptRequest.Messages("user",requestMessage2));
 
-        HashMap<String, String> response_format = new HashMap<>();
-        response_format.put("type","json_object");
+    private List<TextResponseDto.SummaryResponseDto> trimSummary(String jsonResult){
+        log.info("요약 내용: {}", jsonResult);
+        List<TextResponseDto.SummaryResponseDto> result = new ArrayList<>();
 
-        TextRequestDto.GptRequest gptRequest = new TextRequestDto.GptRequest(gpt_model, messages, response_format);
-        TextResponseDto.GptResponse gptResponse = template.postForObject(gpt_api_url, gptRequest, TextResponseDto.GptResponse.class);
-
-        return gptResponse.getChoices().get(0).getMessage().getContent();
-    }
-
-    private HashMap<Double,String> trimResult(String jsonResult){
-
-        log.info("소제목 추출 결과: {}", jsonResult);
-        HashMap<Double, String> result = new HashMap<>();
-
-        jsonResult = jsonResult.replaceAll("\n", "").trim();
+        //jsonResult = jsonResult.replaceAll("\n", "").trim();
         jsonResult = jsonResult.replace("{", "").trim();
         jsonResult = jsonResult.replaceAll("}", "").trim();
 
-        List<String> lines = List.of(jsonResult.split(","));
+        List<String> lines = List.of(jsonResult.split("\n"));
 
         for (String line : lines) {
 
             List<String> parts = List.of(line.split(":"));
 
             String value = parts.get(1).replaceAll("\"", "");
+            value = value.trim();
 
-            Double tl = Double.valueOf(parts.get(0).replaceAll("\"",""));
+            String idx = parts.get(0).replaceAll("\"","");
+            idx = idx.trim();
 
-            result.put(tl,value);
+            result.add(new TextResponseDto.SummaryResponseDto(idx,value));
 
-            log.info("{} : {}", tl, value);
+            log.info("{} : {}", idx, value);
         }
 
         return result;
@@ -279,30 +252,48 @@ public class TextService {
 
 
     public String getAudioFileFromYoutubeUrl(String youtubeUrl){
+        String filename = "mp3 파일 가져오기 실패.";
+
+        //yt-dlp 파일 실행 위치.
+        String ytDlpPath = "yt-dlp";
+
+        //mp3 파일 저장 경로. 서버 상에 경로 지정.
+        String downloadDir = "yt-dlp/mp3/%(title)s.%(ext)s";
 
         try {
             // Command to download video
-            String downloadCommand = "youtube-dl -f bestaudio -x --audio-format mp3 -o 'temp.%(ext)s' " + youtubeUrl;
-            // Command to extract audio
-            String extractCommand = "ffmpeg -i temp.mp3 -vn -acodec copy output.mp3";
+            String downloadCommand = String.format("%s -x --audio-format mp3 -o \"%s\" %s", ytDlpPath, downloadDir, youtubeUrl);
 
-            // Download video
+            // Command to print filename
+            String printCommand = String.format("%s --print filename -o \"%s\" %s", ytDlpPath, downloadDir, youtubeUrl);
+
             executeCommand(downloadCommand);
-            // Extract audio
-            executeCommand(extractCommand);
+
+            filename = executeCommand(printCommand);
+
+            if (filename != null) {
+                String ext = filename.substring(filename.lastIndexOf("."));
+                filename = filename.replace(ext, ".mp3");
+            }
+
         } catch (IOException | InterruptedException e) {
             e.printStackTrace();
         }
-        return " ";
+        log.info("filename: {}" ,filename);
+        return filename;
     }
 
-    private void executeCommand(String command) throws IOException, InterruptedException {
+    private String executeCommand(String command) throws IOException, InterruptedException {
         Process process = Runtime.getRuntime().exec(command);
         BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
         String line;
+        int i = 0;
+        String filename = null;
         while ((line = reader.readLine()) != null) {
-            System.out.println(line);
+            filename = line;
         }
         process.waitFor();
+
+        return filename;
     }
 }
