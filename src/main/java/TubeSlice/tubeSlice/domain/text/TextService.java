@@ -245,8 +245,9 @@ public class TextService {
 
             String idx = parts.get(0).replaceAll("\"","");
             idx = idx.trim();
+            Integer id = Integer.parseInt(idx);
 
-            result.add(new TextResponseDto.SummaryResponseDto(idx,value));
+            result.add(new TextResponseDto.SummaryResponseDto(id,value));
 
             log.info("{} : {}", idx, value);
         }

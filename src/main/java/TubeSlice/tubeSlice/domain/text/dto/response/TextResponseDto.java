@@ -44,7 +44,7 @@ public class TextResponseDto {
     @NoArgsConstructor
     @AllArgsConstructor
     public static class SummaryResponseDto{
-        private String id;
+        private Integer id;
         private String message;
     }
 }

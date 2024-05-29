@@ -55,7 +55,7 @@ public class TextController {
     @Parameters(value = {
             @Parameter(name = "scriptBody", description = "요약할 영상의 스크립트"),
     })
-    public ApiResponse<Object> gptSummarize(@RequestParam("row") String row,
+    public ApiResponse<Object> gptSummarize(@RequestParam("row") Integer row,
                                             @RequestParam("youtubeUrl") String youtubeUrl){
         Script findScript = scriptRepository.findByVideoUrl(youtubeUrl);
 

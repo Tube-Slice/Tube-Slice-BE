@@ -38,7 +38,7 @@ public class TextRequestDto {
     @AllArgsConstructor
     public static class SummaryRequestDto {
 
-        private String row;
+        private Integer row;
         private String script;
     }
 }
