@@ -70,18 +70,5 @@ public class TextController {
         return ApiResponse.onSuccess(textService.summarize(new TextRequestDto.SummaryRequestDto(row, totalScript)));
     }
 
-    @PostMapping("/upload")
-    public ApiResponse<TextResponseDto.ClovaSpeechResponseDto> uploadFile(@RequestParam("filePath") String filePath){
-
-        textService.uploadFile(filePath);
-
-        return ApiResponse.onSuccess(new TextResponseDto.ClovaSpeechResponseDto());
-    }
-
-    @PostMapping("/youtube")
-    public ApiResponse<Object> youtubeUrl(@RequestParam("youtubeUrl") String youtubeUrl) {
-
-        return ApiResponse.onSuccess(textService.getAudioFileFromYoutubeUrl(youtubeUrl));
-    }
 
 }
