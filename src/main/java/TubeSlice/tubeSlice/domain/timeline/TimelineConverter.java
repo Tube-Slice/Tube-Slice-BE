@@ -32,7 +32,7 @@ public class TimelineConverter {
                 .toList();
 
         return TimelineResponseDto.PostTimelineDtoList.builder()
-                .postTimelineDtoList(postTimelineDtoList)
+                .timelines(postTimelineDtoList)
                 .build();
     }
 }
