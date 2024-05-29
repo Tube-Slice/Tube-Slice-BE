@@ -264,7 +264,7 @@ public class TextService {
         String ytDlpPath = "yt-dlp";
 
         //mp3 파일 저장 경로. 서버 상에 경로 지정.
-        String downloadDir = "yt-dlp/mp3/%(title)s.%(ext)s";
+        String downloadDir = "'yt-dlp/mp3/%(title)s.%(ext)s'";
 
         try {
             // Command to download video
