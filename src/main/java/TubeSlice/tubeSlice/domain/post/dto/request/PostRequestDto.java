@@ -1,6 +1,6 @@
 package TubeSlice.tubeSlice.domain.post.dto.request;
 
-import TubeSlice.tubeSlice.domain.timeline.dto.TimelineRequestDto;
+import TubeSlice.tubeSlice.domain.timeline.dto.TimelineRequestDto.TimelineRequestDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
