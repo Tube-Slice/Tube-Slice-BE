@@ -35,16 +35,16 @@ public class TextController {
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200",description = "OK, 성공"),
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "USER401", description = "변환에 실패하였습니다.",content = @Content(schema = @Schema(implementation = ApiResponse.class))),
     })
-    public ApiResponse<Object> videoToScript(@RequestParam("youtubeUrl") String youtubeUrl){
+    public ApiResponse<TextResponseDto.transResponseListDto> videoToScript(@RequestParam("youtubeUrl") String youtubeUrl){
         Script findScript = scriptRepository.findByVideoUrl(youtubeUrl);
 
         if (findScript != null){    //ObjectStorage에 변환된 기록 있으면 변환 없이 파일 가져오기.
 
             log.info("findScript: {}", findScript);
-            return ApiResponse.onSuccess(textService.getScriptFromBucket(findScript));
+            return ApiResponse.onSuccess(new TextResponseDto.transResponseListDto(textService.getScriptFromBucket(findScript)));
         }
 
-        return ApiResponse.onSuccess(textService.videoToScript(youtubeUrl));
+        return ApiResponse.onSuccess(new TextResponseDto.transResponseListDto(textService.videoToScript(youtubeUrl)));
     }
 
     @PostMapping("/summary")

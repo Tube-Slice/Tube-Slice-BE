@@ -14,7 +14,7 @@ public class ScriptService {
 
     private final ScriptRepository scriptRepository;
 
-    public List<ScriptResponseDto.SubtitleResponseDto> getSubtitles(Long script_id){
+    public ScriptResponseDto.SubtitleResponseListDto getSubtitles(Long script_id){
 
         Script script = scriptRepository.findById(script_id).orElseThrow();
 

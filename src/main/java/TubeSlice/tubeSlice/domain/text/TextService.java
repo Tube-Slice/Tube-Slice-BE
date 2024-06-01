@@ -62,7 +62,7 @@ public class TextService {
     private String scriptBucket = "script-file-bucket";
 
     @Transactional
-    public List<TextResponseDto> videoToScript(String youtubeUrl) {
+    public List<TextResponseDto.transResponseDto> videoToScript(String youtubeUrl) {
         String filePath = getAudioFileFromYoutubeUrl(youtubeUrl);   // "mp3/파일이름.mp3"
         String objectStorageDataKey = uploadFile("mp3/" + filePath); //파일이름.mp3
 
@@ -106,7 +106,7 @@ public class TextService {
         } else {
             script = findScript;
         }
-        List<TextResponseDto> result = getScriptFromBucket(script);
+        List<TextResponseDto.transResponseDto> result = getScriptFromBucket(script);
 
         subtitleService.saveSubtitle(result, script);
 
@@ -148,7 +148,7 @@ public class TextService {
     }
 
     @Transactional
-    public List<TextResponseDto> getScriptFromBucket(Script script){ //key가 파일명
+    public List<TextResponseDto.transResponseDto> getScriptFromBucket(Script script){ //key가 파일명
         String fileName = script.getScriptTitle();
 
         S3Object result = amazonS3Client.getObject(new GetObjectRequest(scriptBucket, fileName));
@@ -157,7 +157,7 @@ public class TextService {
             throw new RuntimeException("Script does not exist.");
         }
 
-        List<TextResponseDto> scripts = new ArrayList<>();
+        List<TextResponseDto.transResponseDto> scripts = new ArrayList<>();
 
         try {
             BufferedReader reader = new BufferedReader(new InputStreamReader(result.getObjectContent()));
@@ -190,13 +190,13 @@ public class TextService {
 
                 Double startDouble = Double.parseDouble(start);
 
-                scripts.add(new TextResponseDto(startDouble, eachScript));
+                scripts.add(new TextResponseDto.transResponseDto(startDouble, eachScript));
 
             }
             //스크립트 타임라인 순으로 정렬.
-            Collections.sort(scripts, new Comparator<TextResponseDto>() {
+            Collections.sort(scripts, new Comparator<TextResponseDto.transResponseDto>() {
                 @Override
-                public int compare(TextResponseDto o1, TextResponseDto o2) {
+                public int compare(TextResponseDto.transResponseDto o1, TextResponseDto.transResponseDto o2) {
                     return o1.getTimeline().compareTo(o2.getTimeline());
                 }
             });
@@ -205,17 +205,15 @@ public class TextService {
             throw new RuntimeException("Error in reading file from storage", e);
         }
 
-
-
         return scripts;
     }
 
 
 
-    public String getTotalScript(List<TextResponseDto> scripts){
+    public String getTotalScript(List<TextResponseDto.transResponseDto> scripts){
         String totalScript = "";
 
-        for (TextResponseDto e : scripts){
+        for (TextResponseDto.transResponseDto e : scripts){
             totalScript += e.getText() + "\n";
         }
         log.info("totalScript: {}", totalScript);
@@ -225,7 +223,7 @@ public class TextService {
 
 
 
-    private List<TextResponseDto.SummaryResponseDto> trimSummary(String jsonResult){
+    private TextResponseDto.SummaryResponseListDto trimSummary(String jsonResult){
         log.info("요약 내용: {}", jsonResult);
         List<TextResponseDto.SummaryResponseDto> result = new ArrayList<>();
 
@@ -251,7 +249,7 @@ public class TextService {
             log.info("{} : {}", idx, value);
         }
 
-        return result;
+        return new TextResponseDto.SummaryResponseListDto(result);
     }
 
 

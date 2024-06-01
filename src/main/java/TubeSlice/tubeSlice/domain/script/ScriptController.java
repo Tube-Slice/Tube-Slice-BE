@@ -24,7 +24,7 @@ public class ScriptController {
     @ApiResponses({
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200",description = "OK, 성공"),
     })
-    public ApiResponse<List<ScriptResponseDto.SubtitleResponseDto>> getSubtitles(@RequestParam(name = "youtubeUrl") String youtubeUrl){
+    public ApiResponse<ScriptResponseDto.SubtitleResponseListDto> getSubtitles(@RequestParam(name = "youtubeUrl") String youtubeUrl){
         //youtubeUrl을 입력으로 받아 소제목 가져오기.
         Script findScript = scriptRepository.findByVideoUrl(youtubeUrl);
 

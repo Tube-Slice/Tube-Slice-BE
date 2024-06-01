@@ -33,7 +33,7 @@ public class UserScriptService {
 
     public Long saveScript(User user, Script script, UserScriptRequest.SaveRequestDto requestDto){
 
-        List<TextResponseDto> scripts = textService.getScriptFromBucket(script);
+        List<TextResponseDto.transResponseDto> scripts = textService.getScriptFromBucket(script);
 
         UserScript userScript = UserScript.builder()
                 .script(script)
@@ -42,7 +42,7 @@ public class UserScriptService {
         userScriptRepository.save(userScript);
 
         //text 저장
-        for (TextResponseDto e : scripts) {
+        for (TextResponseDto.transResponseDto e : scripts) {
 
             Text text = TextConverter.toText(e, userScript);
             textRepository.save(text);

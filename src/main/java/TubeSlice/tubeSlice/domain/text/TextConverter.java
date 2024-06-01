@@ -10,7 +10,7 @@ import java.util.Map;
 
 public class TextConverter {
 
-    public static Text toText(TextResponseDto e, UserScript userScript){
+    public static Text toText(TextResponseDto.transResponseDto e, UserScript userScript){
 
         return Text.builder()
                 .timeline(e.getTimeline())

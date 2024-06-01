@@ -8,14 +8,26 @@ import lombok.NoArgsConstructor;
 
 import java.util.List;
 
-@Getter
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
+
 public class TextResponseDto {
 
-    private Double timeline;
-    private String text;
+    @Getter
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class transResponseListDto{
+        List<transResponseDto> scripts;
+    }
+
+    @Getter
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class transResponseDto{
+        private Double timeline;
+        private String text;
+    }
+
 
     @Getter
     @NoArgsConstructor
@@ -38,6 +50,15 @@ public class TextResponseDto {
             private TextRequestDto.GptRequest.Messages message;
         }
     }
+
+    @Getter
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class SummaryResponseListDto{
+        private List<SummaryResponseDto> summaries;
+    }
+
 
     @Getter
     @Builder

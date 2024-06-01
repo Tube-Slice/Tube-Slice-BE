@@ -35,7 +35,7 @@ public class SubtitleService {
     private RestTemplate template;
 
     @Transactional
-    public void saveSubtitle(List<TextResponseDto> scripts, Script script) {
+    public void saveSubtitle(List<TextResponseDto.transResponseDto> scripts, Script script) {
 
         //subtitle은 무조건 저장. 아니면 gpt api 계속 호출해야함.
         String totalScriptsWithTimeline = getTotalScriptsWithTimeline(scripts);
@@ -59,10 +59,10 @@ public class SubtitleService {
         }
     }
 
-    public String getTotalScriptsWithTimeline(List<TextResponseDto> scripts){
+    public String getTotalScriptsWithTimeline(List<TextResponseDto.transResponseDto> scripts){
         String totalScriptsWithTimeline = "";
 
-        for (TextResponseDto e : scripts){
+        for (TextResponseDto.transResponseDto e : scripts){
             totalScriptsWithTimeline += e.getTimeline() + ":" + e.getText() + "\n";
         }
         log.info("totalScriptWithTimeLine: {}", totalScriptsWithTimeline);
@@ -70,10 +70,10 @@ public class SubtitleService {
         return totalScriptsWithTimeline;
     }
 
-    public String getTotalScript(List<TextResponseDto> scripts){
+    public String getTotalScript(List<TextResponseDto.transResponseDto> scripts){
         String totalScript = "";
 
-        for (TextResponseDto e : scripts){
+        for (TextResponseDto.transResponseDto e : scripts){
             totalScript += e.getText() + "\n";
         }
         log.info("totalScript: {}", totalScript);
