@@ -4,6 +4,8 @@ import TubeSlice.tubeSlice.domain.script.Script;
 import TubeSlice.tubeSlice.domain.text.TextService;
 import TubeSlice.tubeSlice.domain.text.dto.request.TextRequestDto;
 import TubeSlice.tubeSlice.domain.text.dto.response.TextResponseDto;
+import TubeSlice.tubeSlice.global.response.code.resultCode.ErrorStatus;
+import TubeSlice.tubeSlice.global.response.exception.handler.TransHandler;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -118,7 +120,7 @@ public class SubtitleService {
     }
 
     public HashMap<Double,String> trimSubtitle(String jsonResult){
-        log.info("요약 내용: {}", jsonResult);
+        log.info("소제목들: {}", jsonResult);
         HashMap<Double, String> result = new HashMap<>();
 
         //jsonResult = jsonResult.replaceAll("\n", "").trim();
@@ -132,8 +134,8 @@ public class SubtitleService {
             List<String> parts = List.of(line.split(":"));
 
             String value = parts.get(1).replaceAll("\"", "");
-
-            Double tl = Double.valueOf(parts.get(0).replaceAll("\"",""));
+            // 유효하지 않은 숫자 형식 처리
+            Double tl = parseTime(parts.get(0).replaceAll("\"",""));
 
             result.put(tl,value);
 
@@ -141,5 +143,13 @@ public class SubtitleService {
         }
 
         return result;
+    }
+
+    private double parseTime(String timeString) {
+        try {
+            return Double.parseDouble(timeString);
+        } catch (NumberFormatException e) {
+            throw new TransHandler(ErrorStatus.TRANSLATION_BAD_REQUEST);
+        }
     }
 }

@@ -314,7 +314,6 @@ public class TextService {
                 System.err.println(errorLine);
             }
 
-
             int exitCode = process.waitFor();
             if (exitCode == 0) {
                 System.out.println("Download completed successfully!");
