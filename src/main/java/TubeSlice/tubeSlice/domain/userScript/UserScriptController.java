@@ -33,10 +33,6 @@ public class UserScriptController {
     @ApiResponses({
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200",description = "OK, 성공"),
     })
-    @Parameters({
-            @Parameter(name = "youtubeUrl", description = "저장할 스크립트 영상 링크"),
-            @Parameter(name = "scriptKeywords", description = "스크립트 키워드 입력"),
-    })
     public ApiResponse<SuccessStatus> saveScript(@AuthenticationPrincipal UserDetails details, @RequestBody UserScriptRequest.SaveRequestDto requestDto){
         Long userId = userService.getUserId(details);
         User user = userService.findUser(userId);

@@ -52,9 +52,6 @@ public class TextController {
     @ApiResponses({
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200",description = "OK, 성공"),
     })
-    @Parameters(value = {
-            @Parameter(name = "scriptBody", description = "요약할 영상의 스크립트"),
-    })
     public ApiResponse<Object> gptSummarize(@RequestParam("row") Integer row,
                                             @RequestParam("youtubeUrl") String youtubeUrl){
         Script findScript = scriptRepository.findByVideoUrl(youtubeUrl);
