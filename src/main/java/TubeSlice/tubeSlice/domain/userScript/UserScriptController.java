@@ -5,6 +5,7 @@ import TubeSlice.tubeSlice.domain.script.ScriptRepository;
 import TubeSlice.tubeSlice.domain.user.User;
 import TubeSlice.tubeSlice.domain.user.UserService;
 import TubeSlice.tubeSlice.domain.userScript.dto.request.UserScriptRequest;
+import TubeSlice.tubeSlice.domain.userScript.dto.response.UserScriptResponse;
 import TubeSlice.tubeSlice.global.response.ApiResponse;
 import TubeSlice.tubeSlice.global.response.code.resultCode.SuccessStatus;
 import io.swagger.v3.oas.annotations.Operation;
@@ -20,13 +21,27 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/v1/user-scripts/")
+@RequestMapping("/v1/user-scripts")
 public class UserScriptController {
 
     private final UserScriptService userScriptService;
     private final UserService userService;
 
     private final ScriptRepository scriptRepository;
+
+    @GetMapping("/{userScriptId}")
+    @Operation(summary = "스크립트 가져오기",description = "저장한 스크립트 중 하나 가져오기")
+    @ApiResponses({
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200",description = "OK, 성공"),
+    })
+    public ApiResponse<UserScriptResponse.UserScriptResponseDto> getScript(@AuthenticationPrincipal UserDetails details, @PathVariable("userScriptId") Long userScriptId){
+        Long userId = userService.getUserId(details);
+        User user = userService.findUser(userId);
+
+        return ApiResponse.onSuccess(userScriptService.getScript(user, userScriptId));
+    }
+
+
 
     @PostMapping("/save")
     @Operation(summary = "스크립트 저장하기",description = "youtubeUrl과 키워드 입력받아 스크립드와 함께 저장")

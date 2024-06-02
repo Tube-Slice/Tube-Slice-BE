@@ -2,28 +2,22 @@ package TubeSlice.tubeSlice.domain.userScript;
 
 import TubeSlice.tubeSlice.domain.script.Script;
 import TubeSlice.tubeSlice.domain.script.ScriptRepository;
-import TubeSlice.tubeSlice.domain.scriptKeyword.ScriptKeyword;
 import TubeSlice.tubeSlice.domain.scriptKeyword.ScriptKeywordService;
-import TubeSlice.tubeSlice.domain.subtitle.Subtitle;
-import TubeSlice.tubeSlice.domain.subtitle.SubtitleRepository;
 import TubeSlice.tubeSlice.domain.text.Text;
 import TubeSlice.tubeSlice.domain.text.TextConverter;
 import TubeSlice.tubeSlice.domain.text.TextRepository;
 import TubeSlice.tubeSlice.domain.text.TextService;
-import TubeSlice.tubeSlice.domain.text.dto.request.TextRequestDto;
 import TubeSlice.tubeSlice.domain.text.dto.response.TextResponseDto;
 import TubeSlice.tubeSlice.domain.user.User;
 import TubeSlice.tubeSlice.domain.userScript.dto.request.UserScriptRequest;
+import TubeSlice.tubeSlice.domain.userScript.dto.response.UserScriptResponse;
 import TubeSlice.tubeSlice.global.response.code.resultCode.ErrorStatus;
 import TubeSlice.tubeSlice.global.response.code.resultCode.SuccessStatus;
 import TubeSlice.tubeSlice.global.response.exception.handler.UserScriptHandler;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -35,6 +29,16 @@ public class UserScriptService {
 
     private final TextService textService;
     private final ScriptKeywordService scriptKeywordService;
+
+    public UserScriptResponse.UserScriptResponseDto getScript(User user , Long userScriptId){
+        UserScript userScript = userScriptRepository.findById(userScriptId).orElseThrow(null);
+
+        if (userScript.getUser() != user){
+            throw new RuntimeException();
+        }
+
+        return UserScriptConverter.toUserScript(userScript);
+    }
 
     public Long saveScript(User user, Script script, UserScriptRequest.SaveRequestDto requestDto){
 
