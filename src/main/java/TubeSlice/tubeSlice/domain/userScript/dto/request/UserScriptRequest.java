@@ -28,4 +28,14 @@ public class UserScriptRequest {
         String scripts;
         private List<String> scriptKeywords;
     }
+
+    @Getter
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class highlightRequestDto{
+
+        private Double timeline;
+        private String text;
+    }
 }

@@ -42,4 +42,18 @@ public class UserScriptController {
 
         return ApiResponse.onSuccess(SuccessStatus._OK);
     }
+
+    @PatchMapping("/{userScriptId}/highlights")
+    @Operation(summary = "스크립트 강조하기",description = "강조할 문장의 타임라인을 입력받아 해당 문장 강조")
+    @ApiResponses({
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200",description = "OK, 성공"),
+    })
+    public ApiResponse<SuccessStatus> highlightScript(@AuthenticationPrincipal UserDetails details,
+                                                      @PathVariable("userScriptId") Long userScriptId,
+                                                      @RequestBody List<UserScriptRequest.highlightRequestDto> requestDto){
+        Long userId = userService.getUserId(details);
+        User user = userService.findUser(userId);
+
+        return ApiResponse.onSuccess(userScriptService.highlightScript(user, userScriptId, requestDto));
+    }
 }
