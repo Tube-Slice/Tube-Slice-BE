@@ -43,6 +43,20 @@ public class UserScriptController {
         return ApiResponse.onSuccess(SuccessStatus._OK);
     }
 
+    @PatchMapping("/{userScriptId}/update")
+    @Operation(summary = "스크립트 수정하기",description = "저장한 스크립트의 내용 수정")
+    @ApiResponses({
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200",description = "OK, 성공"),
+    })
+    public ApiResponse<SuccessStatus> updateScript(@AuthenticationPrincipal UserDetails details,
+                                                   @PathVariable("userScriptId") Long userScriptId,
+                                                   @RequestBody List<UserScriptRequest.UpdateRequestDto> requestDto){
+        Long userId = userService.getUserId(details);
+        User user = userService.findUser(userId);
+
+        return ApiResponse.onSuccess(userScriptService.updateScript(user, userScriptId, requestDto));
+    }
+
     @PatchMapping("/{userScriptId}/highlights")
     @Operation(summary = "스크립트 강조하기",description = "강조할 문장의 타임라인을 입력받아 해당 문장 강조")
     @ApiResponses({

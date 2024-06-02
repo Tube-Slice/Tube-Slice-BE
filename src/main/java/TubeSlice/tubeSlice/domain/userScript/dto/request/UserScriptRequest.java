@@ -25,8 +25,8 @@ public class UserScriptRequest {
     @AllArgsConstructor
     public static class UpdateRequestDto{
 
-        String scripts;
-        private List<String> scriptKeywords;
+        private Double timeline;
+        private String text;
     }
 
     @Getter

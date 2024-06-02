@@ -58,6 +58,23 @@ public class UserScriptService {
         return userScript.getId();
     }
 
+    public SuccessStatus updateScript(User user, Long userScriptId, List<UserScriptRequest.UpdateRequestDto> requestDto){
+
+        UserScript userScript = userScriptRepository.findById(userScriptId).orElseThrow(() -> new UserScriptHandler(ErrorStatus.USER_SCRIPT_NOT_FOUND));
+
+        if (userScript.getUser() != user){
+            throw new UserScriptHandler(ErrorStatus.USER_SCRIPT_NOT_FOUND);
+        }
+
+        for (UserScriptRequest.UpdateRequestDto r : requestDto){
+            Text text  = textRepository.findAllByUserScriptAndTimeline(userScript, r.getTimeline());
+            text.setText(r.getText());
+            textRepository.save(text);
+        }
+
+        return SuccessStatus._OK;
+    }
+
     public SuccessStatus highlightScript(User user, Long userScriptId, List<UserScriptRequest.highlightRequestDto> requestListDto){
 
         UserScript userScript = userScriptRepository.findById(userScriptId).orElseThrow(() -> new UserScriptHandler(ErrorStatus.USER_SCRIPT_NOT_FOUND));
