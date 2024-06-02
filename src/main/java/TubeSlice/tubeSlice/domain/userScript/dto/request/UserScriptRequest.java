@@ -34,8 +34,6 @@ public class UserScriptRequest {
     @NoArgsConstructor
     @AllArgsConstructor
     public static class highlightRequestDto{
-
         private Double timeline;
-        private String text;
     }
 }
