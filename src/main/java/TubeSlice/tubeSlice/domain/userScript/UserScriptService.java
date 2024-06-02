@@ -58,7 +58,7 @@ public class UserScriptService {
         return userScript.getId();
     }
 
-    public SuccessStatus updateScript(User user, Long userScriptId, List<UserScriptRequest.UpdateRequestDto> requestDto){
+    public SuccessStatus updateScript(User user, Long userScriptId, UserScriptRequest.UpdateRequestDto requestDto){
 
         UserScript userScript = userScriptRepository.findById(userScriptId).orElseThrow(() -> new UserScriptHandler(ErrorStatus.USER_SCRIPT_NOT_FOUND));
 
@@ -66,10 +66,16 @@ public class UserScriptService {
             throw new UserScriptHandler(ErrorStatus.USER_SCRIPT_NOT_FOUND);
         }
 
-        for (UserScriptRequest.UpdateRequestDto r : requestDto){
-            Text text  = textRepository.findAllByUserScriptAndTimeline(userScript, r.getTimeline());
-            text.setText(r.getText());
-            textRepository.save(text);
+        if (requestDto.getScript() != null) {
+            for (UserScriptRequest.UpdateRequestDto.Script r : requestDto.getScript()) {
+                Text text = textRepository.findAllByUserScriptAndTimeline(userScript, r.getTimeline());
+                text.setText(r.getText());
+                textRepository.save(text);
+            }
+        }
+
+        if (requestDto.getScriptKeywords()!=null){
+            scriptKeywordService.updateScriptKeyword(userScriptId, requestDto.getScriptKeywords(),userScript);
         }
 
         return SuccessStatus._OK;

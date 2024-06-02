@@ -50,7 +50,7 @@ public class UserScriptController {
     })
     public ApiResponse<SuccessStatus> updateScript(@AuthenticationPrincipal UserDetails details,
                                                    @PathVariable("userScriptId") Long userScriptId,
-                                                   @RequestBody List<UserScriptRequest.UpdateRequestDto> requestDto){
+                                                   @RequestBody UserScriptRequest.UpdateRequestDto requestDto){
         Long userId = userService.getUserId(details);
         User user = userService.findUser(userId);
 
