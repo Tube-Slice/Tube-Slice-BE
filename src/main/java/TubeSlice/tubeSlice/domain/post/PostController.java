@@ -30,6 +30,7 @@ public class PostController {
     @Operation(summary = "게시글 생성하기",description = "게시글 생성")
     @ApiResponses({
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200",description = "OK, 성공"),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "POST402", description = "요청 형식이 올바르지 않습니다.",content = @Content(schema = @Schema(implementation = ApiResponse.class))),
     })
     public ApiResponse<SuccessStatus> createPost(@AuthenticationPrincipal UserDetails details,
                                         @RequestBody PostRequestDto.PostCreateDto postRequestDto) {
@@ -43,6 +44,7 @@ public class PostController {
     @Operation(summary = "게시글 수정하기",description = "게시글 수정")
     @ApiResponses({
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200",description = "OK, 성공"),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "POST401", description = "게시글을 찾을 수 없습니다.",content = @Content(schema = @Schema(implementation = ApiResponse.class))),
     })
     public ApiResponse<Long> updatePost(@AuthenticationPrincipal UserDetails details,
                                         @PathVariable Long postId,
@@ -57,6 +59,7 @@ public class PostController {
     @Operation(summary = "게시글 삭제하기",description = "게시글 삭제")
     @ApiResponses({
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200",description = "OK, 성공"),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "POST401", description = "게시글을 찾을 수 없습니다.",content = @Content(schema = @Schema(implementation = ApiResponse.class))),
     })
     public ApiResponse<SuccessStatus> deletePost(@PathVariable Long postId){
 
@@ -67,6 +70,7 @@ public class PostController {
     @Operation(summary = "게시글 정보 가져오기 API",description = "SinglePostInfoDto 반환")
     @ApiResponses({
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200",description = "OK, 성공"),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "POST401", description = "게시글을 찾을 수 없습니다.",content = @Content(schema = @Schema(implementation = ApiResponse.class))),
     })
     public ApiResponse<PostResponseDto.SinglePostInfoDto> getSinglePostInfo(@AuthenticationPrincipal UserDetails details, @PathVariable(name = "postId")Long postId){
         Post post = postService.findPost(postId);

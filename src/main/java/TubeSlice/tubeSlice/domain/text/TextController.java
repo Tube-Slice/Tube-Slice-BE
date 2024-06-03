@@ -33,7 +33,7 @@ public class TextController {
     @Operation(summary = "영상에서 스크립트 추출", description = "유튜브 url을 입력 받아 영상의 스크립트를 반환한다.")
     @ApiResponses({
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200",description = "OK, 성공"),
-            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "USER401", description = "변환에 실패하였습니다.",content = @Content(schema = @Schema(implementation = ApiResponse.class))),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "SCRIPT401", description = "변환에 실패하였습니다.",content = @Content(schema = @Schema(implementation = ApiResponse.class))),
     })
     public ApiResponse<TextResponseDto.transResponseListDto> videoToScript(@RequestParam("youtubeUrl") String youtubeUrl){
         Script findScript = scriptRepository.findByVideoUrl(youtubeUrl);
@@ -51,6 +51,7 @@ public class TextController {
     @Operation(summary = "동영상 요약하기",description = "동영상 요약하기")
     @ApiResponses({
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200",description = "OK, 성공"),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "SCRIPT401", description = "스크립트를 찾을 수 없습니다.",content = @Content(schema = @Schema(implementation = ApiResponse.class))),
     })
     public ApiResponse<Object> gptSummarize(@RequestParam("row") Integer row,
                                             @RequestParam("youtubeUrl") String youtubeUrl){
