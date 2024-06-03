@@ -8,6 +8,7 @@ import TubeSlice.tubeSlice.domain.subtitle.Subtitle;
 import TubeSlice.tubeSlice.domain.text.Text;
 import TubeSlice.tubeSlice.domain.userScript.dto.response.UserScriptResponse;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -34,6 +35,7 @@ public class UserScriptConverter {
                 .toList();
         List<ScriptResponseDto.SubtitleResponseDto> subtitiles = script.getSubtitles().stream()
                 .map(s -> new ScriptResponseDto.SubtitleResponseDto(s.getTimeline(), s.getSubtitle()))
+                .sorted(Comparator.comparing(ScriptResponseDto.SubtitleResponseDto::getTimeline))
                 .toList();
 
         return UserScriptResponse.UserScriptResponseDto.builder()
