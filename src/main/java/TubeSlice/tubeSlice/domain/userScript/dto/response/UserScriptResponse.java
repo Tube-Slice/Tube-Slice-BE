@@ -30,7 +30,6 @@ public class UserScriptResponse {
         private Long scriptId;
         private List<Script> scripts;
         private List<String> scriptKeywords;
-
     }
 
     @Getter

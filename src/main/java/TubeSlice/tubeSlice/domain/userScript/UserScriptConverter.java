@@ -11,6 +11,17 @@ import java.util.stream.Collectors;
 
 public class UserScriptConverter {
 
+    public static UserScriptResponse.UserScriptResponseListDto toUserScriptList(List<UserScript> userScriptList){
+
+        List<UserScriptResponse.UserScriptResponseDto> userScriptResponseDtos = userScriptList.stream()
+                .map(UserScriptConverter::toUserScript)
+                .toList();
+
+        return UserScriptResponse.UserScriptResponseListDto.builder()
+                .scriptList(userScriptResponseDtos)
+                .build();
+    }
+
     public static UserScriptResponse.UserScriptResponseDto toUserScript(UserScript userScript){
         Script script = userScript.getScript();
         List<UserScriptResponse.Script> texts = userScript.getScriptTexts().stream()
