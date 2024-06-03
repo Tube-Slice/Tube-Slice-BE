@@ -1,5 +1,7 @@
 package TubeSlice.tubeSlice.domain.userScript.dto.response;
 
+import TubeSlice.tubeSlice.domain.keyword.dto.response.KeywordResponseDto;
+import TubeSlice.tubeSlice.domain.script.dto.response.ScriptResponseDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -26,10 +28,10 @@ public class UserScriptResponse {
         private Long userScriptId;
         private String youtubeUrl;
         private String youtubeTitle;
-        private List<String> subtitles;
+        private List<ScriptResponseDto.SubtitleResponseDto> subtitles;
         private Long scriptId;
         private List<Script> scripts;
-        private List<String> scriptKeywords;
+        private List<KeywordResponseDto.KeywordResultDto> scriptKeywords;
     }
 
     @Getter
@@ -38,9 +40,10 @@ public class UserScriptResponse {
     @AllArgsConstructor
     public static class Script{
 
+        private Long textId;
         private Double timeline;
         private String text;
-        Boolean isHighlighted;
+        private Boolean isHighlighted;
 
     }
 }
