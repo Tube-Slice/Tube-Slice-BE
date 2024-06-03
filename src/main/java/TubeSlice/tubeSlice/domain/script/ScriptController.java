@@ -5,6 +5,8 @@ import TubeSlice.tubeSlice.global.response.ApiResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.Parameters;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -23,6 +25,8 @@ public class ScriptController {
     @Operation(summary = "스크립트 소제목 가져오기 API",description = "스크립트 소제목 가져오기")
     @ApiResponses({
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200",description = "OK, 성공"),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "SCRIPT401", description = "스크립트를 찾을 수 없습니다.",content = @Content(schema = @Schema(implementation = ApiResponse.class))),
+
     })
     public ApiResponse<ScriptResponseDto.SubtitleResponseListDto> getSubtitles(@RequestParam(name = "youtubeUrl") String youtubeUrl){
         //youtubeUrl을 입력으로 받아 소제목 가져오기.
