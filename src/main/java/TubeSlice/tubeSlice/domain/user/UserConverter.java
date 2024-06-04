@@ -84,4 +84,13 @@ public class UserConverter {
                 .profileUrl(user.getProfileUrl())
                 .build();
     }
+
+    public static UserResponseDto.UserSettingInfoDto toUserSettingInfoDto(User user){
+        return UserResponseDto.UserSettingInfoDto.builder()
+                .userId(user.getId())
+                .nickname(user.getNickname())
+                .profileUrl(user.getProfileUrl())
+                .introduction(user.getIntroduction())
+                .build();
+    }
 }

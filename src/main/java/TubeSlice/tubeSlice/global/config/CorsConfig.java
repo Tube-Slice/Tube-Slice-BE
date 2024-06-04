@@ -19,7 +19,7 @@ public class CorsConfig {
         config.addAllowedOriginPattern("*");
         config.addAllowedHeader("*");
         config.setAllowedMethods(List.of("POST", "GET", "PUT", "DELETE", "PATCH", "OPTIONS"));
-        config.addAllowedOrigin("https://www.tubeslice.site");
+        config.addAllowedOrigin("https://www.tubeslice.shop");
 
         source.registerCorsConfiguration("/**", config);
         return new CorsFilter(source);

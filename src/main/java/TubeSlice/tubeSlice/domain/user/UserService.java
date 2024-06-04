@@ -3,6 +3,8 @@ package TubeSlice.tubeSlice.domain.user;
 
 import TubeSlice.tubeSlice.domain.follow.Follow;
 import TubeSlice.tubeSlice.domain.follow.FollowRepository;
+import TubeSlice.tubeSlice.domain.image.Image;
+import TubeSlice.tubeSlice.domain.image.ImageRepository;
 import TubeSlice.tubeSlice.domain.keyword.Keyword;
 import TubeSlice.tubeSlice.domain.keyword.KeywordConverter;
 import TubeSlice.tubeSlice.domain.keyword.KeywordRepository;
@@ -46,6 +48,7 @@ public class UserService {
     private final PostRepository postRepository;
     private final UserDetailsServiceImpl userDetailsService;
     private final FollowRepository followRepository;
+    private final ImageRepository imageRepository;
 
     public Long getUserId(UserDetails user){
         String username = user.getUsername();
@@ -136,8 +139,9 @@ public class UserService {
         if(request.getIntroduction() != null){
             user.setIntroduction(request.getIntroduction());
         }
-        if(request.getProfileUrl() != null){
-            user.setProfileUrl(request.getProfileUrl());
+        if(request.getImageId() != null){
+            Image image = imageRepository.getReferenceById(request.getImageId());
+            user.setProfileUrl(image.getUrl());
         }
 
         userRepository.save(user);
@@ -202,6 +206,10 @@ public class UserService {
         }
 
 
+    }
+
+    public UserResponseDto.UserSettingInfoDto getUserSettingInfo(User user){
+        return UserConverter.toUserSettingInfoDto(user);
     }
 }
 

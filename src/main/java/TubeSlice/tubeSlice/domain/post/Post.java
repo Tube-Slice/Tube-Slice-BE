@@ -38,9 +38,6 @@ public class Post extends BaseEntity {
     private User user;
 
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
-    private List<Image> imageList = new ArrayList<>();
-
-    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
     private List<PostKeyword> postKeywordList = new ArrayList<>();
 
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
