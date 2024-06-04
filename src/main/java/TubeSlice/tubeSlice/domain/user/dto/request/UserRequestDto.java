@@ -11,7 +11,7 @@ public class UserRequestDto {
     @AllArgsConstructor
     public static class UserInfoUpdateDto{
         private String nickname;
-        private String profileUrl;
+        private Long imageId;
         private String introduction;
     }
 
