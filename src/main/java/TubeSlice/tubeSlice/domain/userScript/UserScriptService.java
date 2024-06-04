@@ -20,11 +20,14 @@ import TubeSlice.tubeSlice.global.response.exception.handler.UserScriptHandler;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import java.util.List;
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class UserScriptService {
 
     private final UserScriptRepository userScriptRepository;
@@ -55,6 +58,7 @@ public class UserScriptService {
         return UserScriptConverter.toUserScriptList(userScripts);
     }
 
+    @Transactional
     public Long saveScript(User user, Script script, UserScriptRequest.SaveRequestDto requestDto){
 
         List<TextResponseDto.transResponseDto> scripts = textService.getScriptFromBucket(script);
@@ -77,6 +81,7 @@ public class UserScriptService {
         return userScript.getId();
     }
 
+    @Transactional
     public SuccessStatus updateScript(User user, Long userScriptId, UserScriptRequest.UpdateRequestDto requestDto){
 
         UserScript userScript = userScriptRepository.findById(userScriptId).orElseThrow(() -> new UserScriptHandler(ErrorStatus.USER_SCRIPT_NOT_FOUND));
@@ -100,6 +105,7 @@ public class UserScriptService {
         return SuccessStatus._OK;
     }
 
+    @Transactional
     public SuccessStatus highlightScript(User user, Long userScriptId, List<UserScriptRequest.highlightRequestDto> requestListDto){
 
         UserScript userScript = userScriptRepository.findById(userScriptId).orElseThrow(() -> new UserScriptHandler(ErrorStatus.USER_SCRIPT_NOT_FOUND));
