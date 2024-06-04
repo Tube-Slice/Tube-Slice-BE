@@ -2,6 +2,7 @@ package TubeSlice.tubeSlice.domain.image;
 
 import TubeSlice.tubeSlice.domain.image.dto.response.ImageResponseDto;
 import TubeSlice.tubeSlice.domain.user.User;
+import TubeSlice.tubeSlice.domain.user.UserRepository;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.stereotype.Service;
@@ -13,6 +14,7 @@ import org.springframework.web.multipart.MultipartFile;
 @Transactional(readOnly = true)
 public class ImageService {
     private final ImageRepository imageRepository;
+    private final UserRepository userRepository;
     private final S3Service s3Service;
 
     @Transactional
