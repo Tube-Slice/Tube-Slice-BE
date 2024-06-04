@@ -3,15 +3,13 @@ package TubeSlice.tubeSlice.domain.text;
 import TubeSlice.tubeSlice.domain.userScript.UserScript;
 import TubeSlice.tubeSlice.global.entity.BaseEntity;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Entity
 @Table(name = "text")
 @Builder
 @Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 public class Text extends BaseEntity {

@@ -35,6 +35,10 @@ public enum ErrorStatus implements BaseErrorCode {
     //Translation
     TRANSLATION_BAD_REQUEST(HttpStatus.BAD_REQUEST,"TRANSLATION400","변환 오류. 다시 변환해주세요."),
 
+    //User Script
+    USER_SCRIPT_NOT_FOUND(HttpStatus.NOT_FOUND, "USERSCRIPT401", "저장되지 않은 스크립트입니다."),
+    USER_SCRIPT_NOT_FOUND2(HttpStatus.NOT_FOUND, "USERSCRIPT401", "저장한 스크립트가 없습니다."),
+
     // Image
     IMAGE_SERVER_ERROR(HttpStatus.BAD_REQUEST, "IMAGE401", "이미지 업로드 실패 - 서버문제");
 
