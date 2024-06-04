@@ -299,4 +299,17 @@ public class UserController {
 
         return ApiResponse.onSuccess(userService.getSearchFollowList(me , user, type, nickname));
     }
+
+    @GetMapping("/setting")
+    @Operation(summary = "설정용 유저기반 정보 가져오기 API",description = "UserSettingInfoDto를 반환")
+    @ApiResponses({
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200",description = "OK, 성공"),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "USER402", description = "유저 검색 타입이 유효하지 않습니다.",content = @Content(schema = @Schema(implementation = ApiResponse.class))),
+    })
+    public ApiResponse<UserResponseDto.UserSettingInfoDto> getUserSettingInfo(@AuthenticationPrincipal UserDetails details){
+        Long userId = userService.getUserId(details);
+        User user = userService.findUser(userId);
+
+        return ApiResponse.onSuccess(userService.getUserSettingInfo(user));
+    }
 }

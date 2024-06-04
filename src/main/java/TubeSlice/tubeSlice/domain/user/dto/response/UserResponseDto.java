@@ -1,5 +1,6 @@
 package TubeSlice.tubeSlice.domain.user.dto.response;
 
+import TubeSlice.tubeSlice.domain.image.dto.response.ImageResponseDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -79,6 +80,16 @@ public class UserResponseDto {
         private String profileUrl;
     }
 
+    @Builder
+    @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class UserSettingInfoDto{
+        private Long userId;
+        private String nickname;
+        private String profileUrl;
+        private String introduction;
+    }
 
 
 
