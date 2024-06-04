@@ -59,6 +59,8 @@ public class S3Service {
             throw new ImageHandler(ErrorStatus.IMAGE_SERVER_ERROR);
         }
 
-        return new ImageResponseDto.S3Dto(fileUrl + "/ProfileImage/" + fileName);
+        return ImageResponseDto.S3Dto.builder()
+                .fileUrl(fileUrl + "/ProfileImage/" + fileName)
+                .build();
     }
 }
