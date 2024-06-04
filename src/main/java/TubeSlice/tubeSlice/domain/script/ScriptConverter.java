@@ -9,13 +9,13 @@ import java.util.stream.Collectors;
 
 public class ScriptConverter {
 
-    public static List<ScriptResponseDto.SubtitleResponseDto> toSubtitleListDto(Script script){
+    public static ScriptResponseDto.SubtitleResponseListDto toSubtitleListDto(Script script){
         List<ScriptResponseDto.SubtitleResponseDto> subs = script.getSubtitles().stream()
                 .map(subtitle -> new ScriptResponseDto.SubtitleResponseDto(subtitle.getTimeline(), subtitle.getSubtitle()))
                 .sorted(Comparator.comparing(ScriptResponseDto.SubtitleResponseDto::getTimeline))
                 .collect(Collectors.toList());
 
-        return subs;
+        return new ScriptResponseDto.SubtitleResponseListDto(subs);
     }
 
 }

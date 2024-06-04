@@ -22,6 +22,14 @@ public class ScriptResponseDto {
     private List<ScriptKeyword> keywords;
     private List<SubtitleResponseDto> subtitles;
 
+    @Getter
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class SubtitleResponseListDto {
+
+        private List<SubtitleResponseDto> subtitles;
+    }
 
     @Getter
     @Builder
@@ -30,6 +38,6 @@ public class ScriptResponseDto {
     public static class SubtitleResponseDto {
 
         private Double timeline;
-        private String subtitles;
+        private String sub;
     }
 }

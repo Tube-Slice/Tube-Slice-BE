@@ -30,7 +30,14 @@ public enum ErrorStatus implements BaseErrorCode {
     COMMENT_FORBIDDEN(HttpStatus.FORBIDDEN, "COMMENT402", "댓글 수정 혹은 삭제에 관한 권한이 존재하지 않습니다."),
 
     // Keyword
-    KEYWORD_NOT_FOUND(HttpStatus.NOT_FOUND, "KEYWORD401","해당하는 키워드가 존재하지 않습니다.");
+    KEYWORD_NOT_FOUND(HttpStatus.NOT_FOUND, "KEYWORD401","해당하는 키워드가 존재하지 않습니다."),
+
+    //Translation
+    TRANSLATION_BAD_REQUEST(HttpStatus.BAD_REQUEST,"TRANSLATION400","변환 오류. 다시 변환해주세요."),
+
+    //User Script
+    USER_SCRIPT_NOT_FOUND(HttpStatus.NOT_FOUND, "USERSCRIPT401", "저장되지 않은 스크립트입니다."),
+    USER_SCRIPT_NOT_FOUND2(HttpStatus.NOT_FOUND, "USERSCRIPT401", "저장한 스크립트가 없습니다.");
 
     private final HttpStatus httpStatus;
     private final String code;

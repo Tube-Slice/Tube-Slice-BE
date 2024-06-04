@@ -61,12 +61,10 @@ public class TextService {
     private String wavBucket = "test-wav"; //kms 키 없는 버킷.
     private String scriptBucket = "script-file-bucket";
 
-    String currentDir = ".";
-
     @Transactional
-    public List<TextResponseDto> videoToScript(String youtubeUrl) {
+    public List<TextResponseDto.transResponseDto> videoToScript(String youtubeUrl) {
         String filePath = getAudioFileFromYoutubeUrl(youtubeUrl);   // "mp3/파일이름.mp3"
-        String objectStorageDataKey = uploadFile(currentDir+"/mp3/" + filePath); //파일이름.mp3
+        String objectStorageDataKey = uploadFile("mp3/" + filePath); //파일이름.mp3
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
@@ -108,11 +106,11 @@ public class TextService {
         } else {
             script = findScript;
         }
-        List<TextResponseDto> result = getScriptFromBucket(script);
+        List<TextResponseDto.transResponseDto> result = getScriptFromBucket(script);
 
         subtitleService.saveSubtitle(result, script);
 
-        File file = new File(currentDir+"/mp3/" + objectStorageDataKey);
+        File file = new File("mp3/" + objectStorageDataKey);
         boolean isDeleted = file.delete();
 
         log.info("파일 삭제: {}", isDeleted);
@@ -148,9 +146,9 @@ public class TextService {
 
         return key; //mp3 파일 이름
     }
-    
+
     @Transactional
-    public List<TextResponseDto> getScriptFromBucket(Script script){ //key가 파일명
+    public List<TextResponseDto.transResponseDto> getScriptFromBucket(Script script){ //key가 파일명
         String fileName = script.getScriptTitle();
 
         S3Object result = amazonS3Client.getObject(new GetObjectRequest(scriptBucket, fileName));
@@ -159,7 +157,7 @@ public class TextService {
             throw new RuntimeException("Script does not exist.");
         }
 
-        List<TextResponseDto> scripts = new ArrayList<>();
+        List<TextResponseDto.transResponseDto> scripts = new ArrayList<>();
 
         try {
             BufferedReader reader = new BufferedReader(new InputStreamReader(result.getObjectContent()));
@@ -192,13 +190,13 @@ public class TextService {
 
                 Double startDouble = Double.parseDouble(start);
 
-                scripts.add(new TextResponseDto(startDouble, eachScript));
+                scripts.add(new TextResponseDto.transResponseDto(startDouble, eachScript));
 
             }
             //스크립트 타임라인 순으로 정렬.
-            Collections.sort(scripts, new Comparator<TextResponseDto>() {
+            Collections.sort(scripts, new Comparator<TextResponseDto.transResponseDto>() {
                 @Override
-                public int compare(TextResponseDto o1, TextResponseDto o2) {
+                public int compare(TextResponseDto.transResponseDto o1, TextResponseDto.transResponseDto o2) {
                     return o1.getTimeline().compareTo(o2.getTimeline());
                 }
             });
@@ -207,17 +205,15 @@ public class TextService {
             throw new RuntimeException("Error in reading file from storage", e);
         }
 
-
-
         return scripts;
     }
 
 
 
-    public String getTotalScript(List<TextResponseDto> scripts){
+    public String getTotalScript(List<TextResponseDto.transResponseDto> scripts){
         String totalScript = "";
 
-        for (TextResponseDto e : scripts){
+        for (TextResponseDto.transResponseDto e : scripts){
             totalScript += e.getText() + "\n";
         }
         log.info("totalScript: {}", totalScript);
@@ -227,7 +223,7 @@ public class TextService {
 
 
 
-    private List<TextResponseDto.SummaryResponseDto> trimSummary(String jsonResult){
+    private TextResponseDto.SummaryResponseListDto trimSummary(String jsonResult){
         log.info("요약 내용: {}", jsonResult);
         List<TextResponseDto.SummaryResponseDto> result = new ArrayList<>();
 
@@ -253,7 +249,7 @@ public class TextService {
             log.info("{} : {}", idx, value);
         }
 
-        return result;
+        return new TextResponseDto.SummaryResponseListDto(result);
     }
 
 
@@ -261,41 +257,15 @@ public class TextService {
     public String getAudioFileFromYoutubeUrl(String youtubeUrl){
         String filename = "mp3 파일 가져오기 실패.";
 
-        //yt-dlp 파일 실행 위치.
-        String ytDlpPath = "yt-dlp";
-
-
-
         try {
-            currentDir = executeCommand("pwd");
-            log.info("current working dir: {}", currentDir);
 
-            //mp3 파일 저장 경로. 서버 상에 경로 지정.
-            String downloadDir = currentDir+"/mp3/%(title)s.%(ext)s";
-
-            // Command to download video
-            String downloadCommand = String.format("%s -x --audio-format mp3 -o \"%s\" %s", ytDlpPath, downloadDir, youtubeUrl);
-
-            // Command to print filename
-            String printCommand = String.format("%s --print filename -o \"%s\" %s", ytDlpPath, downloadDir, youtubeUrl);
-
-
-
-
-            executeCommand(downloadCommand);
-
-            filename = executeCommand(printCommand);
-
-            if (filename != null) {
-                String ext = filename.substring(filename.lastIndexOf("."));
-                filename = filename.replace(ext, ".mp3");
-            }
+            executeCommand(youtubeUrl);
 
         } catch (IOException | InterruptedException e) {
             e.printStackTrace();
         }
 
-        String DATA_DIRECTORY = currentDir+"/mp3/";
+        String DATA_DIRECTORY = "mp3/";
         File dir = new File(DATA_DIRECTORY);
 
         if (dir.exists() && dir.isDirectory()) {
@@ -319,16 +289,43 @@ public class TextService {
         return filename;
     }
 
-    private String executeCommand(String command) throws IOException, InterruptedException {
-        Process process = Runtime.getRuntime().exec(command);
-        BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
-        String line;
-        int i = 0;
+    private String executeCommand(String youtubeUrl) throws IOException, InterruptedException {
+
+        ProcessBuilder processBuilder = new ProcessBuilder();
+        processBuilder.command("/usr/local/bin/yt-dlp", "-x", "--audio-format", "mp3", "-o", "'%(title)s.%(ext)s'", youtubeUrl);
         String filename = null;
-        while ((line = reader.readLine()) != null) {
-            filename = line;
+        try {
+            processBuilder.directory(new java.io.File("./mp3"));  // 원하는 작업 디렉토리로 변경
+
+            Process process = processBuilder.start();
+            BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+
+
+            String line;
+            while ((line = reader.readLine()) != null) {
+                filename = line;
+            }
+            log.info("command: {}", filename);
+
+            // 에러 출력
+            BufferedReader errorReader = new BufferedReader(new InputStreamReader(process.getErrorStream(), "EUC-KR"));
+            String errorLine;
+            while ((errorLine = errorReader.readLine()) != null) {
+                System.err.println(errorLine);
+            }
+
+            int exitCode = process.waitFor();
+            if (exitCode == 0) {
+                System.out.println("Download completed successfully!");
+            } else {
+                System.err.println("다운로드 실패 Download failed with exit code " + exitCode);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+            Thread.currentThread().interrupt();
         }
-        process.waitFor();
 
         return filename;
     }

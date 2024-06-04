@@ -4,6 +4,8 @@ import TubeSlice.tubeSlice.domain.script.Script;
 import TubeSlice.tubeSlice.domain.text.TextService;
 import TubeSlice.tubeSlice.domain.text.dto.request.TextRequestDto;
 import TubeSlice.tubeSlice.domain.text.dto.response.TextResponseDto;
+import TubeSlice.tubeSlice.global.response.code.resultCode.ErrorStatus;
+import TubeSlice.tubeSlice.global.response.exception.handler.TransHandler;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,7 +37,7 @@ public class SubtitleService {
     private RestTemplate template;
 
     @Transactional
-    public void saveSubtitle(List<TextResponseDto> scripts, Script script) {
+    public void saveSubtitle(List<TextResponseDto.transResponseDto> scripts, Script script) {
 
         //subtitle은 무조건 저장. 아니면 gpt api 계속 호출해야함.
         String totalScriptsWithTimeline = getTotalScriptsWithTimeline(scripts);
@@ -59,10 +61,10 @@ public class SubtitleService {
         }
     }
 
-    public String getTotalScriptsWithTimeline(List<TextResponseDto> scripts){
+    public String getTotalScriptsWithTimeline(List<TextResponseDto.transResponseDto> scripts){
         String totalScriptsWithTimeline = "";
 
-        for (TextResponseDto e : scripts){
+        for (TextResponseDto.transResponseDto e : scripts){
             totalScriptsWithTimeline += e.getTimeline() + ":" + e.getText() + "\n";
         }
         log.info("totalScriptWithTimeLine: {}", totalScriptsWithTimeline);
@@ -70,10 +72,10 @@ public class SubtitleService {
         return totalScriptsWithTimeline;
     }
 
-    public String getTotalScript(List<TextResponseDto> scripts){
+    public String getTotalScript(List<TextResponseDto.transResponseDto> scripts){
         String totalScript = "";
 
-        for (TextResponseDto e : scripts){
+        for (TextResponseDto.transResponseDto e : scripts){
             totalScript += e.getText() + "\n";
         }
         log.info("totalScript: {}", totalScript);
@@ -118,7 +120,7 @@ public class SubtitleService {
     }
 
     public HashMap<Double,String> trimSubtitle(String jsonResult){
-        log.info("요약 내용: {}", jsonResult);
+        log.info("소제목들: {}", jsonResult);
         HashMap<Double, String> result = new HashMap<>();
 
         //jsonResult = jsonResult.replaceAll("\n", "").trim();
@@ -132,8 +134,8 @@ public class SubtitleService {
             List<String> parts = List.of(line.split(":"));
 
             String value = parts.get(1).replaceAll("\"", "");
-
-            Double tl = Double.valueOf(parts.get(0).replaceAll("\"",""));
+            // 유효하지 않은 숫자 형식 처리
+            Double tl = parseTime(parts.get(0).replaceAll("\"",""));
 
             result.put(tl,value);
 
@@ -141,5 +143,13 @@ public class SubtitleService {
         }
 
         return result;
+    }
+
+    private double parseTime(String timeString) {
+        try {
+            return Double.parseDouble(timeString);
+        } catch (NumberFormatException e) {
+            throw new TransHandler(ErrorStatus.TRANSLATION_BAD_REQUEST);
+        }
     }
 }
