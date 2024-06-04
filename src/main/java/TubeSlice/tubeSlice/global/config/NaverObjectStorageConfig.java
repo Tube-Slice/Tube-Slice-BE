@@ -22,7 +22,7 @@ public class NaverObjectStorageConfig {
     @Value("${naver.objectstorage.endpoint}")
     private String endpoint;
 
-    @Bean
+    @Bean(name = "amazonS3Client")
     public AmazonS3Client amazonS3Client() {
         BasicAWSCredentials awsCredentials = new BasicAWSCredentials(accessKey, secretKey);
 
