@@ -37,8 +37,6 @@ public class PostService {
     private final PostKeywordService postKeywordService;
     private final TimelineService timelineService;
 
-    @Value("${spring.servlet.multipart.location}")
-    private String fileDir;
 
     @Transactional
     public ApiResponse<SuccessStatus> createPost(User user, PostRequestDto.PostCreateDto postRequestDto) {

@@ -203,5 +203,9 @@ public class UserService {
 
 
     }
+
+    public UserResponseDto.UserSettingInfoDto getUserSettingInfo(User user){
+        return UserConverter.toUserSettingInfoDto(user);
+    }
 }
 
