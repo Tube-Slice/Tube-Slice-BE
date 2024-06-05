@@ -58,8 +58,7 @@ public class PostService {
 
 
     @Transactional
-    public Long updatePost(User user,  Long postId, PostRequestDto.PostUpdateDto postRequestDto) {
-
+    public SuccessStatus updatePost(User user,  Long postId, PostRequestDto.PostUpdateDto postRequestDto) {
         Post findPost = postRepository.findById(postId).orElseThrow(()-> new PostHandler(ErrorStatus.POST_NOT_FOUND));
 
         if(findPost.getUser() != user){
@@ -83,7 +82,11 @@ public class PostService {
         if (updatePostKeywords!=null) {
             postKeywordService.updatePostKeyword(postId, updatePostKeywords, findPost);
         }
-        return findPost.getId();
+        if (postRequestDto.getTimelineDtoList()!=null){
+            timelineService.updatePostTimeline(postRequestDto,findPost);
+        }
+
+        return SuccessStatus._OK;
     }
 
     @Transactional

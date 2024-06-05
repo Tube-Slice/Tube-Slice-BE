@@ -122,4 +122,18 @@ public class UserScriptService {
 
         return SuccessStatus._OK;
     }
+
+    @Transactional
+    public SuccessStatus deleteScript(User user, Long userScriptId){
+
+        UserScript findScript = userScriptRepository.findById(userScriptId).orElseThrow(() -> new UserScriptHandler(ErrorStatus.USER_SCRIPT_NOT_FOUND));
+
+        if (findScript.getUser() != user){
+            throw new UserScriptHandler(ErrorStatus.USER_SCRIPT_NOT_FOUND);
+        }
+
+        userScriptRepository.delete(findScript);
+
+        return SuccessStatus._OK;
+    }
 }

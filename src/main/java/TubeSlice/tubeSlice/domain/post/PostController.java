@@ -46,7 +46,7 @@ public class PostController {
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200",description = "OK, 성공"),
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "POST401", description = "게시글을 찾을 수 없습니다.",content = @Content(schema = @Schema(implementation = ApiResponse.class))),
     })
-    public ApiResponse<Long> updatePost(@AuthenticationPrincipal UserDetails details,
+    public ApiResponse<SuccessStatus> updatePost(@AuthenticationPrincipal UserDetails details,
                                         @PathVariable Long postId,
                                         @RequestBody PostRequestDto.PostUpdateDto postRequestDto) {
         Long myId = userService.getUserId(details);

@@ -44,7 +44,7 @@ public class UserScriptController {
         return ApiResponse.onSuccess(userScriptService.getScript(user, userScriptId));
     }
 
-    @GetMapping("/")
+    @GetMapping
     @Operation(summary = "스크립트 목록 가져오기",description = "저장한 스크립트 목록 가져오기")
     @ApiResponses({
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200",description = "OK, 성공"),
@@ -61,7 +61,7 @@ public class UserScriptController {
     @Operation(summary = "스크립트 저장하기",description = "youtubeUrl과 키워드 입력받아 스크립드와 함께 저장")
     @ApiResponses({
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200",description = "OK, 성공"),
-            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "USER402", description = "요청 형식이 올바르지 않습니다.",content = @Content(schema = @Schema(implementation = ApiResponse.class))),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "USERSCRIPT402", description = "요청 형식이 올바르지 않습니다.",content = @Content(schema = @Schema(implementation = ApiResponse.class))),
 
     })
     public ApiResponse<SuccessStatus> saveScript(@AuthenticationPrincipal UserDetails details, @RequestBody UserScriptRequest.SaveRequestDto requestDto){
@@ -78,7 +78,7 @@ public class UserScriptController {
     @Operation(summary = "스크립트 수정하기",description = "저장한 스크립트의 내용 수정")
     @ApiResponses({
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200",description = "OK, 성공"),
-            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "USER401", description = "유저 스크립트를 찾을 수 없습니다.",content = @Content(schema = @Schema(implementation = ApiResponse.class))),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "USERSCRIPT401", description = "유저 스크립트를 찾을 수 없습니다.",content = @Content(schema = @Schema(implementation = ApiResponse.class))),
     })
     public ApiResponse<SuccessStatus> updateScript(@AuthenticationPrincipal UserDetails details,
                                                    @PathVariable("userScriptId") Long userScriptId,
@@ -93,7 +93,7 @@ public class UserScriptController {
     @Operation(summary = "스크립트 강조하기",description = "강조할 문장의 타임라인을 입력받아 해당 문장 강조")
     @ApiResponses({
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200",description = "OK, 성공"),
-            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "USER401", description = "유저 스크립트를 찾을 수 없습니다.",content = @Content(schema = @Schema(implementation = ApiResponse.class))),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "USERSCRIPT401", description = "유저 스크립트를 찾을 수 없습니다.",content = @Content(schema = @Schema(implementation = ApiResponse.class))),
     })
     public ApiResponse<SuccessStatus> highlightScript(@AuthenticationPrincipal UserDetails details,
                                                       @PathVariable("userScriptId") Long userScriptId,
@@ -102,5 +102,20 @@ public class UserScriptController {
         User user = userService.findUser(userId);
 
         return ApiResponse.onSuccess(userScriptService.highlightScript(user, userScriptId, requestDto));
+    }
+
+    @DeleteMapping("/{userScriptId}")
+    @Operation(summary = "스크립트 삭제하기",description = "저장한 스크립트 삭제하기")
+    @ApiResponses({
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200",description = "OK, 성공"),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "USERSCRIPT401", description = "유저 스크립트를 찾을 수 없습니다.",content = @Content(schema = @Schema(implementation = ApiResponse.class))),
+    })
+    public ApiResponse<SuccessStatus> deleteScript(@AuthenticationPrincipal UserDetails details,
+                                                   @PathVariable("userScriptId") Long userScriptId
+                                                    ){
+        Long userId = userService.getUserId(details);
+        User user = userService.findUser(userId);
+
+        return ApiResponse.onSuccess(userScriptService.deleteScript(user, userScriptId));
     }
 }
