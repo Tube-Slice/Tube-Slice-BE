@@ -44,7 +44,7 @@ public class UserScriptController {
         return ApiResponse.onSuccess(userScriptService.getScript(user, userScriptId));
     }
 
-    @GetMapping("/")
+    @GetMapping
     @Operation(summary = "스크립트 목록 가져오기",description = "저장한 스크립트 목록 가져오기")
     @ApiResponses({
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200",description = "OK, 성공"),

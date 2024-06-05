@@ -13,6 +13,7 @@ public class TimelineConverter {
         return Timeline.builder()
                 .startTime(timelineDto.getStartTime())
                 .endTime(timelineDto.getEndTime())
+                .description(timelineDto.getDescription())
                 .post(post)
                 .build();
     }

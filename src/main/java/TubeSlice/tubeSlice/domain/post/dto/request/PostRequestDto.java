@@ -33,5 +33,6 @@ public class PostRequestDto {
         private String content;
         private String youtubeUrl;
         private List<String> postKeywords;
+        private List<TimelineRequestDto.TimelineDto> timelineDtoList;
     }
 }
