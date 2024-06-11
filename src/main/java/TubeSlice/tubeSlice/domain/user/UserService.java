@@ -133,10 +133,10 @@ public class UserService {
 
     @Transactional
     public ApiResponse<SuccessStatus> updateUserInfo(User user, UserRequestDto.UserInfoUpdateDto request){
-        if(request.getNickname() != null){
+        if(!request.getNickname().isEmpty()){
             user.setNickname(request.getNickname());
         }
-        if(request.getIntroduction() != null){
+        if(!request.getIntroduction().isEmpty()){
             user.setIntroduction(request.getIntroduction());
         }
         if(request.getImageId() != null){
