@@ -200,7 +200,7 @@ public class UserController {
         return ApiResponse.onSuccess(userService.getPostWithKeyword(user, keyword, page, size));
     }
 
-    @PatchMapping("/")
+    @PatchMapping("")
     @Operation(summary = "유저 정보 수정하기 API",description = "유저 정보를 수정")
     @ApiResponses({
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200",description = "OK, 성공"),
