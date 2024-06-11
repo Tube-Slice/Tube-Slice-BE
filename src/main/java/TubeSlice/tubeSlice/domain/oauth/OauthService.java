@@ -32,6 +32,9 @@ public class OauthService {
     private boolean isUser;
     private String username;
 
+    // 기본이미지 주소
+    private static final String profileUrl = "https://tubeslice-bucket.s3.ap-southeast-1.amazonaws.com/ProfileImage/080d2acb-2cd6-42a5-aa45-9ff34957b7fd.png";
+
     @Transactional
     public LoginResponseDto getJwtTokenAndUserId(String access_token, String socialType){
         String loginId = null;
@@ -84,6 +87,7 @@ public class OauthService {
                     .socialType("naver")
                     .loginStatus(Status.ACTIVATE)
                     .role("ROLE_USER")
+                    .profileUrl(profileUrl)
                     .build();
 
             userRepository.save(user);
@@ -127,6 +131,7 @@ public class OauthService {
                     .socialType("kakao")
                     .loginStatus(Status.ACTIVATE)
                     .role("ROLE_USER")
+                    .profileUrl(profileUrl)
                     .build();
 
             userRepository.save(user);
