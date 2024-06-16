@@ -15,6 +15,24 @@ public class UserScriptResponse {
     @Builder
     @NoArgsConstructor
     @AllArgsConstructor
+    public static class UserScriptKeywordtListDto{
+        private List<UserScriptKeywordtDto> script_keywords;
+
+    }
+
+    @Getter
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class UserScriptKeywordtDto{
+        private String keyword;
+
+    }
+
+    @Getter
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
     public static class UserScriptResponseListDto{
         private List<UserScriptResponseDto> scriptList;
 
@@ -28,10 +46,12 @@ public class UserScriptResponse {
         private Long userScriptId;
         private String youtubeUrl;
         private String youtubeTitle;
+        private String updateAt;
         private List<ScriptResponseDto.SubtitleResponseDto> subtitles;
         private Long scriptId;
         private List<Script> scripts;
         private List<KeywordResponseDto.KeywordResultDto> scriptKeywords;
+
     }
 
     @Getter

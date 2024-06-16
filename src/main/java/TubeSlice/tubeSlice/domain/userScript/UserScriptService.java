@@ -1,7 +1,8 @@
 package TubeSlice.tubeSlice.domain.userScript;
 
 import TubeSlice.tubeSlice.domain.script.Script;
-import TubeSlice.tubeSlice.domain.script.ScriptRepository;
+import TubeSlice.tubeSlice.domain.scriptKeyword.ScriptKeyword;
+import TubeSlice.tubeSlice.domain.scriptKeyword.ScriptKeywordRepository;
 import TubeSlice.tubeSlice.domain.scriptKeyword.ScriptKeywordService;
 import TubeSlice.tubeSlice.domain.text.Text;
 import TubeSlice.tubeSlice.domain.text.TextConverter;
@@ -9,12 +10,10 @@ import TubeSlice.tubeSlice.domain.text.TextRepository;
 import TubeSlice.tubeSlice.domain.text.TextService;
 import TubeSlice.tubeSlice.domain.text.dto.response.TextResponseDto;
 import TubeSlice.tubeSlice.domain.user.User;
-import TubeSlice.tubeSlice.domain.user.UserRepository;
 import TubeSlice.tubeSlice.domain.userScript.dto.request.UserScriptRequest;
 import TubeSlice.tubeSlice.domain.userScript.dto.response.UserScriptResponse;
 import TubeSlice.tubeSlice.global.response.code.resultCode.ErrorStatus;
 import TubeSlice.tubeSlice.global.response.code.resultCode.SuccessStatus;
-import TubeSlice.tubeSlice.global.response.exception.handler.UserHandler;
 import TubeSlice.tubeSlice.global.response.exception.handler.UserScriptHandler;
 
 import lombok.RequiredArgsConstructor;
@@ -22,7 +21,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -31,8 +33,8 @@ import java.util.List;
 public class UserScriptService {
 
     private final UserScriptRepository userScriptRepository;
+    private final ScriptKeywordRepository scriptKeywordRepository;
     private final TextRepository textRepository;
-    private final UserRepository userRepository;
 
     private final TextService textService;
     private final ScriptKeywordService scriptKeywordService;
@@ -135,5 +137,27 @@ public class UserScriptService {
         userScriptRepository.delete(findScript);
 
         return SuccessStatus._OK;
+    }
+
+    public UserScriptResponse.UserScriptKeywordtListDto getScriptKeywordList(User user){
+
+        List<UserScript> userScriptList = userScriptRepository.findAllByUser(user);
+
+        return UserScriptConverter.toUserScriptKeywordList(userScriptList);
+    }
+
+    public UserScriptResponse.UserScriptResponseListDto getScriptListByKeyword(User user, String keyword){
+
+        List<ScriptKeyword> scriptKeywords = scriptKeywordRepository.findAllByKeywordName(keyword);
+
+        if (scriptKeywords == null){
+            throw new UserScriptHandler(ErrorStatus.USER_SCRIPT_NOT_FOUND2);
+        }
+
+        List<UserScript> userScriptList = scriptKeywords.stream()
+                .map(ScriptKeyword::getUserScript)
+                .collect(Collectors.toList());
+
+        return UserScriptConverter.toUserScriptList(userScriptList);
     }
 }
