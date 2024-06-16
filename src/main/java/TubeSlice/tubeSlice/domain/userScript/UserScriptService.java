@@ -1,6 +1,8 @@
 package TubeSlice.tubeSlice.domain.userScript;
 
 import TubeSlice.tubeSlice.domain.script.Script;
+import TubeSlice.tubeSlice.domain.scriptKeyword.ScriptKeyword;
+import TubeSlice.tubeSlice.domain.scriptKeyword.ScriptKeywordRepository;
 import TubeSlice.tubeSlice.domain.scriptKeyword.ScriptKeywordService;
 import TubeSlice.tubeSlice.domain.text.Text;
 import TubeSlice.tubeSlice.domain.text.TextConverter;
@@ -19,8 +21,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -29,6 +33,7 @@ import java.util.List;
 public class UserScriptService {
 
     private final UserScriptRepository userScriptRepository;
+    private final ScriptKeywordRepository scriptKeywordRepository;
     private final TextRepository textRepository;
 
     private final TextService textService;
@@ -139,5 +144,20 @@ public class UserScriptService {
         List<UserScript> userScriptList = userScriptRepository.findAllByUser(user);
 
         return UserScriptConverter.toUserScriptKeywordList(userScriptList);
+    }
+
+    public UserScriptResponse.UserScriptResponseListDto getScriptListByKeyword(User user, String keyword){
+
+        List<ScriptKeyword> scriptKeywords = scriptKeywordRepository.findAllByKeywordName(keyword);
+
+        if (scriptKeywords == null){
+            throw new UserScriptHandler(ErrorStatus.USER_SCRIPT_NOT_FOUND2);
+        }
+
+        List<UserScript> userScriptList = scriptKeywords.stream()
+                .map(ScriptKeyword::getUserScript)
+                .collect(Collectors.toList());
+
+        return UserScriptConverter.toUserScriptList(userScriptList);
     }
 }
