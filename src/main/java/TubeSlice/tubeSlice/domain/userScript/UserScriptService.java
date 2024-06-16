@@ -19,6 +19,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Iterator;
 import java.util.List;
 
 @Slf4j
@@ -131,5 +132,12 @@ public class UserScriptService {
         userScriptRepository.delete(findScript);
 
         return SuccessStatus._OK;
+    }
+
+    public UserScriptResponse.UserScriptKeywordtListDto getScriptKeywordList(User user){
+
+        List<UserScript> userScriptList = userScriptRepository.findAllByUser(user);
+
+        return UserScriptConverter.toUserScriptKeywordList(userScriptList);
     }
 }
