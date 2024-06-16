@@ -1,7 +1,6 @@
 package TubeSlice.tubeSlice.domain.userScript;
 
 import TubeSlice.tubeSlice.domain.script.Script;
-import TubeSlice.tubeSlice.domain.script.ScriptRepository;
 import TubeSlice.tubeSlice.domain.scriptKeyword.ScriptKeywordService;
 import TubeSlice.tubeSlice.domain.text.Text;
 import TubeSlice.tubeSlice.domain.text.TextConverter;
@@ -9,12 +8,10 @@ import TubeSlice.tubeSlice.domain.text.TextRepository;
 import TubeSlice.tubeSlice.domain.text.TextService;
 import TubeSlice.tubeSlice.domain.text.dto.response.TextResponseDto;
 import TubeSlice.tubeSlice.domain.user.User;
-import TubeSlice.tubeSlice.domain.user.UserRepository;
 import TubeSlice.tubeSlice.domain.userScript.dto.request.UserScriptRequest;
 import TubeSlice.tubeSlice.domain.userScript.dto.response.UserScriptResponse;
 import TubeSlice.tubeSlice.global.response.code.resultCode.ErrorStatus;
 import TubeSlice.tubeSlice.global.response.code.resultCode.SuccessStatus;
-import TubeSlice.tubeSlice.global.response.exception.handler.UserHandler;
 import TubeSlice.tubeSlice.global.response.exception.handler.UserScriptHandler;
 
 import lombok.RequiredArgsConstructor;
@@ -32,7 +29,6 @@ public class UserScriptService {
 
     private final UserScriptRepository userScriptRepository;
     private final TextRepository textRepository;
-    private final UserRepository userRepository;
 
     private final TextService textService;
     private final ScriptKeywordService scriptKeywordService;

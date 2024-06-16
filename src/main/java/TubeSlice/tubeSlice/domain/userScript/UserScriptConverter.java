@@ -7,6 +7,7 @@ import TubeSlice.tubeSlice.domain.scriptKeyword.ScriptKeyword;
 import TubeSlice.tubeSlice.domain.subtitle.Subtitle;
 import TubeSlice.tubeSlice.domain.text.Text;
 import TubeSlice.tubeSlice.domain.userScript.dto.response.UserScriptResponse;
+import TubeSlice.tubeSlice.global.entity.BaseEntity;
 
 import java.util.Comparator;
 import java.util.List;
@@ -18,6 +19,7 @@ public class UserScriptConverter {
 
         List<UserScriptResponse.UserScriptResponseDto> userScriptResponseDtos = userScriptList.stream()
                 .map(UserScriptConverter::toUserScript)
+                .sorted(Comparator.comparing(UserScriptResponse.UserScriptResponseDto::getUpdateAt).reversed())
                 .toList();
 
         return UserScriptResponse.UserScriptResponseListDto.builder()
@@ -37,6 +39,10 @@ public class UserScriptConverter {
                 .map(s -> new ScriptResponseDto.SubtitleResponseDto(s.getTimeline(), s.getSubtitle()))
                 .sorted(Comparator.comparing(ScriptResponseDto.SubtitleResponseDto::getTimeline))
                 .toList();
+        String updateAt = userScript.getScriptTexts().stream()
+                .max(Comparator.comparing(BaseEntity::getUpdatedAt))
+                .stream().findFirst().orElseThrow(null)
+                .getUpdatedAt().toString();
 
         return UserScriptResponse.UserScriptResponseDto.builder()
                 .userScriptId(userScript.getId())
@@ -46,6 +52,7 @@ public class UserScriptConverter {
                 .scripts(texts)
                 .scriptKeywords(scriptKeywords)
                 .subtitles(subtitiles)
+                .updateAt(updateAt)
                 .build();
     }
 }
