@@ -15,6 +15,24 @@ public class UserScriptResponse {
     @Builder
     @NoArgsConstructor
     @AllArgsConstructor
+    public static class UserScriptKeywordtListDto{
+        private List<UserScriptKeywordtDto> script_keywords;
+
+    }
+
+    @Getter
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class UserScriptKeywordtDto{
+        private String keyword;
+
+    }
+
+    @Getter
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
     public static class UserScriptResponseListDto{
         private List<UserScriptResponseDto> scriptList;
 

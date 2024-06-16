@@ -9,11 +9,28 @@ import TubeSlice.tubeSlice.domain.text.Text;
 import TubeSlice.tubeSlice.domain.userScript.dto.response.UserScriptResponse;
 import TubeSlice.tubeSlice.global.entity.BaseEntity;
 
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
 public class UserScriptConverter {
+
+    public static UserScriptResponse.UserScriptKeywordtListDto toUserScriptKeywordList(List<UserScript> userScriptList){
+        List<UserScriptResponse.UserScriptKeywordtDto> scriptKeywordtDtos = new ArrayList<>();
+
+        for (UserScript us : userScriptList){
+            for (ScriptKeyword keyword : us.getScriptKeywords()){
+                scriptKeywordtDtos.add(new UserScriptResponse.UserScriptKeywordtDto(keyword.getKeyword().getName()));
+            }
+        }
+
+        scriptKeywordtDtos = scriptKeywordtDtos.stream().sorted(Comparator.comparing(UserScriptResponse.UserScriptKeywordtDto::getKeyword)).collect(Collectors.toList());
+
+        return  UserScriptResponse.UserScriptKeywordtListDto.builder()
+                .script_keywords(scriptKeywordtDtos)
+                .build();
+    }
 
     public static UserScriptResponse.UserScriptResponseListDto toUserScriptList(List<UserScript> userScriptList){
 
