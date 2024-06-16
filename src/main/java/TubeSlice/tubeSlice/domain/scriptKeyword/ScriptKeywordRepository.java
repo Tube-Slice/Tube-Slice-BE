@@ -10,4 +10,5 @@ public interface ScriptKeywordRepository extends JpaRepository<ScriptKeyword, Lo
 
     ScriptKeyword findByKeywordAndUserScriptId(Keyword keyword, Long userScriptId);
     List<ScriptKeyword> findByUserScriptId(Long userScriptId);
+    List<ScriptKeyword> findAllByKeywordName(String keyword);
 }

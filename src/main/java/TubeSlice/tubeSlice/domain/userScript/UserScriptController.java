@@ -132,5 +132,17 @@ public class UserScriptController {
         return ApiResponse.onSuccess(userScriptService.getScriptKeywordList(user));
     }
 
+    @GetMapping("/list")
+    @Operation(summary = "키워드 별로 스크립트 목록 가져오기",description = "키워드 별로 저장한 스크립트 목록 가져오기")
+    @ApiResponses({
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200",description = "OK, 성공"),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "USERSCRIPT01", description = "스크립트 정보를 찾을 수 없습니다.",content = @Content(schema = @Schema(implementation = ApiResponse.class))),
+    })
+    public ApiResponse<UserScriptResponse.UserScriptResponseListDto> getScriptByKeyword(@AuthenticationPrincipal UserDetails details,
+                                                                                        @RequestParam("keyword") String keyword){
+        Long userId = userService.getUserId(details);
+        User user = userService.findUser(userId);
 
+        return ApiResponse.onSuccess(userScriptService.getScriptListByKeyword(user, keyword));
+    }
 }
