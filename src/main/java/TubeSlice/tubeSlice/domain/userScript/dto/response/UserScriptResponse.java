@@ -28,10 +28,12 @@ public class UserScriptResponse {
         private Long userScriptId;
         private String youtubeUrl;
         private String youtubeTitle;
+        private String updateAt;
         private List<ScriptResponseDto.SubtitleResponseDto> subtitles;
         private Long scriptId;
         private List<Script> scripts;
         private List<KeywordResponseDto.KeywordResultDto> scriptKeywords;
+
     }
 
     @Getter
