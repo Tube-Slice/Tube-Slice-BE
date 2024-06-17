@@ -97,11 +97,11 @@ public class UserScriptController {
     })
     public ApiResponse<SuccessStatus> highlightScript(@AuthenticationPrincipal UserDetails details,
                                                       @PathVariable("userScriptId") Long userScriptId,
-                                                      @RequestBody List<UserScriptRequest.highlightRequestDto> requestDto){
+                                                      @RequestBody List<Long> textId){
         Long userId = userService.getUserId(details);
         User user = userService.findUser(userId);
 
-        return ApiResponse.onSuccess(userScriptService.highlightScript(user, userScriptId, requestDto));
+        return ApiResponse.onSuccess(userScriptService.highlightScript(user, userScriptId, textId));
     }
 
     @DeleteMapping("/{userScriptId}")
@@ -125,11 +125,11 @@ public class UserScriptController {
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200",description = "OK, 성공"),
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "USERSCRIPT401", description = "스크립트 정보를 찾을 수 없습니다.",content = @Content(schema = @Schema(implementation = ApiResponse.class))),
     })
-    public ApiResponse<UserScriptResponse.UserScriptKeywordtListDto> getScriptKeywordList(@AuthenticationPrincipal UserDetails details){
-        Long userId = userService.getUserId(details);
-        User user = userService.findUser(userId);
+    public ApiResponse<UserScriptResponse.UserScriptKeywordtListDto> getScriptKeywordList(){
+//        Long userId = userService.getUserId(details);
+//        User user = userService.findUser(userId);
 
-        return ApiResponse.onSuccess(userScriptService.getScriptKeywordList(user));
+        return ApiResponse.onSuccess(userScriptService.getScriptKeywordList());
     }
 
     @GetMapping("/list")

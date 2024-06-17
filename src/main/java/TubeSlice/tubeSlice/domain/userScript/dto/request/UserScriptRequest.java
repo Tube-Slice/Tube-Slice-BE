@@ -39,11 +39,4 @@ public class UserScriptRequest {
         }
     }
 
-    @Getter
-    @Builder
-    @NoArgsConstructor
-    @AllArgsConstructor
-    public static class highlightRequestDto{
-        private Double timeline;
-    }
 }
