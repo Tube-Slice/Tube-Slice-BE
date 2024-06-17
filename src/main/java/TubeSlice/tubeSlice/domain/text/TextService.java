@@ -210,7 +210,6 @@ public class TextService {
     }
 
 
-
     public String getTotalScript(List<TextResponseDto.transResponseDto> scripts){
         String totalScript = "";
 
@@ -221,7 +220,6 @@ public class TextService {
 
         return totalScript;
     }
-
 
 
     private TextResponseDto.SummaryResponseListDto trimSummary(String jsonResult){
@@ -254,12 +252,10 @@ public class TextService {
     }
 
 
-
     public String getAudioFileFromYoutubeUrl(String youtubeUrl){
         String filename = "mp3 파일 가져오기 실패.";
 
         try {
-
             executeCommand(youtubeUrl);
 
         } catch (IOException | InterruptedException e) {
@@ -284,7 +280,6 @@ public class TextService {
             }
         }
 
-
         log.info("filename: {}" ,filename);
 
         return filename;
@@ -300,7 +295,6 @@ public class TextService {
 
             Process process = processBuilder.start();
             BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
-
 
             String line;
             while ((line = reader.readLine()) != null) {

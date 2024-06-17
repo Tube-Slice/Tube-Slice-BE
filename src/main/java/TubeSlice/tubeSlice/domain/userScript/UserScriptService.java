@@ -108,7 +108,7 @@ public class UserScriptService {
     }
 
     @Transactional
-    public SuccessStatus highlightScript(User user, Long userScriptId, List<UserScriptRequest.highlightRequestDto> requestListDto){
+    public SuccessStatus highlightScript(User user, Long userScriptId, List<Long> textId){
 
         UserScript userScript = userScriptRepository.findById(userScriptId).orElseThrow(() -> new UserScriptHandler(ErrorStatus.USER_SCRIPT_NOT_FOUND));
 
@@ -116,8 +116,8 @@ public class UserScriptService {
             throw new UserScriptHandler(ErrorStatus.USER_SCRIPT_NOT_FOUND);
         }
 
-        for (UserScriptRequest.highlightRequestDto r : requestListDto){
-            Text text  = textRepository.findAllByUserScriptAndTimeline(userScript, r.getTimeline());
+        for (Long r : textId){
+            Text text  = textRepository.findById(r).orElseThrow(()-> new UserScriptHandler(ErrorStatus.USER_SCRIPT_NOT_FOUND));
             text.setHighlight(true);
             textRepository.save(text);
         }
@@ -139,9 +139,10 @@ public class UserScriptService {
         return SuccessStatus._OK;
     }
 
-    public UserScriptResponse.UserScriptKeywordtListDto getScriptKeywordList(User user){
+    public UserScriptResponse.UserScriptKeywordtListDto getScriptKeywordList(){
 
-        List<UserScript> userScriptList = userScriptRepository.findAllByUser(user);
+        //List<UserScript> userScriptList = userScriptRepository.findAllByUser(user);
+        List<UserScript> userScriptList = userScriptRepository.findAllByUserId(1L);
 
         return UserScriptConverter.toUserScriptKeywordList(userScriptList);
     }

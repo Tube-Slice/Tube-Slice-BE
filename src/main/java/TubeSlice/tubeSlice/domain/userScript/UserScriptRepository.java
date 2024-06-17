@@ -9,4 +9,5 @@ import java.util.List;
 public interface UserScriptRepository extends JpaRepository<UserScript, Long> {
 
     List<UserScript> findAllByUser(User user);
+    List<UserScript> findAllByUserId(Long userId);
 }
